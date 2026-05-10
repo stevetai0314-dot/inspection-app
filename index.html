@@ -231,6 +231,22 @@
         .toast.show { transform: translateX(-50%) translateY(0); }
 
         .divider { height: 1px; background: #1e293b; margin: 10px 0; }
+
+        .lang-btn {
+            background: #1e293b;
+            border: 2px solid #334155;
+            border-radius: 30px;
+            color: #64748b;
+            font-size: 14px;
+            padding: 8px 18px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .lang-btn.active {
+            background: #1d4ed8;
+            border-color: #3b82f6;
+            color: #fff;
+        }
     </style>
 </head>
 <body>
@@ -263,6 +279,13 @@
 <!-- ── RECORD SCREEN ── -->
 <div class="screen" id="screenRecord">
     <div class="record-wrap">
+
+        <!-- Language toggle -->
+        <div style="display:flex; gap:10px;">
+            <button class="lang-btn active" id="langVI" onclick="setLang('vi',this)">🇻🇳 Tiếng Việt</button>
+            <button class="lang-btn" id="langZH" onclick="setLang('zh',this)">🇹🇼 中文</button>
+        </div>
+
         <button id="btnRecord" onclick="toggleRecord()">
             Nhấn để<br>ghi âm
         </button>
@@ -397,6 +420,14 @@
 </div>
 
 <script>
+    // ── Language ──
+    let currentLang = 'vi';
+    function setLang(lang, el) {
+        currentLang = lang;
+        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+        el.classList.add('active');
+    }
+
     // ── Config ──
     const KEYS = {
         openai:   'cfg_openai',
@@ -492,7 +523,7 @@
         const form = new FormData();
         form.append('file', blob, 'audio.webm');
         form.append('model', 'whisper-1');
-        form.append('language', 'vi');
+        form.append('language', currentLang);
 
         try {
             const res = await fetch('https://api.openai.com/v1/audio/transcriptions', {
@@ -520,7 +551,7 @@
     async function parseWithDeepSeek(text) {
         const key = localStorage.getItem(KEYS.deepseek);
 
-        const systemPrompt = `Bạn là trợ lý phân tích dữ liệu kiểm tra máy may. Từ văn bản tiếng Việt, hãy trích xuất các trường sau và trả về JSON thuần túy (không có markdown, không có giải thích):
+        const systemPrompt = `你是工廠巡檢資料解析助手，支援越南文與中文輸入。從語音辨識文字中提取以下欄位，回傳純 JSON（不含 markdown、不含說明）：
 
 {
   "so_may": "số máy",
@@ -542,7 +573,7 @@
   "ghi_chu_phai": "ghi chú / lỗi bên phải"
 }
 
-Nếu không đề cập, để chuỗi rỗng "". Chỉ trả về JSON.`;
+若未提及則填空字串 ""。只回傳 JSON。`;
 
         try {
             const res = await fetch('https://api.deepseek.com/v1/chat/completions', {
