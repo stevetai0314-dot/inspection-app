@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Kiểm tra máy</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            min-height: 100vh;
+            padding: 16px;
+        }
+
+        /* ── Header ── */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 14px;
+            border-bottom: 1px solid #1e293b;
+            margin-bottom: 20px;
+        }
+        .header h1 { font-size: 16px; letter-spacing: 2px; color: #60a5fa; }
+        .gear { font-size: 20px; cursor: pointer; }
+
+        /* ── Screens ── */
+        .screen { display: none; }
+        .screen.active { display: block; }
+
+        /* ── Settings ── */
+        .setting-row { margin-bottom: 16px; }
+        .setting-label { font-size: 12px; color: #64748b; margin-bottom: 6px; letter-spacing: 1px; }
+        .setting-input {
+            width: 100%;
+            background: #1e293b;
+            border: 2px solid #334155;
+            border-radius: 10px;
+            color: #f1f5f9;
+            font-size: 13px;
+            padding: 11px 14px;
+            outline: none;
+        }
+        .setting-input:focus { border-color: #3b82f6; }
+        .btn-save {
+            width: 100%;
+            background: #1d4ed8;
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 16px;
+            padding: 15px;
+            cursor: pointer;
+            margin-top: 8px;
+            letter-spacing: 1px;
+        }
+
+        /* ── Record Screen ── */
+        .record-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 24px;
+            padding-top: 20px;
+        }
+
+        #btnRecord {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            border: 4px solid #3b82f6;
+            background: #1d4ed8;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            line-height: 1.5;
+            transition: all 0.15s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        #btnRecord.rec {
+            background: #dc2626;
+            border-color: #ef4444;
+            animation: pulse 0.8s infinite;
+        }
+        #btnRecord.loading {
+            background: #92400e;
+            border-color: #f59e0b;
+            animation: none;
+        }
+        @keyframes pulse {
+            0%,100% { transform: scale(1); }
+            50% { transform: scale(1.06); }
+        }
+
+        #recStatus { font-size: 13px; color: #64748b; text-align: center; }
+
+        .transcript-box {
+            width: 100%;
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 14px;
+            font-size: 14px;
+            color: #94a3b8;
+            min-height: 60px;
+            line-height: 1.6;
+            display: none;
+        }
+        .transcript-box.show { display: block; }
+        .transcript-label { font-size: 11px; color: #475569; margin-bottom: 6px; }
+
+        /* ── Preview Screen ── */
+        .preview-title {
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 16px;
+            letter-spacing: 1px;
+        }
+
+        .group-card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 14px;
+            padding: 14px;
+            margin-bottom: 14px;
+        }
+        .group-title {
+            font-size: 11px;
+            color: #60a5fa;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        .field-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .field-label {
+            font-size: 12px;
+            color: #64748b;
+            flex: 0 0 120px;
+            line-height: 1.3;
+        }
+        .field-input {
+            flex: 1;
+            background: #0f172a;
+            border: 1.5px solid #334155;
+            border-radius: 8px;
+            color: #f1f5f9;
+            font-size: 15px;
+            padding: 9px 12px;
+            outline: none;
+            text-align: center;
+        }
+        .field-input:focus { border-color: #3b82f6; }
+        .field-input.notes {
+            text-align: left;
+            font-size: 13px;
+        }
+
+        .btn-confirm {
+            width: 100%;
+            background: #15803d;
+            border: none;
+            border-radius: 14px;
+            color: #fff;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 18px;
+            cursor: pointer;
+            letter-spacing: 2px;
+            margin-top: 4px;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .btn-confirm:active { opacity: 0.85; transform: scale(0.98); }
+
+        .btn-redo {
+            width: 100%;
+            background: transparent;
+            border: 2px solid #475569;
+            border-radius: 14px;
+            color: #94a3b8;
+            font-size: 15px;
+            padding: 14px;
+            cursor: pointer;
+            margin-top: 10px;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* ── Success Screen ── */
+        .success-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 60vh;
+            gap: 20px;
+        }
+        .success-icon { font-size: 72px; }
+        .success-msg { font-size: 20px; color: #4ade80; font-weight: bold; letter-spacing: 1px; }
+        .success-sub { font-size: 14px; color: #64748b; }
+        .btn-next {
+            background: #1d4ed8;
+            border: none;
+            border-radius: 14px;
+            color: #fff;
+            font-size: 16px;
+            padding: 16px 48px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        /* ── Toast ── */
+        .toast {
+            position: fixed;
+            top: 16px; left: 50%;
+            transform: translateX(-50%) translateY(-80px);
+            background: #dc2626;
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-size: 14px;
+            transition: transform 0.3s;
+            z-index: 999;
+        }
+        .toast.show { transform: translateX(-50%) translateY(0); }
+
+        .divider { height: 1px; background: #1e293b; margin: 10px 0; }
+    </style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<!-- Header -->
+<div class="header">
+    <h1>KIỂM TRA MÁY</h1>
+    <span class="gear" onclick="goSettings()">⚙️</span>
+</div>
+
+<!-- ── SETTINGS SCREEN ── -->
+<div class="screen active" id="screenSettings">
+    <div class="setting-row">
+        <div class="setting-label">OPENAI API KEY (Whisper)</div>
+        <input class="setting-input" type="password" id="openaiKey" placeholder="sk-...">
+    </div>
+    <div class="setting-row">
+        <div class="setting-label">DEEPSEEK API KEY (Phân tích)</div>
+        <input class="setting-input" type="password" id="deepseekKey" placeholder="sk-...">
+    </div>
+    <div class="setting-row">
+        <div class="setting-label">APPS SCRIPT URL (Google Sheet)</div>
+        <input class="setting-input" type="text" id="appsUrl" placeholder="https://script.google.com/...">
+    </div>
+    <button class="btn-save" onclick="saveSettings()">LƯU VÀ BẮT ĐẦU</button>
+</div>
+
+<!-- ── RECORD SCREEN ── -->
+<div class="screen" id="screenRecord">
+    <div class="record-wrap">
+        <button id="btnRecord" onclick="toggleRecord()">
+            Nhấn để<br>ghi âm
+        </button>
+        <div id="recStatus">Sẵn sàng</div>
+        <div class="transcript-box" id="transcriptBox">
+            <div class="transcript-label">NỘI DUNG NHẬN DẠNG：</div>
+            <div id="transcriptText"></div>
+        </div>
+    </div>
+</div>
+
+<!-- ── PREVIEW SCREEN ── -->
+<div class="screen" id="screenPreview">
+    <div class="preview-title">KIỂM TRA VÀ XÁC NHẬN DỮ LIỆU</div>
+
+    <!-- 機台 -->
+    <div class="group-card">
+        <div class="group-title">Số máy</div>
+        <div class="field-row">
+            <span class="field-label">Số máy<br><small style="color:#475569">機台號</small></span>
+            <input class="field-input" id="f_so_may" type="text" inputmode="numeric">
+        </div>
+    </div>
+
+    <!-- 帶寬 -->
+    <div class="group-card">
+        <div class="group-title">Độ rộng / 帶寬</div>
+        <div class="field-row">
+            <span class="field-label">Trái / 左</span>
+            <input class="field-input" id="f_do_rong_trai" type="text" inputmode="decimal">
+        </div>
+        <div class="field-row">
+            <span class="field-label">Phải / 右</span>
+            <input class="field-input" id="f_do_rong_phai" type="text" inputmode="decimal">
+        </div>
+    </div>
+
+    <!-- 左側高度 -->
+    <div class="group-card">
+        <div class="group-title">Cao móc TRÁI / 左高度標記</div>
+        <div class="field-row">
+            <span class="field-label">Bên kiếm<br><small style="color:#475569">邊界側</small></span>
+            <input class="field-input" id="f_cao_trai_bien_kiem" type="text" inputmode="decimal">
+        </div>
+        <div class="field-row">
+            <span class="field-label">Giữa<br><small style="color:#475569">中間</small></span>
+            <input class="field-input" id="f_cao_trai_giua" type="text" inputmode="decimal">
+        </div>
+        <div class="field-row">
+            <span class="field-label">Bên kim<br><small style="color:#475569">針側</small></span>
+            <input class="field-input" id="f_cao_trai_bien_kim" type="text" inputmode="decimal">
+        </div>
+    </div>
+
+    <!-- 左側溫度 -->
+    <div class="group-card">
+        <div class="group-title">Nhiệt TRÁI / 左溫度</div>
+        <div class="field-row">
+            <span class="field-label">Bên kiếm<br><small style="color:#475569">邊界側</small></span>
+            <input class="field-input" id="f_nhiet_trai_bien_kiem" type="text" inputmode="decimal">
+        </div>
+        <div class="field-row">
+            <span class="field-label">Giữa<br><small style="color:#475569">中間</small></span>
+            <input class="field-input" id="f_nhiet_trai_giua" type="text" inputmode="decimal">
+        </div>
+        <div class="field-row">
+            <span class="field-label">Bên kim<br><small style="color:#475569">針側</small></span>
+            <input class="field-input" id="f_nhiet_trai_bien_kim" type="text" inputmode="decimal">
+        </div>
+    </div>
+
+    <!-- 右側高度 -->
+    <div class="group-card">
+        <div class="group-title">Cao móc PHẢI / 右高度標記</div>
+        <div class="field-row">
+            <span class="field-label">Bên kiếm<br><small style="color:#475569">邊界側</small></span>
+            <input class="field-input" id="f_cao_phai_bien_kiem" type="text" inputmode="decimal">
+        </div>
+        <div class="field-row">
+            <span class="field-label">Giữa<br><small style="color:#475569">中間</small></span>
+            <input class="field-input" id="f_cao_phai_giua" type="text" inputmode="decimal">
+        </div>
+        <div class="field-row">
+            <span class="field-label">Bên kim<br><small style="color:#475569">針側</small></span>
+            <input class="field-input" id="f_cao_phai_bien_kim" type="text" inputmode="decimal">
+        </div>
+    </div>
+
+    <!-- 右側溫度 -->
+    <div class="group-card">
+        <div class="group-title">Nhiệt PHẢI / 右溫度</div>
+        <div class="field-row">
+            <span class="field-label">Bên kiếm<br><small style="color:#475569">邊界側</small></span>
+            <input class="field-input" id="f_nhiet_phai_bien_kiem" type="text" inputmode="decimal">
+        </div>
+        <div class="field-row">
+            <span class="field-label">Giữa<br><small style="color:#475569">中間</small></span>
+            <input class="field-input" id="f_nhiet_phai_giua" type="text" inputmode="decimal">
+        </div>
+        <div class="field-row">
+            <span class="field-label">Bên kim<br><small style="color:#475569">針側</small></span>
+            <input class="field-input" id="f_nhiet_phai_bien_kim" type="text" inputmode="decimal">
+        </div>
+    </div>
+
+    <!-- 備註 -->
+    <div class="group-card">
+        <div class="group-title">Ghi chú / 備註</div>
+        <div class="field-row">
+            <span class="field-label">Trái / 左側</span>
+            <input class="field-input notes" id="f_ghi_chu_trai" type="text">
+        </div>
+        <div class="field-row">
+            <span class="field-label">Phải / 右側</span>
+            <input class="field-input notes" id="f_ghi_chu_phai" type="text">
+        </div>
+    </div>
+
+    <button class="btn-confirm" onclick="submitData()">✓ XÁC NHẬN GỬI</button>
+    <button class="btn-redo" onclick="goScreen('screenRecord')">↩ Ghi âm lại</button>
+    <div style="height:20px;"></div>
+</div>
+
+<!-- ── SUCCESS SCREEN ── -->
+<div class="screen" id="screenSuccess">
+    <div class="success-wrap">
+        <div class="success-icon">✅</div>
+        <div class="success-msg">ĐÃ LƯU THÀNH CÔNG</div>
+        <div class="success-sub" id="successInfo"></div>
+        <button class="btn-next" onclick="goScreen('screenRecord')">Máy tiếp theo →</button>
+    </div>
+</div>
+
+<script>
+    // ── Config ──
+    const KEYS = {
+        openai:   'cfg_openai',
+        deepseek: 'cfg_deepseek',
+        apps:     'cfg_apps',
+    };
+
+    function loadSettings() {
+        document.getElementById('openaiKey').value   = localStorage.getItem(KEYS.openai)   || '';
+        document.getElementById('deepseekKey').value = localStorage.getItem(KEYS.deepseek) || '';
+        document.getElementById('appsUrl').value     = localStorage.getItem(KEYS.apps)     || '';
+    }
+
+    function saveSettings() {
+        const o = document.getElementById('openaiKey').value.trim();
+        const d = document.getElementById('deepseekKey').value.trim();
+        const a = document.getElementById('appsUrl').value.trim();
+        if (!o || !d || !a) { showToast('Vui lòng điền đầy đủ thông tin'); return; }
+        localStorage.setItem(KEYS.openai,   o);
+        localStorage.setItem(KEYS.deepseek, d);
+        localStorage.setItem(KEYS.apps,     a);
+        goScreen('screenRecord');
+    }
+
+    function goSettings() { loadSettings(); goScreen('screenSettings'); }
+
+    window.onload = () => {
+        loadSettings();
+        const hasAll = localStorage.getItem(KEYS.openai) &&
+                       localStorage.getItem(KEYS.deepseek) &&
+                       localStorage.getItem(KEYS.apps);
+        goScreen(hasAll ? 'screenRecord' : 'screenSettings');
+    };
+
+    // ── Screen navigation ──
+    function goScreen(id) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        window.scrollTo(0, 0);
+    }
+
+    // ── Toast ──
+    function showToast(msg) {
+        const t = document.getElementById('toast');
+        t.textContent = msg;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
+    // ── Recording ──
+    let recording = false;
+    let mediaRecorder = null;
+    let chunks = [];
+
+    async function toggleRecord() {
+        if (recording) {
+            mediaRecorder.stop();
+            recording = false;
+            return;
+        }
+
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            chunks = [];
+            mediaRecorder = new MediaRecorder(stream);
+            mediaRecorder.ondataavailable = e => chunks.push(e.data);
+            mediaRecorder.onstop = async () => {
+                stream.getTracks().forEach(t => t.stop());
+                await processAudio(new Blob(chunks, { type: 'audio/webm' }));
+            };
+            mediaRecorder.start();
+            recording = true;
+
+            const btn = document.getElementById('btnRecord');
+            btn.className = 'rec';
+            btn.innerHTML = '🔴<br>Nhấn để dừng';
+            document.getElementById('recStatus').textContent = 'Đang ghi âm...';
+            document.getElementById('transcriptBox').classList.remove('show');
+
+        } catch (e) {
+            showToast('Không thể truy cập microphone');
+        }
+    }
+
+    // ── Step 1: Whisper ──
+    async function processAudio(blob) {
+        const btn = document.getElementById('btnRecord');
+        btn.className = 'loading';
+        btn.innerHTML = '⏳<br>Đang xử lý...';
+        document.getElementById('recStatus').textContent = 'Đang nhận dạng giọng nói...';
+
+        const key = localStorage.getItem(KEYS.openai);
+        const form = new FormData();
+        form.append('file', blob, 'audio.webm');
+        form.append('model', 'whisper-1');
+        form.append('language', 'vi');
+
+        try {
+            const res = await fetch('https://api.openai.com/v1/audio/transcriptions', {
+                method: 'POST',
+                headers: { 'Authorization': 'Bearer ' + key },
+                body: form
+            });
+            if (!res.ok) throw new Error('Whisper lỗi: ' + res.status);
+            const data = await res.json();
+            const text = data.text;
+
+            document.getElementById('transcriptText').textContent = text;
+            document.getElementById('transcriptBox').classList.add('show');
+            document.getElementById('recStatus').textContent = 'Đang phân tích dữ liệu...';
+
+            await parseWithDeepSeek(text);
+
+        } catch (e) {
+            showToast(e.message);
+            resetBtn();
+        }
+    }
+
+    // ── Step 2: DeepSeek ──
+    async function parseWithDeepSeek(text) {
+        const key = localStorage.getItem(KEYS.deepseek);
+
+        const systemPrompt = `Bạn là trợ lý phân tích dữ liệu kiểm tra máy may. Từ văn bản tiếng Việt, hãy trích xuất các trường sau và trả về JSON thuần túy (không có markdown, không có giải thích):
+
+{
+  "so_may": "số máy",
+  "do_rong_trai": "độ rộng bên trái",
+  "do_rong_phai": "độ rộng bên phải",
+  "cao_trai_bien_kiem": "cao móc trái - bên kiếm",
+  "cao_trai_giua": "cao móc trái - giữa",
+  "cao_trai_bien_kim": "cao móc trái - bên kim",
+  "nhiet_trai_bien_kiem": "nhiệt trái - bên kiếm",
+  "nhiet_trai_giua": "nhiệt trái - giữa",
+  "nhiet_trai_bien_kim": "nhiệt trái - bên kim",
+  "cao_phai_bien_kiem": "cao móc phải - bên kiếm",
+  "cao_phai_giua": "cao móc phải - giữa",
+  "cao_phai_bien_kim": "cao móc phải - bên kim",
+  "nhiet_phai_bien_kiem": "nhiệt phải - bên kiếm",
+  "nhiet_phai_giua": "nhiệt phải - giữa",
+  "nhiet_phai_bien_kim": "nhiệt phải - bên kim",
+  "ghi_chu_trai": "ghi chú / lỗi bên trái",
+  "ghi_chu_phai": "ghi chú / lỗi bên phải"
+}
+
+Nếu không đề cập, để chuỗi rỗng "". Chỉ trả về JSON.`;
+
+        try {
+            const res = await fetch('https://api.deepseek.com/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer ' + key,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    model: 'deepseek-chat',
+                    messages: [
+                        { role: 'system', content: systemPrompt },
+                        { role: 'user', content: text }
+                    ],
+                    temperature: 0
+                })
+            });
+            if (!res.ok) throw new Error('DeepSeek lỗi: ' + res.status);
+            const data = await res.json();
+            let raw = data.choices[0].message.content.trim();
+            raw = raw.replace(/```json/g, '').replace(/```/g, '').trim();
+            const parsed = JSON.parse(raw);
+            fillPreview(parsed);
+            goScreen('screenPreview');
+
+        } catch (e) {
+            showToast('Lỗi phân tích: ' + e.message);
+        }
+
+        resetBtn();
+    }
+
+    function resetBtn() {
+        const btn = document.getElementById('btnRecord');
+        btn.className = '';
+        btn.innerHTML = 'Nhấn để<br>ghi âm';
+        document.getElementById('recStatus').textContent = 'Sẵn sàng';
+        recording = false;
+    }
+
+    // ── Fill preview ──
+    function fillPreview(d) {
+        const map = {
+            'f_so_may':              d.so_may,
+            'f_do_rong_trai':        d.do_rong_trai,
+            'f_do_rong_phai':        d.do_rong_phai,
+            'f_cao_trai_bien_kiem':  d.cao_trai_bien_kiem,
+            'f_cao_trai_giua':       d.cao_trai_giua,
+            'f_cao_trai_bien_kim':   d.cao_trai_bien_kim,
+            'f_nhiet_trai_bien_kiem':d.nhiet_trai_bien_kiem,
+            'f_nhiet_trai_giua':     d.nhiet_trai_giua,
+            'f_nhiet_trai_bien_kim': d.nhiet_trai_bien_kim,
+            'f_cao_phai_bien_kiem':  d.cao_phai_bien_kiem,
+            'f_cao_phai_giua':       d.cao_phai_giua,
+            'f_cao_phai_bien_kim':   d.cao_phai_bien_kim,
+            'f_nhiet_phai_bien_kiem':d.nhiet_phai_bien_kiem,
+            'f_nhiet_phai_giua':     d.nhiet_phai_giua,
+            'f_nhiet_phai_bien_kim': d.nhiet_phai_bien_kim,
+            'f_ghi_chu_trai':        d.ghi_chu_trai,
+            'f_ghi_chu_phai':        d.ghi_chu_phai,
+        };
+        for (const [id, val] of Object.entries(map)) {
+            document.getElementById(id).value = val || '';
+        }
+    }
+
+    // ── Submit ──
+    async function submitData() {
+        const appsUrl = localStorage.getItem(KEYS.apps);
+        const payload = {
+            timestamp:           new Date().toLocaleString('zh-TW'),
+            so_may:              document.getElementById('f_so_may').value,
+            do_rong_trai:        document.getElementById('f_do_rong_trai').value,
+            do_rong_phai:        document.getElementById('f_do_rong_phai').value,
+            cao_trai_bien_kiem:  document.getElementById('f_cao_trai_bien_kiem').value,
+            cao_trai_giua:       document.getElementById('f_cao_trai_giua').value,
+            cao_trai_bien_kim:   document.getElementById('f_cao_trai_bien_kim').value,
+            nhiet_trai_bien_kiem:document.getElementById('f_nhiet_trai_bien_kiem').value,
+            nhiet_trai_giua:     document.getElementById('f_nhiet_trai_giua').value,
+            nhiet_trai_bien_kim: document.getElementById('f_nhiet_trai_bien_kim').value,
+            cao_phai_bien_kiem:  document.getElementById('f_cao_phai_bien_kiem').value,
+            cao_phai_giua:       document.getElementById('f_cao_phai_giua').value,
+            cao_phai_bien_kim:   document.getElementById('f_cao_phai_bien_kim').value,
+            nhiet_phai_bien_kiem:document.getElementById('f_nhiet_phai_bien_kiem').value,
+            nhiet_phai_giua:     document.getElementById('f_nhiet_phai_giua').value,
+            nhiet_phai_bien_kim: document.getElementById('f_nhiet_phai_bien_kim').value,
+            ghi_chu_trai:        document.getElementById('f_ghi_chu_trai').value,
+            ghi_chu_phai:        document.getElementById('f_ghi_chu_phai').value,
+        };
+
+        try {
+            await fetch(appsUrl, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            document.getElementById('successInfo').textContent =
+                'Máy #' + (payload.so_may || '?') + ' — ' + payload.timestamp;
+            goScreen('screenSuccess');
+        } catch (e) {
+            showToast('Lỗi gửi dữ liệu: ' + e.message);
+        }
+    }
+</script>
+</body>
+</html>
