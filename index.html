@@ -11,7 +11,7 @@
             background: #0f172a;
             color: #e2e8f0;
             min-height: 100vh;
-            padding: 16px;
+            padding: 14px 14px 60px;
         }
 
         /* ── Header ── */
@@ -19,20 +19,18 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding-bottom: 14px;
-            border-bottom: 1px solid #1e293b;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
-        .header h1 { font-size: 16px; letter-spacing: 2px; color: #60a5fa; }
-        .gear { font-size: 20px; cursor: pointer; }
+        .header h1 { font-size: 15px; letter-spacing: 2px; color: #60a5fa; }
+        .gear { font-size: 20px; cursor: pointer; padding: 4px; }
 
         /* ── Screens ── */
         .screen { display: none; }
         .screen.active { display: block; }
 
         /* ── Settings ── */
-        .setting-row { margin-bottom: 16px; }
-        .setting-label { font-size: 12px; color: #64748b; margin-bottom: 6px; letter-spacing: 1px; }
+        .setting-row { margin-bottom: 14px; }
+        .setting-label { font-size: 11px; color: #64748b; margin-bottom: 5px; letter-spacing: 1px; text-transform: uppercase; }
         .setting-input {
             width: 100%;
             background: #1e293b;
@@ -44,7 +42,7 @@
             outline: none;
         }
         .setting-input:focus { border-color: #3b82f6; }
-        .btn-save {
+        .btn-primary {
             width: 100%;
             background: #1d4ed8;
             border: none;
@@ -53,29 +51,70 @@
             font-size: 16px;
             padding: 15px;
             cursor: pointer;
-            margin-top: 8px;
+            margin-top: 6px;
             letter-spacing: 1px;
         }
 
-        /* ── Record Screen ── */
-        .record-wrap {
+        /* ── Main Screen ── */
+        .top-bar {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+        .machine-input {
+            flex: 1;
+            background: #1e293b;
+            border: 2px solid #334155;
+            border-radius: 10px;
+            color: #f9fafb;
+            font-size: 22px;
+            font-weight: bold;
+            padding: 10px 14px;
+            text-align: center;
+            outline: none;
+        }
+        .machine-input:focus { border-color: #3b82f6; }
+        .machine-input::placeholder { color: #334155; font-size: 13px; font-weight: normal; }
+
+        .lang-toggle {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .lang-btn {
+            background: #1e293b;
+            border: 1.5px solid #334155;
+            border-radius: 8px;
+            color: #64748b;
+            font-size: 12px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        .lang-btn.active {
+            background: #1e3a5f;
+            border-color: #3b82f6;
+            color: #93c5fd;
+        }
+
+        /* ── Record Button ── */
+        .rec-area {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 24px;
-            padding-top: 20px;
+            gap: 10px;
+            margin-bottom: 14px;
         }
-
         #btnRecord {
-            width: 180px;
-            height: 180px;
+            width: 120px;
+            height: 120px;
             border-radius: 50%;
-            border: 4px solid #3b82f6;
+            border: 3px solid #3b82f6;
             background: #1d4ed8;
             color: #fff;
-            font-size: 16px;
+            font-size: 14px;
             cursor: pointer;
-            line-height: 1.5;
+            line-height: 1.4;
             transition: all 0.15s;
             -webkit-tap-highlight-color: transparent;
         }
@@ -85,7 +124,7 @@
             animation: pulse 0.8s infinite;
         }
         #btnRecord.loading {
-            background: #92400e;
+            background: #78350f;
             border-color: #f59e0b;
             animation: none;
         }
@@ -93,127 +132,125 @@
             0%,100% { transform: scale(1); }
             50% { transform: scale(1.06); }
         }
-
-        #recStatus { font-size: 13px; color: #64748b; text-align: center; }
+        #recStatus { font-size: 12px; color: #64748b; text-align: center; }
 
         .transcript-box {
             width: 100%;
             background: #1e293b;
-            border: 1px solid #334155;
-            border-radius: 12px;
-            padding: 14px;
-            font-size: 14px;
-            color: #94a3b8;
-            min-height: 60px;
-            line-height: 1.6;
-            display: none;
-        }
-        .transcript-box.show { display: block; }
-        .transcript-label { font-size: 11px; color: #475569; margin-bottom: 6px; }
-
-        /* ── Preview Screen ── */
-        .preview-title {
+            border-left: 3px solid #334155;
+            padding: 8px 12px;
             font-size: 13px;
             color: #64748b;
-            margin-bottom: 16px;
-            letter-spacing: 1px;
+            border-radius: 0 8px 8px 0;
+            display: none;
+            line-height: 1.5;
+        }
+        .transcript-box.show { display: block; }
+
+        /* ── Preview Cards ── */
+        .section-label {
+            font-size: 10px;
+            color: #475569;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin: 12px 0 6px;
         }
 
-        .group-card {
+        .card {
             background: #1e293b;
-            border: 1px solid #334155;
-            border-radius: 14px;
-            padding: 14px;
-            margin-bottom: 14px;
+            border: 1px solid #1e293b;
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 10px;
+            transition: border-color 0.3s;
         }
-        .group-title {
-            font-size: 11px;
+        .card.has-data { border-color: #1d4ed8; }
+
+        .card-title {
+            font-size: 10px;
             color: #60a5fa;
             letter-spacing: 2px;
-            margin-bottom: 12px;
             text-transform: uppercase;
+            margin-bottom: 10px;
         }
 
         .field-row {
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
+            gap: 8px;
+            margin-bottom: 8px;
         }
+        .field-row:last-child { margin-bottom: 0; }
+
         .field-label {
-            font-size: 12px;
+            font-size: 11px;
             color: #64748b;
-            flex: 0 0 120px;
+            flex: 0 0 100px;
             line-height: 1.3;
         }
+
         .field-input {
             flex: 1;
             background: #0f172a;
-            border: 1.5px solid #334155;
+            border: 1.5px solid #1e293b;
             border-radius: 8px;
             color: #f1f5f9;
             font-size: 15px;
-            padding: 9px 12px;
+            padding: 8px 10px;
             outline: none;
             text-align: center;
+            transition: border-color 0.2s, background 0.2s;
         }
         .field-input:focus { border-color: #3b82f6; }
-        .field-input.notes {
-            text-align: left;
-            font-size: 13px;
+        .field-input.filled {
+            background: #0d2137;
+            border-color: #1d4ed8;
+            color: #60a5fa;
         }
+        .field-input.notes { text-align: left; font-size: 13px; }
 
-        .btn-confirm {
+        /* ── Buttons ── */
+        .btn-submit {
             width: 100%;
             background: #15803d;
             border: none;
-            border-radius: 14px;
+            border-radius: 12px;
             color: #fff;
-            font-size: 18px;
+            font-size: 17px;
             font-weight: bold;
-            padding: 18px;
+            padding: 16px;
             cursor: pointer;
             letter-spacing: 2px;
-            margin-top: 4px;
-            -webkit-tap-highlight-color: transparent;
-        }
-        .btn-confirm:active { opacity: 0.85; transform: scale(0.98); }
-
-        .btn-redo {
-            width: 100%;
-            background: transparent;
-            border: 2px solid #475569;
-            border-radius: 14px;
-            color: #94a3b8;
-            font-size: 15px;
-            padding: 14px;
-            cursor: pointer;
             margin-top: 10px;
             -webkit-tap-highlight-color: transparent;
         }
+        .btn-submit:active { opacity: 0.85; }
 
-        /* ── Success Screen ── */
+        .btn-reset {
+            width: 100%;
+            background: transparent;
+            border: 1.5px solid #334155;
+            border-radius: 12px;
+            color: #64748b;
+            font-size: 14px;
+            padding: 12px;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+
+        /* ── Success ── */
         .success-wrap {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 60vh;
-            gap: 20px;
+            min-height: 70vh;
+            gap: 16px;
+            text-align: center;
         }
-        .success-icon { font-size: 72px; }
-        .success-msg { font-size: 20px; color: #4ade80; font-weight: bold; letter-spacing: 1px; }
-        .success-sub { font-size: 14px; color: #64748b; }
-        .btn-next {
-            background: #1d4ed8;
-            border: none;
-            border-radius: 14px;
-            color: #fff;
-            font-size: 16px;
-            padding: 16px 48px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
+        .success-icon { font-size: 64px; }
+        .success-msg { font-size: 20px; color: #4ade80; font-weight: bold; }
+        .success-sub { font-size: 13px; color: #64748b; }
 
         /* ── Toast ── */
         .toast {
@@ -222,462 +259,416 @@
             transform: translateX(-50%) translateY(-80px);
             background: #dc2626;
             color: #fff;
-            padding: 12px 24px;
+            padding: 10px 22px;
             border-radius: 30px;
-            font-size: 14px;
+            font-size: 13px;
             transition: transform 0.3s;
             z-index: 999;
+            white-space: nowrap;
         }
         .toast.show { transform: translateX(-50%) translateY(0); }
-
-        .divider { height: 1px; background: #1e293b; margin: 10px 0; }
-
-        .lang-btn {
-            background: #1e293b;
-            border: 2px solid #334155;
-            border-radius: 30px;
-            color: #64748b;
-            font-size: 14px;
-            padding: 8px 18px;
-            cursor: pointer;
-            transition: all 0.15s;
-        }
-        .lang-btn.active {
-            background: #1d4ed8;
-            border-color: #3b82f6;
-            color: #fff;
-        }
     </style>
 </head>
 <body>
 
 <div class="toast" id="toast"></div>
 
-<!-- Header -->
 <div class="header">
     <h1>KIỂM TRA MÁY</h1>
     <span class="gear" onclick="goSettings()">⚙️</span>
 </div>
 
-<!-- ── SETTINGS SCREEN ── -->
-<div class="screen active" id="screenSettings">
+<!-- ══ SETTINGS ══ -->
+<div class="screen" id="screenSettings">
+    <div style="font-size:13px; color:#64748b; margin-bottom:20px;">
+        Thiết lập một lần, không cần nhập lại.<br>
+        設定一次，之後不需要重填。
+    </div>
     <div class="setting-row">
-        <div class="setting-label">OPENAI API KEY (Whisper)</div>
+        <div class="setting-label">OpenAI API Key (Whisper)</div>
         <input class="setting-input" type="password" id="openaiKey" placeholder="sk-...">
     </div>
     <div class="setting-row">
-        <div class="setting-label">DEEPSEEK API KEY (Phân tích)</div>
+        <div class="setting-label">DeepSeek API Key (Phân tích)</div>
         <input class="setting-input" type="password" id="deepseekKey" placeholder="sk-...">
     </div>
     <div class="setting-row">
-        <div class="setting-label">APPS SCRIPT URL (Google Sheet)</div>
+        <div class="setting-label">Google Apps Script URL</div>
         <input class="setting-input" type="text" id="appsUrl" placeholder="https://script.google.com/...">
     </div>
-    <button class="btn-save" onclick="saveSettings()">LƯU VÀ BẮT ĐẦU</button>
+    <button class="btn-primary" onclick="saveSettings()">LƯU VÀ BẮT ĐẦU →</button>
 </div>
 
-<!-- ── RECORD SCREEN ── -->
-<div class="screen" id="screenRecord">
-    <div class="record-wrap">
+<!-- ══ MAIN ══ -->
+<div class="screen" id="screenMain">
 
-        <!-- Language toggle -->
-        <div style="display:flex; gap:10px;">
-            <button class="lang-btn active" id="langVI" onclick="setLang('vi',this)">🇻🇳 Tiếng Việt</button>
-            <button class="lang-btn" id="langZH" onclick="setLang('zh',this)">🇹🇼 中文</button>
-        </div>
-
-        <button id="btnRecord" onclick="toggleRecord()">
-            Nhấn để<br>ghi âm
-        </button>
-        <div id="recStatus">Sẵn sàng</div>
-        <div class="transcript-box" id="transcriptBox">
-            <div class="transcript-label">NỘI DUNG NHẬN DẠNG：</div>
-            <div id="transcriptText"></div>
+    <!-- 機台 + 語言 -->
+    <div class="top-bar">
+        <input class="machine-input" type="number" id="machineNum"
+               placeholder="Số máy / 機台號" inputmode="numeric"
+               oninput="syncMachine()">
+        <div class="lang-toggle">
+            <button class="lang-btn active" id="langVI" onclick="setLang('vi',this)">🇻🇳 VI</button>
+            <button class="lang-btn" id="langZH" onclick="setLang('zh',this)">🇹🇼 ZH</button>
         </div>
     </div>
-</div>
 
-<!-- ── PREVIEW SCREEN ── -->
-<div class="screen" id="screenPreview">
-    <div class="preview-title">KIỂM TRA VÀ XÁC NHẬN DỮ LIỆU</div>
-
-    <!-- 機台 -->
-    <div class="group-card">
-        <div class="group-title">Số máy</div>
-        <div class="field-row">
-            <span class="field-label">Số máy<br><small style="color:#475569">機台號</small></span>
-            <input class="field-input" id="f_so_may" type="text" inputmode="numeric">
-        </div>
+    <!-- 錄音區 -->
+    <div class="rec-area">
+        <button id="btnRecord" onclick="toggleRecord()">Nhấn<br>ghi âm</button>
+        <div id="recStatus">Sẵn sàng — nói từng phần</div>
+        <div class="transcript-box" id="transcriptBox"></div>
     </div>
+
+    <!-- ── 即時預覽 ── -->
+    <div class="section-label">Dữ liệu đang ghi / 當前記錄</div>
 
     <!-- 帶寬 -->
-    <div class="group-card">
-        <div class="group-title">Độ rộng / 帶寬</div>
+    <div class="card" id="cardRong">
+        <div class="card-title">Độ rộng / 帶寬</div>
         <div class="field-row">
             <span class="field-label">Trái / 左</span>
-            <input class="field-input" id="f_do_rong_trai" type="text" inputmode="decimal">
+            <input class="field-input" id="f_do_rong_trai" inputmode="decimal" oninput="onManualEdit(this)">
         </div>
         <div class="field-row">
             <span class="field-label">Phải / 右</span>
-            <input class="field-input" id="f_do_rong_phai" type="text" inputmode="decimal">
+            <input class="field-input" id="f_do_rong_phai" inputmode="decimal" oninput="onManualEdit(this)">
         </div>
     </div>
 
-    <!-- 左側高度 -->
-    <div class="group-card">
-        <div class="group-title">Cao móc TRÁI / 左高度標記</div>
+    <!-- 左高度 -->
+    <div class="card" id="cardMocTrai">
+        <div class="card-title">Cao móc TRÁI / 左高度</div>
         <div class="field-row">
-            <span class="field-label">Bên kiếm<br><small style="color:#475569">邊界側</small></span>
-            <input class="field-input" id="f_cao_trai_bien_kiem" type="text" inputmode="decimal">
+            <span class="field-label">Bên kiếm / 邊界側</span>
+            <input class="field-input" id="f_cao_trai_bien_kiem" inputmode="decimal" oninput="onManualEdit(this)">
         </div>
         <div class="field-row">
-            <span class="field-label">Giữa<br><small style="color:#475569">中間</small></span>
-            <input class="field-input" id="f_cao_trai_giua" type="text" inputmode="decimal">
+            <span class="field-label">Giữa / 中間</span>
+            <input class="field-input" id="f_cao_trai_giua" inputmode="decimal" oninput="onManualEdit(this)">
         </div>
         <div class="field-row">
-            <span class="field-label">Bên kim<br><small style="color:#475569">針側</small></span>
-            <input class="field-input" id="f_cao_trai_bien_kim" type="text" inputmode="decimal">
-        </div>
-    </div>
-
-    <!-- 左側溫度 -->
-    <div class="group-card">
-        <div class="group-title">Nhiệt TRÁI / 左溫度</div>
-        <div class="field-row">
-            <span class="field-label">Bên kiếm<br><small style="color:#475569">邊界側</small></span>
-            <input class="field-input" id="f_nhiet_trai_bien_kiem" type="text" inputmode="decimal">
-        </div>
-        <div class="field-row">
-            <span class="field-label">Giữa<br><small style="color:#475569">中間</small></span>
-            <input class="field-input" id="f_nhiet_trai_giua" type="text" inputmode="decimal">
-        </div>
-        <div class="field-row">
-            <span class="field-label">Bên kim<br><small style="color:#475569">針側</small></span>
-            <input class="field-input" id="f_nhiet_trai_bien_kim" type="text" inputmode="decimal">
+            <span class="field-label">Bên kim / 針側</span>
+            <input class="field-input" id="f_cao_trai_bien_kim" inputmode="decimal" oninput="onManualEdit(this)">
         </div>
     </div>
 
-    <!-- 右側高度 -->
-    <div class="group-card">
-        <div class="group-title">Cao móc PHẢI / 右高度標記</div>
+    <!-- 右高度 -->
+    <div class="card" id="cardMocPhai">
+        <div class="card-title">Cao móc PHẢI / 右高度</div>
         <div class="field-row">
-            <span class="field-label">Bên kiếm<br><small style="color:#475569">邊界側</small></span>
-            <input class="field-input" id="f_cao_phai_bien_kiem" type="text" inputmode="decimal">
+            <span class="field-label">Bên kiếm / 邊界側</span>
+            <input class="field-input" id="f_cao_phai_bien_kiem" inputmode="decimal" oninput="onManualEdit(this)">
         </div>
         <div class="field-row">
-            <span class="field-label">Giữa<br><small style="color:#475569">中間</small></span>
-            <input class="field-input" id="f_cao_phai_giua" type="text" inputmode="decimal">
+            <span class="field-label">Giữa / 中間</span>
+            <input class="field-input" id="f_cao_phai_giua" inputmode="decimal" oninput="onManualEdit(this)">
         </div>
         <div class="field-row">
-            <span class="field-label">Bên kim<br><small style="color:#475569">針側</small></span>
-            <input class="field-input" id="f_cao_phai_bien_kim" type="text" inputmode="decimal">
+            <span class="field-label">Bên kim / 針側</span>
+            <input class="field-input" id="f_cao_phai_bien_kim" inputmode="decimal" oninput="onManualEdit(this)">
         </div>
     </div>
 
-    <!-- 右側溫度 -->
-    <div class="group-card">
-        <div class="group-title">Nhiệt PHẢI / 右溫度</div>
+    <!-- 左溫度 -->
+    <div class="card" id="cardNhietTrai">
+        <div class="card-title">Nhiệt TRÁI / 左溫度 <span style="color:#475569;font-size:10px;">（選填）</span></div>
         <div class="field-row">
-            <span class="field-label">Bên kiếm<br><small style="color:#475569">邊界側</small></span>
-            <input class="field-input" id="f_nhiet_phai_bien_kiem" type="text" inputmode="decimal">
+            <span class="field-label">Bên kiếm / 邊界側</span>
+            <input class="field-input" id="f_nhiet_trai_bien_kiem" inputmode="decimal" oninput="onManualEdit(this)">
         </div>
         <div class="field-row">
-            <span class="field-label">Giữa<br><small style="color:#475569">中間</small></span>
-            <input class="field-input" id="f_nhiet_phai_giua" type="text" inputmode="decimal">
+            <span class="field-label">Giữa / 中間</span>
+            <input class="field-input" id="f_nhiet_trai_giua" inputmode="decimal" oninput="onManualEdit(this)">
         </div>
         <div class="field-row">
-            <span class="field-label">Bên kim<br><small style="color:#475569">針側</small></span>
-            <input class="field-input" id="f_nhiet_phai_bien_kim" type="text" inputmode="decimal">
+            <span class="field-label">Bên kim / 針側</span>
+            <input class="field-input" id="f_nhiet_trai_bien_kim" inputmode="decimal" oninput="onManualEdit(this)">
+        </div>
+    </div>
+
+    <!-- 右溫度 -->
+    <div class="card" id="cardNhietPhai">
+        <div class="card-title">Nhiệt PHẢI / 右溫度 <span style="color:#475569;font-size:10px;">（選填）</span></div>
+        <div class="field-row">
+            <span class="field-label">Bên kiếm / 邊界側</span>
+            <input class="field-input" id="f_nhiet_phai_bien_kiem" inputmode="decimal" oninput="onManualEdit(this)">
+        </div>
+        <div class="field-row">
+            <span class="field-label">Giữa / 中間</span>
+            <input class="field-input" id="f_nhiet_phai_giua" inputmode="decimal" oninput="onManualEdit(this)">
+        </div>
+        <div class="field-row">
+            <span class="field-label">Bên kim / 針側</span>
+            <input class="field-input" id="f_nhiet_phai_bien_kim" inputmode="decimal" oninput="onManualEdit(this)">
         </div>
     </div>
 
     <!-- 備註 -->
-    <div class="group-card">
-        <div class="group-title">Ghi chú / 備註</div>
+    <div class="card" id="cardGhiChu">
+        <div class="card-title">Ghi chú / 備註</div>
         <div class="field-row">
             <span class="field-label">Trái / 左側</span>
-            <input class="field-input notes" id="f_ghi_chu_trai" type="text">
+            <input class="field-input notes" id="f_ghi_chu_trai" oninput="onManualEdit(this)">
         </div>
         <div class="field-row">
             <span class="field-label">Phải / 右側</span>
-            <input class="field-input notes" id="f_ghi_chu_phai" type="text">
+            <input class="field-input notes" id="f_ghi_chu_phai" oninput="onManualEdit(this)">
         </div>
     </div>
 
-    <button class="btn-confirm" onclick="submitData()">✓ XÁC NHẬN GỬI</button>
-    <button class="btn-redo" onclick="goScreen('screenRecord')">↩ Ghi âm lại</button>
+    <button class="btn-submit" onclick="submitData()">✓ XÁC NHẬN GỬI / 送出</button>
+    <button class="btn-reset" onclick="resetRecord()">↺ Máy mới / 新機台</button>
     <div style="height:20px;"></div>
 </div>
 
-<!-- ── SUCCESS SCREEN ── -->
+<!-- ══ SUCCESS ══ -->
 <div class="screen" id="screenSuccess">
     <div class="success-wrap">
         <div class="success-icon">✅</div>
         <div class="success-msg">ĐÃ LƯU THÀNH CÔNG</div>
         <div class="success-sub" id="successInfo"></div>
-        <button class="btn-next" onclick="goScreen('screenRecord')">Máy tiếp theo →</button>
+        <button class="btn-primary" style="max-width:200px; margin-top:10px;"
+                onclick="resetRecord(); goScreen('screenMain')">
+            Máy tiếp theo →
+        </button>
     </div>
 </div>
 
 <script>
-    // ── Language ──
-    let currentLang = 'vi';
-    function setLang(lang, el) {
-        currentLang = lang;
-        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-        el.classList.add('active');
-    }
+// ── Keys ──
+const K = { openai:'cfg_openai', deepseek:'cfg_deepseek', apps:'cfg_apps' };
 
-    // ── Config ──
-    const KEYS = {
-        openai:   'cfg_openai',
-        deepseek: 'cfg_deepseek',
-        apps:     'cfg_apps',
-    };
+function loadSettings() {
+    document.getElementById('openaiKey').value   = localStorage.getItem(K.openai)   || '';
+    document.getElementById('deepseekKey').value = localStorage.getItem(K.deepseek) || '';
+    document.getElementById('appsUrl').value     = localStorage.getItem(K.apps)     || '';
+}
+function saveSettings() {
+    const o = document.getElementById('openaiKey').value.trim();
+    const d = document.getElementById('deepseekKey').value.trim();
+    const a = document.getElementById('appsUrl').value.trim();
+    if (!o || !d || !a) { showToast('請填寫所有欄位'); return; }
+    localStorage.setItem(K.openai, o);
+    localStorage.setItem(K.deepseek, d);
+    localStorage.setItem(K.apps, a);
+    goScreen('screenMain');
+}
+function goSettings() { loadSettings(); goScreen('screenSettings'); }
 
-    function loadSettings() {
-        document.getElementById('openaiKey').value   = localStorage.getItem(KEYS.openai)   || '';
-        document.getElementById('deepseekKey').value = localStorage.getItem(KEYS.deepseek) || '';
-        document.getElementById('appsUrl').value     = localStorage.getItem(KEYS.apps)     || '';
-    }
+window.onload = () => {
+    loadSettings();
+    const ready = localStorage.getItem(K.openai) && localStorage.getItem(K.deepseek) && localStorage.getItem(K.apps);
+    goScreen(ready ? 'screenMain' : 'screenSettings');
+};
 
-    function saveSettings() {
-        const o = document.getElementById('openaiKey').value.trim();
-        const d = document.getElementById('deepseekKey').value.trim();
-        const a = document.getElementById('appsUrl').value.trim();
-        if (!o || !d || !a) { showToast('Vui lòng điền đầy đủ thông tin'); return; }
-        localStorage.setItem(KEYS.openai,   o);
-        localStorage.setItem(KEYS.deepseek, d);
-        localStorage.setItem(KEYS.apps,     a);
-        goScreen('screenRecord');
-    }
-
-    function goSettings() { loadSettings(); goScreen('screenSettings'); }
-
-    window.onload = () => {
-        loadSettings();
-        const hasAll = localStorage.getItem(KEYS.openai) &&
-                       localStorage.getItem(KEYS.deepseek) &&
-                       localStorage.getItem(KEYS.apps);
-        goScreen(hasAll ? 'screenRecord' : 'screenSettings');
-    };
-
-    // ── Screen navigation ──
-    function goScreen(id) {
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        window.scrollTo(0, 0);
-    }
-
-    // ── Toast ──
-    function showToast(msg) {
-        const t = document.getElementById('toast');
-        t.textContent = msg;
-        t.classList.add('show');
-        setTimeout(() => t.classList.remove('show'), 3000);
-    }
-
-    // ── Recording ──
-    let recording = false;
-    let mediaRecorder = null;
-    let chunks = [];
-
-    async function toggleRecord() {
-        if (recording) {
-            mediaRecorder.stop();
-            recording = false;
-            return;
-        }
-
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            chunks = [];
-            mediaRecorder = new MediaRecorder(stream);
-            mediaRecorder.ondataavailable = e => chunks.push(e.data);
-            mediaRecorder.onstop = async () => {
-                stream.getTracks().forEach(t => t.stop());
-                await processAudio(new Blob(chunks, { type: 'audio/webm' }));
-            };
-            mediaRecorder.start();
-            recording = true;
-
-            const btn = document.getElementById('btnRecord');
-            btn.className = 'rec';
-            btn.innerHTML = '🔴<br>Nhấn để dừng';
-            document.getElementById('recStatus').textContent = 'Đang ghi âm...';
-            document.getElementById('transcriptBox').classList.remove('show');
-
-        } catch (e) {
-            showToast('Không thể truy cập microphone');
-        }
-    }
-
-    // ── Step 1: Whisper ──
-    async function processAudio(blob) {
-        const btn = document.getElementById('btnRecord');
-        btn.className = 'loading';
-        btn.innerHTML = '⏳<br>Đang xử lý...';
-        document.getElementById('recStatus').textContent = 'Đang nhận dạng giọng nói...';
-
-        const key = localStorage.getItem(KEYS.openai);
-        const form = new FormData();
-        form.append('file', blob, 'audio.webm');
-        form.append('model', 'whisper-1');
-        form.append('language', currentLang);
-
-        try {
-            const res = await fetch('https://api.openai.com/v1/audio/transcriptions', {
-                method: 'POST',
-                headers: { 'Authorization': 'Bearer ' + key },
-                body: form
-            });
-            if (!res.ok) throw new Error('Whisper lỗi: ' + res.status);
-            const data = await res.json();
-            const text = data.text;
-
-            document.getElementById('transcriptText').textContent = text;
-            document.getElementById('transcriptBox').classList.add('show');
-            document.getElementById('recStatus').textContent = 'Đang phân tích dữ liệu...';
-
-            await parseWithDeepSeek(text);
-
-        } catch (e) {
-            showToast(e.message);
-            resetBtn();
-        }
-    }
-
-    // ── Step 2: DeepSeek ──
-    async function parseWithDeepSeek(text) {
-        const key = localStorage.getItem(KEYS.deepseek);
-
-        const systemPrompt = `你是工廠巡檢資料解析助手，支援越南文與中文輸入。從語音辨識文字中提取以下欄位，回傳純 JSON（不含 markdown、不含說明）：
-
-{
-  "so_may": "số máy",
-  "do_rong_trai": "độ rộng bên trái",
-  "do_rong_phai": "độ rộng bên phải",
-  "cao_trai_bien_kiem": "cao móc trái - bên kiếm",
-  "cao_trai_giua": "cao móc trái - giữa",
-  "cao_trai_bien_kim": "cao móc trái - bên kim",
-  "nhiet_trai_bien_kiem": "nhiệt trái - bên kiếm",
-  "nhiet_trai_giua": "nhiệt trái - giữa",
-  "nhiet_trai_bien_kim": "nhiệt trái - bên kim",
-  "cao_phai_bien_kiem": "cao móc phải - bên kiếm",
-  "cao_phai_giua": "cao móc phải - giữa",
-  "cao_phai_bien_kim": "cao móc phải - bên kim",
-  "nhiet_phai_bien_kiem": "nhiệt phải - bên kiếm",
-  "nhiet_phai_giua": "nhiệt phải - giữa",
-  "nhiet_phai_bien_kim": "nhiệt phải - bên kim",
-  "ghi_chu_trai": "ghi chú / lỗi bên trái",
-  "ghi_chu_phai": "ghi chú / lỗi bên phải"
+// ── Screen ──
+function goScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo(0, 0);
 }
 
-若未提及則填空字串 ""。只回傳 JSON。`;
+// ── Toast ──
+function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+}
 
-        try {
-            const res = await fetch('https://api.deepseek.com/v1/chat/completions', {
-                method: 'POST',
-                headers: {
-                    'Authorization': 'Bearer ' + key,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    model: 'deepseek-chat',
-                    messages: [
-                        { role: 'system', content: systemPrompt },
-                        { role: 'user', content: text }
-                    ],
-                    temperature: 0
-                })
-            });
-            if (!res.ok) throw new Error('DeepSeek lỗi: ' + res.status);
-            const data = await res.json();
-            let raw = data.choices[0].message.content.trim();
-            raw = raw.replace(/```json/g, '').replace(/```/g, '').trim();
-            const parsed = JSON.parse(raw);
-            fillPreview(parsed);
-            goScreen('screenPreview');
+// ── Language ──
+let lang = 'vi';
+function setLang(l, el) {
+    lang = l;
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+}
 
-        } catch (e) {
-            showToast('Lỗi phân tích: ' + e.message);
+// ── Current Record (累積) ──
+const FIELDS = [
+    'do_rong_trai','do_rong_phai',
+    'cao_trai_bien_kiem','cao_trai_giua','cao_trai_bien_kim',
+    'nhiet_trai_bien_kiem','nhiet_trai_giua','nhiet_trai_bien_kim',
+    'cao_phai_bien_kiem','cao_phai_giua','cao_phai_bien_kim',
+    'nhiet_phai_bien_kiem','nhiet_phai_giua','nhiet_phai_bien_kim',
+    'ghi_chu_trai','ghi_chu_phai'
+];
+
+let record = {};
+FIELDS.forEach(f => record[f] = '');
+
+function mergeRecord(parsed) {
+    let updated = false;
+    for (const [key, val] of Object.entries(parsed)) {
+        if (FIELDS.includes(key) && val && val.trim() !== '') {
+            record[key] = val.trim();
+            updated = true;
         }
-
-        resetBtn();
     }
+    if (updated) renderRecord();
+}
 
-    function resetBtn() {
-        const btn = document.getElementById('btnRecord');
-        btn.className = '';
-        btn.innerHTML = 'Nhấn để<br>ghi âm';
-        document.getElementById('recStatus').textContent = 'Sẵn sàng';
-        recording = false;
+function renderRecord() {
+    FIELDS.forEach(f => {
+        const el = document.getElementById('f_' + f);
+        if (!el) return;
+        el.value = record[f];
+        el.classList.toggle('filled', record[f] !== '');
+    });
+    // Highlight cards that have data
+    const cardMap = {
+        cardRong:      ['do_rong_trai','do_rong_phai'],
+        cardMocTrai:   ['cao_trai_bien_kiem','cao_trai_giua','cao_trai_bien_kim'],
+        cardMocPhai:   ['cao_phai_bien_kiem','cao_phai_giua','cao_phai_bien_kim'],
+        cardNhietTrai: ['nhiet_trai_bien_kiem','nhiet_trai_giua','nhiet_trai_bien_kim'],
+        cardNhietPhai: ['nhiet_phai_bien_kiem','nhiet_phai_giua','nhiet_phai_bien_kim'],
+        cardGhiChu:    ['ghi_chu_trai','ghi_chu_phai'],
+    };
+    for (const [cardId, fields] of Object.entries(cardMap)) {
+        const hasData = fields.some(f => record[f] !== '');
+        document.getElementById(cardId).classList.toggle('has-data', hasData);
     }
+}
 
-    // ── Fill preview ──
-    function fillPreview(d) {
-        const map = {
-            'f_so_may':              d.so_may,
-            'f_do_rong_trai':        d.do_rong_trai,
-            'f_do_rong_phai':        d.do_rong_phai,
-            'f_cao_trai_bien_kiem':  d.cao_trai_bien_kiem,
-            'f_cao_trai_giua':       d.cao_trai_giua,
-            'f_cao_trai_bien_kim':   d.cao_trai_bien_kim,
-            'f_nhiet_trai_bien_kiem':d.nhiet_trai_bien_kiem,
-            'f_nhiet_trai_giua':     d.nhiet_trai_giua,
-            'f_nhiet_trai_bien_kim': d.nhiet_trai_bien_kim,
-            'f_cao_phai_bien_kiem':  d.cao_phai_bien_kiem,
-            'f_cao_phai_giua':       d.cao_phai_giua,
-            'f_cao_phai_bien_kim':   d.cao_phai_bien_kim,
-            'f_nhiet_phai_bien_kiem':d.nhiet_phai_bien_kiem,
-            'f_nhiet_phai_giua':     d.nhiet_phai_giua,
-            'f_nhiet_phai_bien_kim': d.nhiet_phai_bien_kim,
-            'f_ghi_chu_trai':        d.ghi_chu_trai,
-            'f_ghi_chu_phai':        d.ghi_chu_phai,
+function onManualEdit(el) {
+    const key = el.id.replace('f_', '');
+    if (FIELDS.includes(key)) record[key] = el.value;
+    el.classList.toggle('filled', el.value !== '');
+    updateCardHighlight(el);
+}
+
+function updateCardHighlight(el) {
+    const card = el.closest('.card');
+    if (!card) return;
+    const anyFilled = Array.from(card.querySelectorAll('.field-input')).some(i => i.value !== '');
+    card.classList.toggle('has-data', anyFilled);
+}
+
+function syncMachine() {
+    record.so_may = document.getElementById('machineNum').value;
+}
+
+function resetRecord() {
+    FIELDS.forEach(f => record[f] = '');
+    record.so_may = '';
+    document.getElementById('machineNum').value = '';
+    renderRecord();
+    document.getElementById('transcriptBox').classList.remove('show');
+    document.getElementById('transcriptBox').textContent = '';
+}
+
+// ── Recording ──
+let recording = false, mediaRecorder = null, chunks = [];
+
+async function toggleRecord() {
+    if (recording) { mediaRecorder.stop(); recording = false; return; }
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        chunks = [];
+        mediaRecorder = new MediaRecorder(stream);
+        mediaRecorder.ondataavailable = e => chunks.push(e.data);
+        mediaRecorder.onstop = async () => {
+            stream.getTracks().forEach(t => t.stop());
+            await processAudio(new Blob(chunks, { type: 'audio/webm' }));
         };
-        for (const [id, val] of Object.entries(map)) {
-            document.getElementById(id).value = val || '';
-        }
-    }
+        mediaRecorder.start();
+        recording = true;
+        setBtn('rec', '🔴<br>Dừng lại');
+        setStatus('Đang ghi âm...');
+    } catch { showToast('Không thể truy cập microphone'); }
+}
 
-    // ── Submit ──
-    async function submitData() {
-        const appsUrl = localStorage.getItem(KEYS.apps);
-        const payload = {
-            timestamp:           new Date().toLocaleString('zh-TW'),
-            so_may:              document.getElementById('f_so_may').value,
-            do_rong_trai:        document.getElementById('f_do_rong_trai').value,
-            do_rong_phai:        document.getElementById('f_do_rong_phai').value,
-            cao_trai_bien_kiem:  document.getElementById('f_cao_trai_bien_kiem').value,
-            cao_trai_giua:       document.getElementById('f_cao_trai_giua').value,
-            cao_trai_bien_kim:   document.getElementById('f_cao_trai_bien_kim').value,
-            nhiet_trai_bien_kiem:document.getElementById('f_nhiet_trai_bien_kiem').value,
-            nhiet_trai_giua:     document.getElementById('f_nhiet_trai_giua').value,
-            nhiet_trai_bien_kim: document.getElementById('f_nhiet_trai_bien_kim').value,
-            cao_phai_bien_kiem:  document.getElementById('f_cao_phai_bien_kiem').value,
-            cao_phai_giua:       document.getElementById('f_cao_phai_giua').value,
-            cao_phai_bien_kim:   document.getElementById('f_cao_phai_bien_kim').value,
-            nhiet_phai_bien_kiem:document.getElementById('f_nhiet_phai_bien_kiem').value,
-            nhiet_phai_giua:     document.getElementById('f_nhiet_phai_giua').value,
-            nhiet_phai_bien_kim: document.getElementById('f_nhiet_phai_bien_kim').value,
-            ghi_chu_trai:        document.getElementById('f_ghi_chu_trai').value,
-            ghi_chu_phai:        document.getElementById('f_ghi_chu_phai').value,
-        };
+function setBtn(cls, html) {
+    const b = document.getElementById('btnRecord');
+    b.className = cls;
+    b.innerHTML = html;
+}
+function setStatus(msg) { document.getElementById('recStatus').textContent = msg; }
 
-        try {
-            await fetch(appsUrl, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-            document.getElementById('successInfo').textContent =
-                'Máy #' + (payload.so_may || '?') + ' — ' + payload.timestamp;
-            goScreen('screenSuccess');
-        } catch (e) {
-            showToast('Lỗi gửi dữ liệu: ' + e.message);
-        }
-    }
+// ── Whisper ──
+async function processAudio(blob) {
+    setBtn('loading', '⏳');
+    setStatus('Đang nhận dạng...');
+    const form = new FormData();
+    form.append('file', blob, 'audio.webm');
+    form.append('model', 'whisper-1');
+    form.append('language', lang);
+    try {
+        const res = await fetch('https://api.openai.com/v1/audio/transcriptions', {
+            method: 'POST',
+            headers: { 'Authorization': 'Bearer ' + localStorage.getItem(K.openai) },
+            body: form
+        });
+        if (!res.ok) throw new Error('Whisper ' + res.status);
+        const { text } = await res.json();
+        const box = document.getElementById('transcriptBox');
+        box.textContent = '「' + text + '」';
+        box.classList.add('show');
+        setStatus('Đang phân tích...');
+        await parseText(text);
+    } catch (e) { showToast(e.message); }
+    setBtn('', 'Nhấn<br>ghi âm');
+    setStatus('Sẵn sàng — nói từng phần');
+    recording = false;
+}
+
+// ── DeepSeek ──
+async function parseText(text) {
+    const sys = `Bạn là trợ lý phân tích dữ liệu kiểm tra máy may công nghiệp. Hỗ trợ tiếng Việt và tiếng Trung.
+
+Quy tắc nói của công nhân:
+- Bắt đầu bằng "máy [số]" nếu có
+- "rộng [trái] [phải]" = độ rộng hai bên
+- "móc [3 số]" = cao móc TRÁI theo thứ tự: bên kiếm → giữa → bên kim
+- "móc phải [3 số]" = cao móc PHẢI theo thứ tự: bên kiếm → giữa → bên kim
+- "nhiệt [3 số]" = nhiệt độ TRÁI: bên kiếm → giữa → bên kim
+- "nhiệt phải [3 số]" = nhiệt độ PHẢI: bên kiếm → giữa → bên kim
+- "lỗi [mô tả]" = ghi chú lỗi (lỗi trái hoặc phải tùy ngữ cảnh)
+
+Trả về JSON thuần túy, không có markdown:
+{
+  "do_rong_trai":"", "do_rong_phai":"",
+  "cao_trai_bien_kiem":"", "cao_trai_giua":"", "cao_trai_bien_kim":"",
+  "nhiet_trai_bien_kiem":"", "nhiet_trai_giua":"", "nhiet_trai_bien_kim":"",
+  "cao_phai_bien_kiem":"", "cao_phai_giua":"", "cao_phai_bien_kim":"",
+  "nhiet_phai_bien_kiem":"", "nhiet_phai_giua":"", "nhiet_phai_bien_kim":"",
+  "ghi_chu_trai":"", "ghi_chu_phai":""
+}
+Không đề cập = chuỗi rỗng "". Chỉ trả JSON.`;
+
+    try {
+        const res = await fetch('https://api.deepseek.com/v1/chat/completions', {
+            method: 'POST',
+            headers: { 'Authorization': 'Bearer ' + localStorage.getItem(K.deepseek), 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                model: 'deepseek-chat',
+                messages: [{ role: 'system', content: sys }, { role: 'user', content: text }],
+                temperature: 0
+            })
+        });
+        if (!res.ok) throw new Error('DeepSeek ' + res.status);
+        const data = await res.json();
+        let raw = data.choices[0].message.content.trim().replace(/```json|```/g, '').trim();
+        mergeRecord(JSON.parse(raw));
+    } catch (e) { showToast('Lỗi phân tích: ' + e.message); }
+}
+
+// ── Submit ──
+async function submitData() {
+    const machine = document.getElementById('machineNum').value.trim();
+    if (!machine) { showToast('Vui lòng nhập số máy / 請輸入機台號'); return; }
+    const payload = { timestamp: new Date().toLocaleString('zh-TW'), so_may: machine, ...record };
+    try {
+        await fetch(localStorage.getItem(K.apps), {
+            method: 'POST', mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        document.getElementById('successInfo').textContent = 'Máy #' + machine + ' — ' + payload.timestamp;
+        goScreen('screenSuccess');
+    } catch (e) { showToast('Lỗi gửi: ' + e.message); }
+}
 </script>
 </body>
 </html>
