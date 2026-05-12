@@ -3,671 +3,452 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Kiểm tra máy</title>
+    <title>巡檢表 / Kiểm Tra Máy</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-            background: #0f172a;
-            color: #e2e8f0;
-            min-height: 100vh;
-            padding: 14px 14px 60px;
+        * { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+        :root {
+            --bg:#0f172a; --surf:#1e293b; --surf2:#0d1b2e; --border:#2d3f55;
+            --text:#e2e8f0; --muted:#64748b; --blue:#3b82f6; --blue-dk:#1d4ed8;
+            --green:#16a34a; --green-lt:#4ade80; --red:#dc2626; --r:12px;
         }
-
-        /* ── Header ── */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-        }
-        .header h1 { font-size: 15px; letter-spacing: 2px; color: #60a5fa; }
-        .gear { font-size: 20px; cursor: pointer; padding: 4px; }
-
-        /* ── Screens ── */
-        .screen { display: none; }
-        .screen.active { display: block; }
-
-        /* ── Settings ── */
-        .setting-row { margin-bottom: 14px; }
-        .setting-label { font-size: 11px; color: #64748b; margin-bottom: 5px; letter-spacing: 1px; text-transform: uppercase; }
-        .setting-input {
-            width: 100%;
-            background: #1e293b;
-            border: 2px solid #334155;
-            border-radius: 10px;
-            color: #f1f5f9;
-            font-size: 13px;
-            padding: 11px 14px;
-            outline: none;
-        }
-        .setting-input:focus { border-color: #3b82f6; }
-        .btn-primary {
-            width: 100%;
-            background: #1d4ed8;
-            border: none;
-            border-radius: 12px;
-            color: #fff;
-            font-size: 16px;
-            padding: 15px;
-            cursor: pointer;
-            margin-top: 6px;
-            letter-spacing: 1px;
-        }
-
-        /* ── Main Screen ── */
-        .top-bar {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            margin-bottom: 14px;
-        }
-        .machine-input {
-            flex: 1;
-            background: #1e293b;
-            border: 2px solid #334155;
-            border-radius: 10px;
-            color: #f9fafb;
-            font-size: 22px;
-            font-weight: bold;
-            padding: 10px 14px;
-            text-align: center;
-            outline: none;
-        }
-        .machine-input:focus { border-color: #3b82f6; }
-        .machine-input::placeholder { color: #334155; font-size: 13px; font-weight: normal; }
-
-        .lang-toggle {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-        .lang-btn {
-            background: #1e293b;
-            border: 1.5px solid #334155;
-            border-radius: 8px;
-            color: #64748b;
-            font-size: 12px;
-            padding: 5px 10px;
-            cursor: pointer;
-        }
-        .lang-btn.active {
-            background: #1e3a5f;
-            border-color: #3b82f6;
-            color: #93c5fd;
-        }
-
-        /* ── Record Button ── */
-        .rec-area {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 14px;
-        }
-        #btnRecord {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            border: 3px solid #3b82f6;
-            background: #1d4ed8;
-            color: #fff;
-            font-size: 14px;
-            cursor: pointer;
-            line-height: 1.4;
-            transition: all 0.15s;
-            -webkit-tap-highlight-color: transparent;
-        }
-        #btnRecord.rec {
-            background: #dc2626;
-            border-color: #ef4444;
-            animation: pulse 0.8s infinite;
-        }
-        #btnRecord.loading {
-            background: #78350f;
-            border-color: #f59e0b;
-            animation: none;
-        }
-        @keyframes pulse {
-            0%,100% { transform: scale(1); }
-            50% { transform: scale(1.06); }
-        }
-        #recStatus { font-size: 12px; color: #64748b; text-align: center; }
-
-        .transcript-box {
-            width: 100%;
-            background: #1e293b;
-            border-left: 3px solid #334155;
-            padding: 8px 12px;
-            font-size: 13px;
-            color: #64748b;
-            border-radius: 0 8px 8px 0;
-            display: none;
-            line-height: 1.5;
-        }
-        .transcript-box.show { display: block; }
-
-        /* ── Preview Cards ── */
-        .section-label {
-            font-size: 10px;
-            color: #475569;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            margin: 12px 0 6px;
-        }
-
-        .card {
-            background: #1e293b;
-            border: 1px solid #1e293b;
-            border-radius: 12px;
-            padding: 12px;
-            margin-bottom: 10px;
-            transition: border-color 0.3s;
-        }
-        .card.has-data { border-color: #1d4ed8; }
-
-        .card-title {
-            font-size: 10px;
-            color: #60a5fa;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            margin-bottom: 10px;
-        }
-
-        .field-row {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 8px;
-        }
-        .field-row:last-child { margin-bottom: 0; }
-
-        .field-label {
-            font-size: 11px;
-            color: #64748b;
-            flex: 0 0 100px;
-            line-height: 1.3;
-        }
-
-        .field-input {
-            flex: 1;
-            background: #0f172a;
-            border: 1.5px solid #1e293b;
-            border-radius: 8px;
-            color: #f1f5f9;
-            font-size: 15px;
-            padding: 8px 10px;
-            outline: none;
-            text-align: center;
-            transition: border-color 0.2s, background 0.2s;
-        }
-        .field-input:focus { border-color: #3b82f6; }
-        .field-input.filled {
-            background: #0d2137;
-            border-color: #1d4ed8;
-            color: #60a5fa;
-        }
-        .field-input.notes { text-align: left; font-size: 13px; }
-
-        /* ── Buttons ── */
-        .btn-submit {
-            width: 100%;
-            background: #15803d;
-            border: none;
-            border-radius: 12px;
-            color: #fff;
-            font-size: 17px;
-            font-weight: bold;
-            padding: 16px;
-            cursor: pointer;
-            letter-spacing: 2px;
-            margin-top: 10px;
-            -webkit-tap-highlight-color: transparent;
-        }
-        .btn-submit:active { opacity: 0.85; }
-
-        .btn-reset {
-            width: 100%;
-            background: transparent;
-            border: 1.5px solid #334155;
-            border-radius: 12px;
-            color: #64748b;
-            font-size: 14px;
-            padding: 12px;
-            cursor: pointer;
-            margin-top: 8px;
-        }
-
-        /* ── Success ── */
-        .success-wrap {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 70vh;
-            gap: 16px;
-            text-align: center;
-        }
-        .success-icon { font-size: 64px; }
-        .success-msg { font-size: 20px; color: #4ade80; font-weight: bold; }
-        .success-sub { font-size: 13px; color: #64748b; }
-
-        /* ── Toast ── */
-        .toast {
-            position: fixed;
-            top: 16px; left: 50%;
-            transform: translateX(-50%) translateY(-80px);
-            background: #dc2626;
-            color: #fff;
-            padding: 10px 22px;
-            border-radius: 30px;
-            font-size: 13px;
-            transition: transform 0.3s;
-            z-index: 999;
-            white-space: nowrap;
-        }
-        .toast.show { transform: translateX(-50%) translateY(0); }
+        body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; background:var(--bg); color:var(--text); min-height:100vh; padding-bottom:100px; }
+        .app-header { background:#080f1c; padding:13px 16px; position:sticky; top:0; z-index:100; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
+        .hd-title { font-size:13px; color:var(--blue); letter-spacing:2px; font-weight:700; }
+        .hd-sub   { font-size:10px; color:var(--muted); margin-top:2px; }
+        .gear-btn { background:none; border:none; color:var(--muted); font-size:20px; cursor:pointer; padding:4px 6px; }
+        .screen { display:none; } .screen.active { display:block; }
+        .set-body { padding:20px 16px; }
+        .set-desc { font-size:13px; color:var(--muted); margin-bottom:22px; line-height:1.7; }
+        .set-group { margin-bottom:16px; }
+        .set-lbl { font-size:11px; color:var(--muted); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:6px; }
+        .set-inp { width:100%; background:var(--surf); border:2px solid var(--border); border-radius:10px; color:var(--text); font-size:14px; padding:12px 14px; outline:none; }
+        .set-inp:focus { border-color:var(--blue); }
+        .btn-save { width:100%; background:var(--blue-dk); border:none; border-radius:var(--r); color:#fff; font-size:16px; padding:16px; cursor:pointer; letter-spacing:1px; margin-top:8px; }
+        .form-body { padding:14px 14px 0; }
+        .s-card { background:var(--surf); border:1px solid var(--border); border-radius:var(--r); margin-bottom:12px; overflow:hidden; }
+        .s-head { padding:11px 15px; background:#111f35; border-bottom:1px solid var(--border); }
+        .s-title { font-size:12px; color:var(--blue); letter-spacing:2px; text-transform:uppercase; }
+        .s-sub   { font-size:11px; color:var(--muted); margin-top:3px; line-height:1.4; }
+        .s-body  { padding:14px 15px; }
+        .machine-inp { width:100%; background:var(--surf2); border:2px solid var(--border); border-radius:10px; color:var(--text); font-size:32px; font-weight:bold; padding:12px; text-align:center; outline:none; letter-spacing:4px; }
+        .machine-inp:focus { border-color:var(--blue); }
+        .machine-inp::placeholder { font-size:13px; letter-spacing:1px; color:#2d3f55; font-weight:normal; }
+        .ov-row { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+        .ov-row:last-child { margin-bottom:0; }
+        .ov-lbl { font-size:12px; color:var(--muted); flex:0 0 54px; line-height:1.3; }
+        .ok-btn { flex:0 0 72px; height:46px; border:2px solid var(--border); border-radius:10px; background:var(--surf2); color:var(--muted); font-size:14px; font-weight:bold; cursor:pointer; transition:all .15s; }
+        .ok-btn.on { background:#14532d; border-color:#16a34a; color:var(--green-lt); }
+        .ov-inp { flex:1; height:46px; background:var(--surf2); border:2px solid var(--border); border-radius:10px; color:var(--text); font-size:16px; padding:0 12px; outline:none; text-align:center; transition:all .15s; }
+        .ov-inp:focus { border-color:var(--blue); }
+        .ov-inp.filled { background:#0d2137; border-color:var(--blue-dk); color:#60a5fa; }
+        .ov-inp:disabled { opacity:0.3; }
+        .trio-block { margin-bottom:16px; }
+        .trio-block:last-child { margin-bottom:0; }
+        .trio-hd { display:flex; align-items:center; gap:10px; margin-bottom:9px; }
+        .trio-lbl { font-size:12px; font-weight:600; color:var(--text); flex:1; }
+        .allok-btn { font-size:11px; padding:5px 13px; border-radius:20px; border:1.5px solid var(--border); background:none; color:var(--muted); cursor:pointer; transition:all .15s; }
+        .allok-btn.on { color:var(--green-lt); border-color:var(--green); background:#14532d30; }
+        .trio-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
+        .trio-cell { display:flex; flex-direction:column; align-items:center; gap:5px; }
+        .trio-sublbl { font-size:10px; color:var(--muted); text-align:center; line-height:1.3; }
+        .trio-inp { width:100%; height:50px; background:var(--surf2); border:2px solid var(--border); border-radius:10px; color:var(--text); font-size:16px; text-align:center; outline:none; transition:all .15s; }
+        .trio-inp:focus  { border-color:var(--blue); }
+        .trio-inp.ok-st  { background:#14532d; border-color:var(--green); color:var(--green-lt); }
+        .trio-inp.filled { background:#0d2137; border-color:var(--blue-dk); color:#60a5fa; }
+        .trio-inp:disabled { opacity:0.35; }
+        .divider { border:none; border-top:1px solid var(--border); margin:14px 0; }
+        .ap-side { margin-bottom:20px; }
+        .ap-side:last-child { margin-bottom:0; }
+        .ap-side-hd { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+        .ap-side-lbl { font-size:12px; font-weight:600; color:var(--text); flex:1; }
+        .gok-btn { font-size:12px; padding:6px 14px; border-radius:20px; border:2px solid var(--border); background:var(--surf2); color:var(--muted); cursor:pointer; font-weight:600; transition:all .15s; }
+        .gok-btn.on { background:#14532d; border-color:var(--green); color:var(--green-lt); }
+        .defect-grid { display:flex; flex-wrap:wrap; gap:7px; }
+        .d-chip { background:var(--surf2); border:1.5px solid var(--border); border-radius:8px; color:var(--muted); font-size:11px; padding:7px 10px; cursor:pointer; line-height:1.35; transition:all .15s; }
+        .d-chip strong { display:block; font-size:12px; color:#94a3b8; }
+        .d-chip.on { background:#450a0a; border-color:var(--red); color:#fca5a5; }
+        .d-chip.on strong { color:#f87171; }
+        .other-inp { width:100%; background:var(--surf2); border:2px solid var(--border); border-radius:10px; color:var(--text); font-size:14px; padding:10px 14px; outline:none; margin-top:9px; display:none; }
+        .other-inp:focus { border-color:var(--blue); }
+        .sub-area { padding:12px 14px 20px; position:sticky; bottom:0; background:linear-gradient(to top,var(--bg) 75%,transparent); }
+        .btn-sub { width:100%; background:#15803d; border:none; border-radius:var(--r); color:#fff; font-size:17px; font-weight:bold; padding:17px; cursor:pointer; letter-spacing:2px; }
+        .btn-sub:disabled { opacity:.6; }
+        .btn-rst { width:100%; background:transparent; border:1.5px solid var(--border); border-radius:var(--r); color:var(--muted); font-size:14px; padding:12px; cursor:pointer; margin-top:8px; }
+        .ok-wrap { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:75vh; gap:16px; text-align:center; padding:24px; }
+        .ok-icon { font-size:72px; }
+        .ok-msg  { font-size:22px; color:var(--green-lt); font-weight:bold; line-height:1.4; }
+        .ok-det  { font-size:13px; color:var(--muted); line-height:1.8; }
+        .btn-next { background:var(--blue-dk); border:none; border-radius:var(--r); color:#fff; font-size:16px; padding:15px 32px; cursor:pointer; margin-top:10px; letter-spacing:1px; }
+        .toast { position:fixed; top:16px; left:50%; transform:translateX(-50%) translateY(-100px); background:var(--red); color:#fff; padding:10px 22px; border-radius:30px; font-size:13px; transition:transform .3s; z-index:999; pointer-events:none; white-space:nowrap; }
+        .toast.show { transform:translateX(-50%) translateY(0); }
     </style>
 </head>
 <body>
-
 <div class="toast" id="toast"></div>
 
-<div class="header">
-    <h1>KIỂM TRA MÁY</h1>
-    <span class="gear" onclick="goSettings()">⚙️</span>
+<div class="app-header">
+    <div>
+        <div class="hd-title">巡檢表 / KIỂM TRA MÁY</div>
+        <div class="hd-sub">Q0-QR-006 ＋ Q0-QR-017</div>
+    </div>
+    <button class="gear-btn" onclick="goSettings()">⚙️</button>
 </div>
 
-<!-- ══ SETTINGS ══ -->
-<div class="screen" id="screenSettings">
-    <div style="font-size:13px; color:#64748b; margin-bottom:20px;">
-        Thiết lập một lần, không cần nhập lại.<br>
-        設定一次，之後不需要重填。
+<!-- SETTINGS -->
+<div class="screen" id="scrSettings">
+    <div class="set-body">
+        <p class="set-desc">設定一次，之後不需要重填。<br>Thiết lập một lần, không cần nhập lại.</p>
+        <div class="set-group">
+            <div class="set-lbl">巡檢人員 / Tên người kiểm</div>
+            <input class="set-inp" type="text" id="cfgName" placeholder="EX: STEVE">
+        </div>
+        <div class="set-group">
+            <div class="set-lbl">Google Apps Script URL</div>
+            <input class="set-inp" type="url" id="cfgUrl" placeholder="https://script.google.com/...">
+        </div>
+        <button class="btn-save" onclick="saveSettings()">LƯU VÀ BẮT ĐẦU →</button>
     </div>
-    <div class="setting-row">
-        <div class="setting-label">OpenAI API Key (Whisper)</div>
-        <input class="setting-input" type="password" id="openaiKey" placeholder="sk-...">
-    </div>
-    <div class="setting-row">
-        <div class="setting-label">DeepSeek API Key (Phân tích)</div>
-        <input class="setting-input" type="password" id="deepseekKey" placeholder="sk-...">
-    </div>
-    <div class="setting-row">
-        <div class="setting-label">Google Apps Script URL</div>
-        <input class="setting-input" type="text" id="appsUrl" placeholder="https://script.google.com/...">
-    </div>
-    <button class="btn-primary" onclick="saveSettings()">LƯU VÀ BẮT ĐẦU →</button>
 </div>
 
-<!-- ══ MAIN ══ -->
-<div class="screen" id="screenMain">
+<!-- MAIN -->
+<div class="screen" id="scrMain">
+<div class="form-body">
 
-    <!-- 機台 + 語言 -->
-    <div class="top-bar">
-        <input class="machine-input" type="number" id="machineNum"
-               placeholder="Số máy / 機台號" inputmode="numeric"
-               oninput="syncMachine()">
-        <div class="lang-toggle">
-            <button class="lang-btn active" id="langVI" onclick="setLang('vi',this)">🇻🇳 VI</button>
-            <button class="lang-btn" id="langZH" onclick="setLang('zh',this)">🇹🇼 ZH</button>
+    <!-- ① 機台號 -->
+    <div class="s-card">
+        <div class="s-head"><div class="s-title">① Số máy / 機台號</div></div>
+        <div class="s-body">
+            <input class="machine-inp" type="number" id="machineNum" inputmode="numeric" placeholder="Nhập số máy">
         </div>
     </div>
 
-    <!-- 錄音區 -->
-    <div class="rec-area">
-        <button id="btnRecord" onclick="toggleRecord()">Nhấn<br>ghi âm</button>
-        <div id="recStatus">Sẵn sàng — nói từng phần</div>
-        <div class="transcript-box" id="transcriptBox"></div>
-    </div>
-
-    <!-- ── 即時預覽 ── -->
-    <div class="section-label">Dữ liệu đang ghi / 當前記錄</div>
-
-    <!-- 帶寬 -->
-    <div class="card" id="cardRong">
-        <div class="card-title">Độ rộng / 帶寬</div>
-        <div class="field-row">
-            <span class="field-label">Trái / 左</span>
-            <input class="field-input" id="f_do_rong_trai" inputmode="decimal" oninput="onManualEdit(this)">
+    <!-- ② 帶寬 -->
+    <div class="s-card">
+        <div class="s-head">
+            <div class="s-title">② Độ rộng / 帶寬</div>
+            <div class="s-sub">Tiêu chuẩn 5–6 mm｜差異寫 -1 / +2，合格直接按 OK</div>
         </div>
-        <div class="field-row">
-            <span class="field-label">Phải / 右</span>
-            <input class="field-input" id="f_do_rong_phai" inputmode="decimal" oninput="onManualEdit(this)">
+        <div class="s-body">
+            <div class="ov-row">
+                <span class="ov-lbl">Trái 左</span>
+                <button class="ok-btn" id="ok_rt" onclick="toggleOK('rt')">✓ OK</button>
+                <input class="ov-inp" id="v_rt" inputmode="text" placeholder="Chênh lệch" oninput="onValInput('rt',this)">
+            </div>
+            <div class="ov-row">
+                <span class="ov-lbl">Phải 右</span>
+                <button class="ok-btn" id="ok_rp" onclick="toggleOK('rp')">✓ OK</button>
+                <input class="ov-inp" id="v_rp" inputmode="text" placeholder="Chênh lệch" oninput="onValInput('rp',this)">
+            </div>
         </div>
     </div>
 
-    <!-- 左高度 -->
-    <div class="card" id="cardMocTrai">
-        <div class="card-title">Cao móc TRÁI / 左高度</div>
-        <div class="field-row">
-            <span class="field-label">Bên kiếm / 邊界側</span>
-            <input class="field-input" id="f_cao_trai_bien_kiem" inputmode="decimal" oninput="onManualEdit(this)">
+    <!-- ③ 勾高 -->
+    <div class="s-card">
+        <div class="s-head">
+            <div class="s-title">③ Cao móc / 勾高</div>
+            <div class="s-sub">Hợp lệ có thể không điền｜兩側差 ≤ 0.05 mm</div>
         </div>
-        <div class="field-row">
-            <span class="field-label">Giữa / 中間</span>
-            <input class="field-input" id="f_cao_trai_giua" inputmode="decimal" oninput="onManualEdit(this)">
-        </div>
-        <div class="field-row">
-            <span class="field-label">Bên kim / 針側</span>
-            <input class="field-input" id="f_cao_trai_bien_kim" inputmode="decimal" oninput="onManualEdit(this)">
-        </div>
-    </div>
-
-    <!-- 右高度 -->
-    <div class="card" id="cardMocPhai">
-        <div class="card-title">Cao móc PHẢI / 右高度</div>
-        <div class="field-row">
-            <span class="field-label">Bên kiếm / 邊界側</span>
-            <input class="field-input" id="f_cao_phai_bien_kiem" inputmode="decimal" oninput="onManualEdit(this)">
-        </div>
-        <div class="field-row">
-            <span class="field-label">Giữa / 中間</span>
-            <input class="field-input" id="f_cao_phai_giua" inputmode="decimal" oninput="onManualEdit(this)">
-        </div>
-        <div class="field-row">
-            <span class="field-label">Bên kim / 針側</span>
-            <input class="field-input" id="f_cao_phai_bien_kim" inputmode="decimal" oninput="onManualEdit(this)">
-        </div>
-    </div>
-
-    <!-- 左溫度 -->
-    <div class="card" id="cardNhietTrai">
-        <div class="card-title">Nhiệt TRÁI / 左溫度 <span style="color:#475569;font-size:10px;">（選填）</span></div>
-        <div class="field-row">
-            <span class="field-label">Bên kiếm / 邊界側</span>
-            <input class="field-input" id="f_nhiet_trai_bien_kiem" inputmode="decimal" oninput="onManualEdit(this)">
-        </div>
-        <div class="field-row">
-            <span class="field-label">Giữa / 中間</span>
-            <input class="field-input" id="f_nhiet_trai_giua" inputmode="decimal" oninput="onManualEdit(this)">
-        </div>
-        <div class="field-row">
-            <span class="field-label">Bên kim / 針側</span>
-            <input class="field-input" id="f_nhiet_trai_bien_kim" inputmode="decimal" oninput="onManualEdit(this)">
+        <div class="s-body">
+            <div class="trio-block">
+                <div class="trio-hd">
+                    <span class="trio-lbl">Bên trái / 左側</span>
+                    <button class="allok-btn" id="aok_ct" onclick="setAllOK('ct')">✓ Tất cả đạt</button>
+                </div>
+                <div class="trio-grid">
+                    <div class="trio-cell"><span class="trio-sublbl">Bên kiếm<br>邊界側</span><input class="trio-inp" id="ct_k" inputmode="decimal" oninput="onTrio('ct',this)"></div>
+                    <div class="trio-cell"><span class="trio-sublbl">Giữa<br>中間</span><input class="trio-inp" id="ct_g" inputmode="decimal" oninput="onTrio('ct',this)"></div>
+                    <div class="trio-cell"><span class="trio-sublbl">Bên kim<br>針側</span><input class="trio-inp" id="ct_m" inputmode="decimal" oninput="onTrio('ct',this)"></div>
+                </div>
+            </div>
+            <hr class="divider">
+            <div class="trio-block">
+                <div class="trio-hd">
+                    <span class="trio-lbl">Bên phải / 右側</span>
+                    <button class="allok-btn" id="aok_cp" onclick="setAllOK('cp')">✓ Tất cả đạt</button>
+                </div>
+                <div class="trio-grid">
+                    <div class="trio-cell"><span class="trio-sublbl">Bên kiếm<br>邊界側</span><input class="trio-inp" id="cp_k" inputmode="decimal" oninput="onTrio('cp',this)"></div>
+                    <div class="trio-cell"><span class="trio-sublbl">Giữa<br>中間</span><input class="trio-inp" id="cp_g" inputmode="decimal" oninput="onTrio('cp',this)"></div>
+                    <div class="trio-cell"><span class="trio-sublbl">Bên kim<br>針側</span><input class="trio-inp" id="cp_m" inputmode="decimal" oninput="onTrio('cp',this)"></div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- 右溫度 -->
-    <div class="card" id="cardNhietPhai">
-        <div class="card-title">Nhiệt PHẢI / 右溫度 <span style="color:#475569;font-size:10px;">（選填）</span></div>
-        <div class="field-row">
-            <span class="field-label">Bên kiếm / 邊界側</span>
-            <input class="field-input" id="f_nhiet_phai_bien_kiem" inputmode="decimal" oninput="onManualEdit(this)">
-        </div>
-        <div class="field-row">
-            <span class="field-label">Giữa / 中間</span>
-            <input class="field-input" id="f_nhiet_phai_giua" inputmode="decimal" oninput="onManualEdit(this)">
-        </div>
-        <div class="field-row">
-            <span class="field-label">Bên kim / 針側</span>
-            <input class="field-input" id="f_nhiet_phai_bien_kim" inputmode="decimal" oninput="onManualEdit(this)">
-        </div>
-    </div>
-
-    <!-- 備註 -->
-    <div class="card" id="cardGhiChu">
-        <div class="card-title">Ghi chú / 備註</div>
-        <div class="field-row">
-            <span class="field-label">Trái / 左側</span>
-            <input class="field-input notes" id="f_ghi_chu_trai" oninput="onManualEdit(this)">
-        </div>
-        <div class="field-row">
-            <span class="field-label">Phải / 右側</span>
-            <input class="field-input notes" id="f_ghi_chu_phai" oninput="onManualEdit(this)">
+    <!-- ④ 電熱 -->
+    <div class="s-card">
+        <div class="s-head"><div class="s-title">④ Miếng sứ nhiệt / 電熱</div></div>
+        <div class="s-body">
+            <div class="trio-block">
+                <div class="trio-hd"><span class="trio-lbl">Bên trái / 左側</span></div>
+                <div class="trio-grid">
+                    <div class="trio-cell"><span class="trio-sublbl">Bên kiếm<br>邊界側</span><input class="trio-inp" id="nt_k" inputmode="decimal" oninput="onHeat(this)"></div>
+                    <div class="trio-cell"><span class="trio-sublbl">Giữa<br>中間</span><input class="trio-inp" id="nt_g" inputmode="decimal" oninput="onHeat(this)"></div>
+                    <div class="trio-cell"><span class="trio-sublbl">Bên kim<br>針側</span><input class="trio-inp" id="nt_m" inputmode="decimal" oninput="onHeat(this)"></div>
+                </div>
+            </div>
+            <hr class="divider">
+            <div class="trio-block">
+                <div class="trio-hd"><span class="trio-lbl">Bên phải / 右側</span></div>
+                <div class="trio-grid">
+                    <div class="trio-cell"><span class="trio-sublbl">Bên kiếm<br>邊界側</span><input class="trio-inp" id="np_k" inputmode="decimal" oninput="onHeat(this)"></div>
+                    <div class="trio-cell"><span class="trio-sublbl">Giữa<br>中間</span><input class="trio-inp" id="np_g" inputmode="decimal" oninput="onHeat(this)"></div>
+                    <div class="trio-cell"><span class="trio-sublbl">Bên kim<br>針側</span><input class="trio-inp" id="np_m" inputmode="decimal" oninput="onHeat(this)"></div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <button class="btn-submit" onclick="submitData()">✓ XÁC NHẬN GỬI / 送出</button>
-    <button class="btn-reset" onclick="resetRecord()">↺ Máy mới / 新機台</button>
-    <div style="height:20px;"></div>
+    <!-- ⑤ 外觀 -->
+    <div class="s-card">
+        <div class="s-head">
+            <div class="s-title">⑤ Ngoại quan / 外觀</div>
+            <div class="s-sub">無異常按 OK，有問題點選對應代碼</div>
+        </div>
+        <div class="s-body">
+            <div class="ap-side">
+                <div class="ap-side-hd">
+                    <span class="ap-side-lbl">Bên trái / 左側</span>
+                    <button class="gok-btn on" id="gok_t" onclick="tapGlobalOK('t')">✓ OK</button>
+                </div>
+                <div class="defect-grid" id="grid_t"></div>
+                <input class="other-inp" id="oi_t" placeholder="其他說明 / Khác...">
+            </div>
+            <hr class="divider">
+            <div class="ap-side">
+                <div class="ap-side-hd">
+                    <span class="ap-side-lbl">Bên phải / 右側</span>
+                    <button class="gok-btn on" id="gok_p" onclick="tapGlobalOK('p')">✓ OK</button>
+                </div>
+                <div class="defect-grid" id="grid_p"></div>
+                <input class="other-inp" id="oi_p" placeholder="其他說明 / Khác...">
+            </div>
+        </div>
+    </div>
+
+</div>
+    <div class="sub-area">
+        <button class="btn-sub" id="btnSub" onclick="submitForm()">✓ XÁC NHẬN GỬI / 確認送出</button>
+        <button class="btn-rst" onclick="resetForm()">↺ Máy mới / 新機台</button>
+    </div>
 </div>
 
-<!-- ══ SUCCESS ══ -->
-<div class="screen" id="screenSuccess">
-    <div class="success-wrap">
-        <div class="success-icon">✅</div>
-        <div class="success-msg">ĐÃ LƯU THÀNH CÔNG</div>
-        <div class="success-sub" id="successInfo"></div>
-        <button class="btn-primary" style="max-width:200px; margin-top:10px;"
-                onclick="resetRecord(); goScreen('screenMain')">
-            Máy tiếp theo →
-        </button>
+<!-- SUCCESS -->
+<div class="screen" id="scrOK">
+    <div class="ok-wrap">
+        <div class="ok-icon">✅</div>
+        <div class="ok-msg">ĐÃ LƯU THÀNH CÔNG<br>送出成功</div>
+        <div class="ok-det" id="okDet"></div>
+        <button class="btn-next" onclick="resetForm();goScreen('scrMain')">Máy tiếp theo → / 下一台</button>
     </div>
 </div>
 
 <script>
-// ── Keys ──
-const K = { openai:'cfg_openai', deepseek:'cfg_deepseek', apps:'cfg_apps' };
+var DEFECTS = [
+    ["D02","污緯紗","Chỉ ngang dơ"],
+    ["D06","沾污","Đai dơ"],
+    ["Y02","斷緯紗","Đứt sợi chỉ ngang"],
+    ["Y06","浮經紗","Nổi chỉ nền"],
+    ["Y07","浮毛紗","Nổi chỉ bông"],
+    ["Y10","錯穿經紗","Xỏ sai"],
+    ["Y17","邊毛","Nổi lông biên"],
+    ["Y18","邊漏織","Lỗi sợi biên"],
+    ["S01","兩面直條","Đường thẳng 2 mặt"],
+    ["S02","帶面直條","Đường thẳng mặt trước"],
+    ["S03","帶背直條","Đường thẳng mặt sau"],
+    ["S09","荷葉邊","Viền lá sen"],
+    ["S10","彎帶","Đai cong"],
+    ["S11","拱帶","Đai vênh"],
+    ["S25","孔洞直條","Lỗ kim to (khung go)"],
+    ["S29","邊粗糙","Biên thô"],
+    ["S45","邊圈狀","Biên nổi vòng tròn"],
+    ["S46","收邊不漂亮","Dệt biên không đẹp"],
+    ["H01","邊倒勾","Móc biên ngã"],
+    ["H02","邊勾型不良","Hình móc không đạt"],
+    ["H04","勾大或圓","Móc to hoặc tròn"],
+    ["H05","勾小或尖","Móc nhỏ hoặc nhọn"],
+    ["W06","邊縫寬","Biên đai rộng"],
+    ["W08","邊縫窄","Biên đai hẹp"],
+    ["M08","勾嚴重毛邊","Cắt móc trắng đầu"]
+];
 
-function loadSettings() {
-    document.getElementById('openaiKey').value   = localStorage.getItem(K.openai)   || '';
-    document.getElementById('deepseekKey').value = localStorage.getItem(K.deepseek) || '';
-    document.getElementById('appsUrl').value     = localStorage.getItem(K.apps)     || '';
-}
-function saveSettings() {
-    const o = document.getElementById('openaiKey').value.trim();
-    const d = document.getElementById('deepseekKey').value.trim();
-    const a = document.getElementById('appsUrl').value.trim();
-    if (!o || !d || !a) { showToast('請填寫所有欄位'); return; }
-    localStorage.setItem(K.openai, o);
-    localStorage.setItem(K.deepseek, d);
-    localStorage.setItem(K.apps, a);
-    goScreen('screenMain');
-}
-function goSettings() { loadSettings(); goScreen('screenSettings'); }
+var K = {name:"cfg_name", url:"cfg_url"};
+var okBtnState = {rt:false, rp:false};
+var trioOK = {ct:false, cp:false};
+var defects = {t:new Set(), p:new Set()};
 
-window.onload = () => {
-    loadSettings();
-    const ready = localStorage.getItem(K.openai) && localStorage.getItem(K.deepseek) && localStorage.getItem(K.apps);
-    goScreen(ready ? 'screenMain' : 'screenSettings');
+window.onload = function() {
+    buildGrids();
+    loadCfg();
+    goScreen(localStorage.getItem(K.url) ? "scrMain" : "scrSettings");
 };
 
-// ── Screen ──
+function buildGrids() {
+    ["t","p"].forEach(function(side) {
+        var grid = document.getElementById("grid_" + side);
+        DEFECTS.forEach(function(d) {
+            var c = document.createElement("button");
+            c.className = "d-chip";
+            c.dataset.code = d[0];
+            c.innerHTML = "<strong>" + d[0] + "</strong>" + d[1];
+            c.title = d[2];
+            (function(s, code, ch) { c.onclick = function() { toggleDefect(s, code, ch); }; })(side, d[0], c);
+            grid.appendChild(c);
+        });
+        var oc = document.createElement("button");
+        oc.className = "d-chip";
+        oc.innerHTML = "<strong>其他</strong>Khác";
+        (function(s, ch) { oc.onclick = function() { toggleOtherChip(s, ch); }; })(side, oc);
+        grid.appendChild(oc);
+    });
+}
+
 function goScreen(id) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
+    document.querySelectorAll(".screen").forEach(function(s) { s.classList.remove("active"); });
+    document.getElementById(id).classList.add("active");
     window.scrollTo(0, 0);
 }
 
-// ── Toast ──
+function loadCfg() {
+    document.getElementById("cfgName").value = localStorage.getItem(K.name) || "";
+    document.getElementById("cfgUrl").value  = localStorage.getItem(K.url)  || "";
+}
+function saveSettings() {
+    var url = document.getElementById("cfgUrl").value.trim();
+    if (!url) { showToast("請填入 Google Apps Script URL"); return; }
+    localStorage.setItem(K.name, document.getElementById("cfgName").value.trim());
+    localStorage.setItem(K.url, url);
+    goScreen("scrMain");
+}
+function goSettings() { loadCfg(); goScreen("scrSettings"); }
+
 function showToast(msg) {
-    const t = document.getElementById('toast');
+    var t = document.getElementById("toast");
     t.textContent = msg;
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 3000);
+    t.classList.add("show");
+    setTimeout(function() { t.classList.remove("show"); }, 3000);
 }
 
-// ── Language ──
-let lang = 'vi';
-function setLang(l, el) {
-    lang = l;
-    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-    el.classList.add('active');
-}
-
-// ── Current Record (累積) ──
-const FIELDS = [
-    'do_rong_trai','do_rong_phai',
-    'cao_trai_bien_kiem','cao_trai_giua','cao_trai_bien_kim',
-    'nhiet_trai_bien_kiem','nhiet_trai_giua','nhiet_trai_bien_kim',
-    'cao_phai_bien_kiem','cao_phai_giua','cao_phai_bien_kim',
-    'nhiet_phai_bien_kiem','nhiet_phai_giua','nhiet_phai_bien_kim',
-    'ghi_chu_trai','ghi_chu_phai'
-];
-
-let record = {};
-FIELDS.forEach(f => record[f] = '');
-
-function mergeRecord(parsed) {
-    let updated = false;
-    for (const [key, val] of Object.entries(parsed)) {
-        if (FIELDS.includes(key) && val && val.trim() !== '') {
-            record[key] = val.trim();
-            updated = true;
-        }
+function toggleOK(key) {
+    okBtnState[key] = !okBtnState[key];
+    var btn = document.getElementById("ok_" + key);
+    var inp = document.getElementById("v_" + key);
+    if (okBtnState[key]) {
+        btn.classList.add("on"); inp.value = ""; inp.classList.remove("filled"); inp.disabled = true;
+    } else {
+        btn.classList.remove("on"); inp.disabled = false; inp.focus();
     }
-    if (updated) renderRecord();
+}
+function onValInput(key, el) {
+    if (el.value) { okBtnState[key] = false; document.getElementById("ok_" + key).classList.remove("on"); }
+    el.classList.toggle("filled", !!el.value);
 }
 
-function renderRecord() {
-    FIELDS.forEach(f => {
-        const el = document.getElementById('f_' + f);
-        if (!el) return;
-        el.value = record[f];
-        el.classList.toggle('filled', record[f] !== '');
-    });
-    // Highlight cards that have data
-    const cardMap = {
-        cardRong:      ['do_rong_trai','do_rong_phai'],
-        cardMocTrai:   ['cao_trai_bien_kiem','cao_trai_giua','cao_trai_bien_kim'],
-        cardMocPhai:   ['cao_phai_bien_kiem','cao_phai_giua','cao_phai_bien_kim'],
-        cardNhietTrai: ['nhiet_trai_bien_kiem','nhiet_trai_giua','nhiet_trai_bien_kim'],
-        cardNhietPhai: ['nhiet_phai_bien_kiem','nhiet_phai_giua','nhiet_phai_bien_kim'],
-        cardGhiChu:    ['ghi_chu_trai','ghi_chu_phai'],
+function setAllOK(g) {
+    trioOK[g] = !trioOK[g];
+    var btn = document.getElementById("aok_" + g);
+    var ids = [g+"_k", g+"_g", g+"_m"];
+    if (trioOK[g]) {
+        btn.classList.add("on");
+        ids.forEach(function(id) { var el = document.getElementById(id); el.value = "OK"; el.disabled = true; el.classList.add("ok-st"); el.classList.remove("filled"); });
+    } else {
+        btn.classList.remove("on");
+        ids.forEach(function(id) { var el = document.getElementById(id); el.value = ""; el.disabled = false; el.classList.remove("ok-st","filled"); });
+    }
+}
+function onTrio(g, el) {
+    trioOK[g] = false; document.getElementById("aok_" + g).classList.remove("on");
+    el.classList.toggle("filled", !!el.value); el.classList.remove("ok-st");
+}
+function onHeat(el) { el.classList.toggle("filled", !!el.value); }
+
+function toggleDefect(side, code, chip) {
+    var s = defects[side];
+    if (s.has(code)) { s.delete(code); chip.classList.remove("on"); }
+    else { s.add(code); chip.classList.add("on"); document.getElementById("gok_" + side).classList.remove("on"); }
+    if (s.size === 0 && !document.getElementById("oi_" + side).value)
+        document.getElementById("gok_" + side).classList.add("on");
+}
+function toggleOtherChip(side, chip) {
+    var inp = document.getElementById("oi_" + side);
+    var show = inp.style.display !== "block";
+    inp.style.display = show ? "block" : "none";
+    if (!show) inp.value = "";
+    chip.classList.toggle("on", show);
+    if (show) { document.getElementById("gok_" + side).classList.remove("on"); inp.focus(); }
+    else if (defects[side].size === 0) { document.getElementById("gok_" + side).classList.add("on"); }
+}
+function tapGlobalOK(side) {
+    var btn = document.getElementById("gok_" + side);
+    if (btn.classList.contains("on")) return;
+    btn.classList.add("on");
+    defects[side].clear();
+    document.getElementById("grid_" + side).querySelectorAll(".d-chip").forEach(function(c) { c.classList.remove("on"); });
+    var oi = document.getElementById("oi_" + side); oi.style.display = "none"; oi.value = "";
+}
+
+function getOV(key) {
+    if (okBtnState[key]) return "OK";
+    return document.getElementById("v_" + key).value.trim() || "-";
+}
+function getTrio(g) {
+    return [g+"_k", g+"_g", g+"_m"].map(function(id) { return document.getElementById(id).value.trim() || "-"; }).join(" / ");
+}
+function getAppearance(side) {
+    var btn = document.getElementById("gok_" + side);
+    var other = document.getElementById("oi_" + side).value.trim();
+    if (btn.classList.contains("on") && defects[side].size === 0 && !other) return "OK";
+    var parts = Array.from(defects[side]);
+    if (other) parts.push("其他: " + other);
+    return parts.length ? parts.join(", ") : "OK";
+}
+
+async function submitForm() {
+    var machine = document.getElementById("machineNum").value.trim();
+    if (!machine) { showToast("請輸入機台號 / Vui lòng nhập số máy"); return; }
+    var payload = {
+        timestamp: new Date().toLocaleString("zh-TW"),
+        inspector: localStorage.getItem(K.name) || "",
+        so_may: machine,
+        do_rong_trai: getOV("rt"), do_rong_phai: getOV("rp"),
+        cao_trai: getTrio("ct"), cao_phai: getTrio("cp"),
+        nhiet_trai: getTrio("nt"), nhiet_phai: getTrio("np"),
+        ngoai_quan_trai: getAppearance("t"), ngoai_quan_phai: getAppearance("p")
     };
-    for (const [cardId, fields] of Object.entries(cardMap)) {
-        const hasData = fields.some(f => record[f] !== '');
-        document.getElementById(cardId).classList.toggle('has-data', hasData);
-    }
-}
-
-function onManualEdit(el) {
-    const key = el.id.replace('f_', '');
-    if (FIELDS.includes(key)) record[key] = el.value;
-    el.classList.toggle('filled', el.value !== '');
-    updateCardHighlight(el);
-}
-
-function updateCardHighlight(el) {
-    const card = el.closest('.card');
-    if (!card) return;
-    const anyFilled = Array.from(card.querySelectorAll('.field-input')).some(i => i.value !== '');
-    card.classList.toggle('has-data', anyFilled);
-}
-
-function syncMachine() {
-    record.so_may = document.getElementById('machineNum').value;
-}
-
-function resetRecord() {
-    FIELDS.forEach(f => record[f] = '');
-    record.so_may = '';
-    document.getElementById('machineNum').value = '';
-    renderRecord();
-    document.getElementById('transcriptBox').classList.remove('show');
-    document.getElementById('transcriptBox').textContent = '';
-}
-
-// ── Recording ──
-let recording = false, mediaRecorder = null, chunks = [];
-
-async function toggleRecord() {
-    if (recording) { mediaRecorder.stop(); recording = false; return; }
+    var btn = document.getElementById("btnSub");
+    btn.textContent = "送出中..."; btn.disabled = true;
     try {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        chunks = [];
-        mediaRecorder = new MediaRecorder(stream);
-        mediaRecorder.ondataavailable = e => chunks.push(e.data);
-        mediaRecorder.onstop = async () => {
-            stream.getTracks().forEach(t => t.stop());
-            await processAudio(new Blob(chunks, { type: 'audio/webm' }));
-        };
-        mediaRecorder.start();
-        recording = true;
-        setBtn('rec', '🔴<br>Dừng lại');
-        setStatus('Đang ghi âm...');
-    } catch { showToast('Không thể truy cập microphone'); }
-}
-
-function setBtn(cls, html) {
-    const b = document.getElementById('btnRecord');
-    b.className = cls;
-    b.innerHTML = html;
-}
-function setStatus(msg) { document.getElementById('recStatus').textContent = msg; }
-
-// ── Whisper ──
-async function processAudio(blob) {
-    setBtn('loading', '⏳');
-    setStatus('Đang nhận dạng...');
-    const form = new FormData();
-    form.append('file', blob, 'audio.webm');
-    form.append('model', 'whisper-1');
-    form.append('language', lang);
-    try {
-        const res = await fetch('https://api.openai.com/v1/audio/transcriptions', {
-            method: 'POST',
-            headers: { 'Authorization': 'Bearer ' + localStorage.getItem(K.openai) },
-            body: form
-        });
-        if (!res.ok) throw new Error('Whisper ' + res.status);
-        const { text } = await res.json();
-        const box = document.getElementById('transcriptBox');
-        box.textContent = '「' + text + '」';
-        box.classList.add('show');
-        setStatus('Đang phân tích...');
-        await parseText(text);
-    } catch (e) { showToast(e.message); }
-    setBtn('', 'Nhấn<br>ghi âm');
-    setStatus('Sẵn sàng — nói từng phần');
-    recording = false;
-}
-
-// ── DeepSeek ──
-async function parseText(text) {
-    const sys = `Bạn là trợ lý phân tích dữ liệu kiểm tra máy may công nghiệp. Hỗ trợ tiếng Việt và tiếng Trung.
-
-Quy tắc nói của công nhân:
-- Bắt đầu bằng "máy [số]" nếu có
-- "rộng [trái] [phải]" = độ rộng hai bên
-- "móc [3 số]" = cao móc TRÁI theo thứ tự: bên kiếm → giữa → bên kim
-- "móc phải [3 số]" = cao móc PHẢI theo thứ tự: bên kiếm → giữa → bên kim
-- "nhiệt [3 số]" = nhiệt độ TRÁI: bên kiếm → giữa → bên kim
-- "nhiệt phải [3 số]" = nhiệt độ PHẢI: bên kiếm → giữa → bên kim
-- "lỗi [mô tả]" = ghi chú lỗi (lỗi trái hoặc phải tùy ngữ cảnh)
-
-Trả về JSON thuần túy, không có markdown:
-{
-  "do_rong_trai":"", "do_rong_phai":"",
-  "cao_trai_bien_kiem":"", "cao_trai_giua":"", "cao_trai_bien_kim":"",
-  "nhiet_trai_bien_kiem":"", "nhiet_trai_giua":"", "nhiet_trai_bien_kim":"",
-  "cao_phai_bien_kiem":"", "cao_phai_giua":"", "cao_phai_bien_kim":"",
-  "nhiet_phai_bien_kiem":"", "nhiet_phai_giua":"", "nhiet_phai_bien_kim":"",
-  "ghi_chu_trai":"", "ghi_chu_phai":""
-}
-Không đề cập = chuỗi rỗng "". Chỉ trả JSON.`;
-
-    try {
-        const res = await fetch('https://api.deepseek.com/v1/chat/completions', {
-            method: 'POST',
-            headers: { 'Authorization': 'Bearer ' + localStorage.getItem(K.deepseek), 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                model: 'deepseek-chat',
-                messages: [{ role: 'system', content: sys }, { role: 'user', content: text }],
-                temperature: 0
-            })
-        });
-        if (!res.ok) throw new Error('DeepSeek ' + res.status);
-        const data = await res.json();
-        let raw = data.choices[0].message.content.trim().replace(/```json|```/g, '').trim();
-        mergeRecord(JSON.parse(raw));
-    } catch (e) { showToast('Lỗi phân tích: ' + e.message); }
-}
-
-// ── Submit ──
-async function submitData() {
-    const machine = document.getElementById('machineNum').value.trim();
-    if (!machine) { showToast('Vui lòng nhập số máy / 請輸入機台號'); return; }
-    const payload = { timestamp: new Date().toLocaleString('zh-TW'), so_may: machine, ...record };
-    try {
-        await fetch(localStorage.getItem(K.apps), {
-            method: 'POST', mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
+        await fetch(localStorage.getItem(K.url), {
+            method: "POST", mode: "no-cors",
+            headers: {"Content-Type":"application/json"},
             body: JSON.stringify(payload)
         });
-        document.getElementById('successInfo').textContent = 'Máy #' + machine + ' — ' + payload.timestamp;
-        goScreen('screenSuccess');
-    } catch (e) { showToast('Lỗi gửi: ' + e.message); }
+        document.getElementById("okDet").innerHTML =
+            "機台 #" + machine + "&ensp;" + payload.timestamp + "<br>巡檢：" + payload.inspector;
+        goScreen("scrOK");
+    } catch(e) { showToast("送出失敗：" + e.message); }
+    finally { btn.textContent = "✓ 確認送出"; btn.disabled = false; }
+}
+
+function resetForm() {
+    ["rt","rp"].forEach(function(k) {
+        okBtnState[k] = false; document.getElementById("ok_" + k).classList.remove("on");
+        var inp = document.getElementById("v_" + k); inp.value = ""; inp.disabled = false; inp.classList.remove("filled");
+    });
+    ["ct","cp"].forEach(function(g) {
+        trioOK[g] = false; document.getElementById("aok_" + g).classList.remove("on");
+        ["k","g","m"].forEach(function(s) { var el = document.getElementById(g+"_"+s); el.value = ""; el.disabled = false; el.classList.remove("ok-st","filled"); });
+    });
+    ["nt","np"].forEach(function(g) {
+        ["k","g","m"].forEach(function(s) { var el = document.getElementById(g+"_"+s); if(el){el.value=""; el.classList.remove("filled");} });
+    });
+    ["t","p"].forEach(function(side) {
+        defects[side].clear();
+        document.getElementById("grid_" + side).querySelectorAll(".d-chip").forEach(function(c) { c.classList.remove("on"); });
+        document.getElementById("gok_" + side).classList.add("on");
+        var oi = document.getElementById("oi_" + side); oi.style.display = "none"; oi.value = "";
+    });
+    document.getElementById("machineNum").value = "";
 }
 </script>
 </body>
