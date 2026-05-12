@@ -3,97 +3,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>巡檢表 / Kiểm Tra Máy</title>
+    <title>異常回報 / Báo Lỗi Máy</title>
     <style>
         * { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
         :root {
-            --bg:#f0f4f8; --surf:#ffffff; --surf2:#f8fafc; --border:#dde3ea;
+            --bg:#f0f4f8; --surf:#fff; --surf2:#f8fafc; --border:#dde3ea;
             --text:#1e293b; --muted:#64748b; --blue:#2563eb; --blue-dk:#1d4ed8;
             --blue-lt:#eff6ff; --green:#16a34a; --green-lt:#dcfce7; --green-dk:#15803d;
-            --red:#dc2626; --red-lt:#fef2f2; --r:12px;
+            --red:#dc2626; --red-lt:#fef2f2; --orange:#ea580c; --orange-lt:#fff7ed;
+            --r:12px;
         }
-        body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; background:var(--bg); color:var(--text); min-height:100vh; padding-bottom:100px; }
+        body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; background:var(--bg); color:var(--text); min-height:100vh; padding-bottom:110px; }
+
+        /* ── Header ── */
         .app-header { background:#fff; padding:13px 16px; position:sticky; top:0; z-index:100; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; box-shadow:0 1px 4px rgba(0,0,0,.06); }
-        .hd-title { font-size:13px; color:var(--blue); letter-spacing:2px; font-weight:800; }
-        .hd-sub   { font-size:10px; color:var(--muted); margin-top:2px; }
+        .hd-left .hd-title { font-size:13px; color:var(--red); letter-spacing:2px; font-weight:800; }
+        .hd-left .hd-sub   { font-size:10px; color:var(--muted); margin-top:2px; }
+        .hd-right { display:flex; align-items:center; gap:8px; }
+        .lang-toggle { display:flex; border:1.5px solid var(--border); border-radius:20px; overflow:hidden; background:var(--surf2); }
+        .lang-btn { background:none; border:none; color:var(--muted); font-size:11px; font-weight:700; padding:5px 11px; cursor:pointer; transition:all .15s; }
+        .lang-btn.on { background:var(--blue); color:#fff; }
         .gear-btn { background:none; border:none; color:var(--muted); font-size:20px; cursor:pointer; padding:4px 6px; }
+
+        /* ── Screens ── */
         .screen { display:none; } .screen.active { display:block; }
+
+        /* ── Settings ── */
         .set-body { padding:20px 16px; }
         .set-desc { font-size:13px; color:var(--muted); margin-bottom:22px; line-height:1.7; }
         .set-group { margin-bottom:16px; }
         .set-lbl { font-size:11px; color:var(--muted); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:6px; font-weight:600; }
         .set-inp { width:100%; background:var(--surf); border:2px solid var(--border); border-radius:10px; color:var(--text); font-size:14px; padding:12px 14px; outline:none; }
         .set-inp:focus { border-color:var(--blue); }
-        .btn-save { width:100%; background:var(--blue); border:none; border-radius:var(--r); color:#fff; font-size:16px; padding:16px; cursor:pointer; letter-spacing:1px; margin-top:8px; font-weight:700; box-shadow:0 2px 8px rgba(37,99,235,.3); }
-        .form-body { padding:14px 14px 0; }
-        .s-card { background:var(--surf); border:1px solid var(--border); border-radius:var(--r); margin-bottom:12px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,.05); }
-        .s-head { padding:11px 15px; background:var(--blue-lt); border-bottom:1px solid #dbeafe; }
-        .s-title { font-size:12px; color:var(--blue); letter-spacing:2px; text-transform:uppercase; font-weight:700; }
-        .s-sub   { font-size:11px; color:#60a5fa; margin-top:3px; line-height:1.4; }
-        .s-body  { padding:14px 15px; }
-        .machine-inp { width:100%; background:var(--surf2); border:2px solid var(--border); border-radius:10px; color:var(--text); font-size:32px; font-weight:bold; padding:12px; text-align:center; outline:none; letter-spacing:4px; }
+        .btn-save { width:100%; background:var(--blue); border:none; border-radius:var(--r); color:#fff; font-size:16px; padding:16px; cursor:pointer; font-weight:700; margin-top:8px; box-shadow:0 2px 8px rgba(37,99,235,.3); }
+
+        /* ── Main form ── */
+        .form-body { padding:14px; }
+
+        /* Machine number */
+        .machine-card { background:var(--surf); border:2px solid var(--border); border-radius:var(--r); padding:14px; margin-bottom:14px; box-shadow:0 1px 3px rgba(0,0,0,.05); }
+        .machine-lbl { font-size:11px; color:var(--muted); letter-spacing:1.5px; text-transform:uppercase; font-weight:600; margin-bottom:8px; }
+        .machine-inp { width:100%; background:var(--surf2); border:2px solid var(--border); border-radius:10px; color:var(--text); font-size:36px; font-weight:800; padding:10px; text-align:center; outline:none; letter-spacing:4px; }
         .machine-inp:focus { border-color:var(--blue); box-shadow:0 0 0 3px rgba(37,99,235,.1); }
-        .machine-inp::placeholder { font-size:13px; letter-spacing:1px; color:#cbd5e1; font-weight:normal; }
-        .ov-row { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
-        .ov-row:last-child { margin-bottom:0; }
-        .ov-lbl { font-size:12px; color:var(--muted); flex:0 0 54px; line-height:1.3; font-weight:500; }
-        .ok-btn { flex:0 0 72px; height:46px; border:2px solid var(--border); border-radius:10px; background:var(--surf2); color:var(--muted); font-size:14px; font-weight:700; cursor:pointer; transition:all .15s; }
-        .ok-btn.on { background:var(--green-lt); border-color:var(--green); color:var(--green-dk); }
-        .ov-inp { flex:1; height:46px; background:var(--surf2); border:2px solid var(--border); border-radius:10px; color:var(--text); font-size:16px; padding:0 12px; outline:none; text-align:center; transition:all .15s; }
-        .ov-inp:focus { border-color:var(--blue); box-shadow:0 0 0 3px rgba(37,99,235,.1); }
-        .ov-inp.filled { background:var(--blue-lt); border-color:var(--blue); color:var(--blue-dk); font-weight:600; }
-        .ov-inp:disabled { opacity:0.4; background:#f1f5f9; }
-        .trio-block { margin-bottom:16px; }
+        .machine-inp::placeholder { font-size:14px; letter-spacing:1px; color:#cbd5e1; font-weight:normal; }
+
+        /* Add problem row */
+        .add-section-lbl { font-size:11px; color:var(--muted); letter-spacing:1.5px; text-transform:uppercase; font-weight:600; margin-bottom:10px; }
+        .add-row { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px; }
+        .add-btn {
+            display:flex; align-items:center; gap:6px;
+            padding:10px 15px; border-radius:10px;
+            border:2px dashed var(--border); background:var(--surf);
+            color:var(--muted); font-size:13px; font-weight:600;
+            cursor:pointer; transition:all .2s;
+        }
+        .add-btn .plus { font-size:16px; line-height:1; }
+        .add-btn.active { border-style:solid; border-color:var(--orange); background:var(--orange-lt); color:var(--orange); }
+        .add-btn.active .plus { transform:rotate(45deg); display:inline-block; }
+
+        /* Problem cards */
+        .prob-card { background:var(--surf); border:2px solid var(--orange); border-radius:var(--r); margin-bottom:12px; overflow:hidden; box-shadow:0 2px 8px rgba(234,88,12,.1); display:none; }
+        .prob-card.show { display:block; }
+        .prob-head { background:var(--orange-lt); padding:11px 15px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #fed7aa; }
+        .prob-title { font-size:12px; color:var(--orange); letter-spacing:1.5px; text-transform:uppercase; font-weight:700; }
+        .remove-btn { background:none; border:none; color:#f97316; font-size:20px; cursor:pointer; line-height:1; padding:0 2px; }
+        .prob-body { padding:14px 15px; }
+
+        /* Input rows */
+        .side-lbl { font-size:11px; font-weight:700; color:var(--text); margin-bottom:8px; }
+        .val-row { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+        .val-row:last-child { margin-bottom:0; }
+        .val-side { font-size:12px; color:var(--muted); flex:0 0 54px; font-weight:500; }
+        .val-inp { flex:1; height:46px; background:var(--surf2); border:2px solid var(--border); border-radius:10px; color:var(--text); font-size:16px; padding:0 12px; outline:none; text-align:center; transition:all .15s; }
+        .val-inp:focus { border-color:var(--orange); box-shadow:0 0 0 3px rgba(234,88,12,.1); }
+        .val-inp.filled { background:var(--orange-lt); border-color:var(--orange); color:var(--orange); font-weight:600; }
+
+        /* Triple inputs */
+        .trio-block { margin-bottom:14px; }
         .trio-block:last-child { margin-bottom:0; }
-        .trio-hd { display:flex; align-items:center; gap:10px; margin-bottom:9px; }
-        .trio-lbl { font-size:12px; font-weight:700; color:var(--text); flex:1; }
-        .allok-btn { font-size:11px; padding:5px 13px; border-radius:20px; border:1.5px solid var(--border); background:var(--surf2); color:var(--muted); cursor:pointer; transition:all .15s; font-weight:600; }
-        .allok-btn.on { color:var(--green-dk); border-color:var(--green); background:var(--green-lt); }
         .trio-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
         .trio-cell { display:flex; flex-direction:column; align-items:center; gap:5px; }
         .trio-sublbl { font-size:10px; color:var(--muted); text-align:center; line-height:1.3; }
         .trio-inp { width:100%; height:50px; background:var(--surf2); border:2px solid var(--border); border-radius:10px; color:var(--text); font-size:16px; text-align:center; outline:none; transition:all .15s; }
-        .trio-inp:focus  { border-color:var(--blue); box-shadow:0 0 0 3px rgba(37,99,235,.1); }
-        .trio-inp.ok-st  { background:var(--green-lt); border-color:var(--green); color:var(--green-dk); font-weight:700; }
-        .trio-inp.filled { background:var(--blue-lt); border-color:var(--blue); color:var(--blue-dk); font-weight:600; }
-        .trio-inp:disabled { opacity:0.45; background:#f1f5f9; }
+        .trio-inp:focus { border-color:var(--orange); box-shadow:0 0 0 3px rgba(234,88,12,.1); }
+        .trio-inp.filled { background:var(--orange-lt); border-color:var(--orange); color:var(--orange); font-weight:600; }
+
+        /* Divider */
         .divider { border:none; border-top:1px solid var(--border); margin:14px 0; }
-        .ap-side { margin-bottom:20px; }
+
+        /* Appearance */
+        .ap-side { margin-bottom:16px; }
         .ap-side:last-child { margin-bottom:0; }
-        .ap-side-hd { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
-        .ap-side-lbl { font-size:12px; font-weight:700; color:var(--text); flex:1; }
-        .gok-btn { font-size:12px; padding:6px 16px; border-radius:20px; border:2px solid var(--border); background:var(--surf2); color:var(--muted); cursor:pointer; font-weight:700; transition:all .15s; }
-        .gok-btn.on { background:var(--green-lt); border-color:var(--green); color:var(--green-dk); }
-        .defect-grid { display:flex; flex-wrap:wrap; gap:7px; }
+        .defect-grid { display:flex; flex-wrap:wrap; gap:7px; margin-top:8px; }
         .d-chip { background:var(--surf2); border:1.5px solid var(--border); border-radius:8px; color:var(--muted); font-size:11px; padding:7px 10px; cursor:pointer; line-height:1.35; transition:all .15s; }
         .d-chip strong { display:block; font-size:12px; color:#475569; }
         .d-chip.on { background:var(--red-lt); border-color:var(--red); color:#b91c1c; }
         .d-chip.on strong { color:var(--red); }
         .other-inp { width:100%; background:var(--surf2); border:2px solid var(--border); border-radius:10px; color:var(--text); font-size:14px; padding:10px 14px; outline:none; margin-top:9px; display:none; }
-        .other-inp:focus { border-color:var(--blue); }
+        .other-inp:focus { border-color:var(--orange); }
+
+        /* Empty hint */
+        .empty-hint { text-align:center; padding:20px 0 8px; color:#94a3b8; font-size:13px; }
+
+        /* Submit */
         .sub-area { padding:12px 14px 20px; position:sticky; bottom:0; background:linear-gradient(to top,var(--bg) 70%,transparent); }
-        .btn-sub { width:100%; background:var(--green-dk); border:none; border-radius:var(--r); color:#fff; font-size:17px; font-weight:800; padding:17px; cursor:pointer; letter-spacing:2px; box-shadow:0 3px 10px rgba(21,128,61,.35); }
-        .btn-sub:disabled { opacity:.6; box-shadow:none; }
+        .btn-sub { width:100%; background:var(--red); border:none; border-radius:var(--r); color:#fff; font-size:17px; font-weight:800; padding:17px; cursor:pointer; letter-spacing:2px; box-shadow:0 3px 10px rgba(220,38,38,.35); }
+        .btn-sub:disabled { opacity:.5; box-shadow:none; }
         .btn-rst { width:100%; background:#fff; border:1.5px solid var(--border); border-radius:var(--r); color:var(--muted); font-size:14px; padding:12px; cursor:pointer; margin-top:8px; }
+
+        /* Success */
         .ok-wrap { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:75vh; gap:16px; text-align:center; padding:24px; }
         .ok-icon { font-size:72px; }
         .ok-msg  { font-size:22px; color:var(--green-dk); font-weight:800; line-height:1.4; }
         .ok-det  { font-size:13px; color:var(--muted); line-height:1.8; }
-        .btn-next { background:var(--blue); border:none; border-radius:var(--r); color:#fff; font-size:16px; padding:15px 32px; cursor:pointer; margin-top:10px; letter-spacing:1px; font-weight:700; box-shadow:0 2px 8px rgba(37,99,235,.3); }
+        .btn-next { background:var(--blue); border:none; border-radius:var(--r); color:#fff; font-size:16px; padding:15px 32px; cursor:pointer; font-weight:700; box-shadow:0 2px 8px rgba(37,99,235,.3); }
+
+        /* Toast */
         .toast { position:fixed; top:16px; left:50%; transform:translateX(-50%) translateY(-100px); background:var(--red); color:#fff; padding:10px 22px; border-radius:30px; font-size:13px; transition:transform .3s; z-index:999; pointer-events:none; white-space:nowrap; box-shadow:0 4px 12px rgba(0,0,0,.2); }
         .toast.show { transform:translateX(-50%) translateY(0); }
-        .hd-right { display:flex; align-items:center; gap:8px; }
-        .lang-toggle { display:flex; border:1.5px solid var(--border); border-radius:20px; overflow:hidden; background:var(--surf2); }
-        .lang-btn { background:none; border:none; color:var(--muted); font-size:11px; font-weight:700; padding:5px 11px; cursor:pointer; letter-spacing:1px; transition:all .15s; }
-        .lang-btn.on { background:var(--blue); color:#fff; }
     </style>
 </head>
 <body>
 <div class="toast" id="toast"></div>
 
+<!-- HEADER -->
 <div class="app-header">
-    <div>
-        <div class="hd-title">巡檢表 / KIỂM TRA MÁY</div>
+    <div class="hd-left">
+        <div class="hd-title">⚠ 異常回報 / BÁO LỖI</div>
         <div class="hd-sub">Q0-QR-006 ＋ Q0-QR-017</div>
     </div>
     <div class="hd-right">
@@ -125,122 +161,131 @@
 <div class="screen" id="scrMain">
 <div class="form-body">
 
-    <!-- ① 機台號 -->
-    <div class="s-card">
-        <div class="s-head"><div class="s-title">① Số máy / 機台號</div></div>
-        <div class="s-body">
-            <input class="machine-inp" type="number" id="machineNum" inputmode="numeric" placeholder="Nhập số máy">
-        </div>
+    <!-- 機台號 -->
+    <div class="machine-card">
+        <div class="machine-lbl">Số máy / 機台號</div>
+        <input class="machine-inp" type="number" id="machineNum" inputmode="numeric" placeholder="輸入機台號">
     </div>
 
-    <!-- ② 帶寬 -->
-    <div class="s-card">
-        <div class="s-head">
-            <div class="s-title">② Độ rộng / 帶寬</div>
-            <div class="s-sub">Tiêu chuẩn 5–6 mm｜差異寫 -1 / +2，合格直接按 OK</div>
-        </div>
-        <div class="s-body">
-            <div class="ov-row">
-                <span class="ov-lbl">Trái 左</span>
-                <button class="ok-btn" id="ok_rt" onclick="toggleOK('rt')">✓ OK</button>
-                <input class="ov-inp" id="v_rt" inputmode="text" placeholder="Chênh lệch" oninput="onValInput('rt',this)">
-            </div>
-            <div class="ov-row">
-                <span class="ov-lbl">Phải 右</span>
-                <button class="ok-btn" id="ok_rp" onclick="toggleOK('rp')">✓ OK</button>
-                <input class="ov-inp" id="v_rp" inputmode="text" placeholder="Chênh lệch" oninput="onValInput('rp',this)">
-            </div>
-        </div>
+    <!-- 新增異常 -->
+    <div class="add-section-lbl">新增異常項目 / Thêm lỗi</div>
+    <div class="add-row">
+        <button class="add-btn" id="addbtn_rong" onclick="toggleProblem('rong')">
+            <span class="plus">＋</span>帶寬 Độ rộng
+        </button>
+        <button class="add-btn" id="addbtn_cao" onclick="toggleProblem('cao')">
+            <span class="plus">＋</span>勾高 Cao móc
+        </button>
+        <button class="add-btn" id="addbtn_nhiet" onclick="toggleProblem('nhiet')">
+            <span class="plus">＋</span>電熱 Nhiệt
+        </button>
+        <button class="add-btn" id="addbtn_ngoai" onclick="toggleProblem('ngoai')">
+            <span class="plus">＋</span>外觀 Ngoại quan
+        </button>
     </div>
 
-    <!-- ③ 勾高 -->
-    <div class="s-card">
-        <div class="s-head">
-            <div class="s-title">③ Cao móc / 勾高</div>
-            <div class="s-sub">Hợp lệ có thể không điền｜兩側差 ≤ 0.05 mm</div>
-        </div>
-        <div class="s-body">
-            <div class="trio-block">
-                <div class="trio-hd">
-                    <span class="trio-lbl">Bên trái / 左側</span>
-                    <button class="allok-btn" id="aok_ct" onclick="setAllOK('ct')">✓ Tất cả đạt</button>
-                </div>
-                <div class="trio-grid">
-                    <div class="trio-cell"><span class="trio-sublbl">Bên kiếm<br>邊界側</span><input class="trio-inp" id="ct_k" inputmode="decimal" oninput="onTrio('ct',this)"></div>
-                    <div class="trio-cell"><span class="trio-sublbl">Giữa<br>中間</span><input class="trio-inp" id="ct_g" inputmode="decimal" oninput="onTrio('ct',this)"></div>
-                    <div class="trio-cell"><span class="trio-sublbl">Bên kim<br>針側</span><input class="trio-inp" id="ct_m" inputmode="decimal" oninput="onTrio('ct',this)"></div>
-                </div>
-            </div>
-            <hr class="divider">
-            <div class="trio-block">
-                <div class="trio-hd">
-                    <span class="trio-lbl">Bên phải / 右側</span>
-                    <button class="allok-btn" id="aok_cp" onclick="setAllOK('cp')">✓ Tất cả đạt</button>
-                </div>
-                <div class="trio-grid">
-                    <div class="trio-cell"><span class="trio-sublbl">Bên kiếm<br>邊界側</span><input class="trio-inp" id="cp_k" inputmode="decimal" oninput="onTrio('cp',this)"></div>
-                    <div class="trio-cell"><span class="trio-sublbl">Giữa<br>中間</span><input class="trio-inp" id="cp_g" inputmode="decimal" oninput="onTrio('cp',this)"></div>
-                    <div class="trio-cell"><span class="trio-sublbl">Bên kim<br>針側</span><input class="trio-inp" id="cp_m" inputmode="decimal" oninput="onTrio('cp',this)"></div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <div id="probCards">
+        <p class="empty-hint" id="emptyHint">↑ 點選上方異常項目開始記錄</p>
 
-    <!-- ④ 電熱 -->
-    <div class="s-card">
-        <div class="s-head"><div class="s-title">④ Miếng sứ nhiệt / 電熱</div></div>
-        <div class="s-body">
-            <div class="trio-block">
-                <div class="trio-hd"><span class="trio-lbl">Bên trái / 左側</span></div>
-                <div class="trio-grid">
-                    <div class="trio-cell"><span class="trio-sublbl">Bên kiếm<br>邊界側</span><input class="trio-inp" id="nt_k" inputmode="decimal" oninput="onHeat(this)"></div>
-                    <div class="trio-cell"><span class="trio-sublbl">Giữa<br>中間</span><input class="trio-inp" id="nt_g" inputmode="decimal" oninput="onHeat(this)"></div>
-                    <div class="trio-cell"><span class="trio-sublbl">Bên kim<br>針側</span><input class="trio-inp" id="nt_m" inputmode="decimal" oninput="onHeat(this)"></div>
-                </div>
+        <!-- 帶寬 card -->
+        <div class="prob-card" id="card_rong">
+            <div class="prob-head">
+                <span class="prob-title">⚠ Độ rộng / 帶寬</span>
+                <button class="remove-btn" onclick="toggleProblem('rong')">×</button>
             </div>
-            <hr class="divider">
-            <div class="trio-block">
-                <div class="trio-hd"><span class="trio-lbl">Bên phải / 右側</span></div>
-                <div class="trio-grid">
-                    <div class="trio-cell"><span class="trio-sublbl">Bên kiếm<br>邊界側</span><input class="trio-inp" id="np_k" inputmode="decimal" oninput="onHeat(this)"></div>
-                    <div class="trio-cell"><span class="trio-sublbl">Giữa<br>中間</span><input class="trio-inp" id="np_g" inputmode="decimal" oninput="onHeat(this)"></div>
-                    <div class="trio-cell"><span class="trio-sublbl">Bên kim<br>針側</span><input class="trio-inp" id="np_m" inputmode="decimal" oninput="onHeat(this)"></div>
+            <div class="prob-body">
+                <div class="val-row">
+                    <span class="val-side">Trái 左</span>
+                    <input class="val-inp" id="rong_t" inputmode="text" placeholder="-1 / +2" oninput="onFill(this)">
+                </div>
+                <div class="val-row">
+                    <span class="val-side">Phải 右</span>
+                    <input class="val-inp" id="rong_p" inputmode="text" placeholder="-1 / +2" oninput="onFill(this)">
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- ⑤ 外觀 -->
-    <div class="s-card">
-        <div class="s-head">
-            <div class="s-title">⑤ Ngoại quan / 外觀</div>
-            <div class="s-sub">無異常按 OK，有問題點選對應代碼</div>
-        </div>
-        <div class="s-body">
-            <div class="ap-side">
-                <div class="ap-side-hd">
-                    <span class="ap-side-lbl">Bên trái / 左側</span>
-                    <button class="gok-btn on" id="gok_t" onclick="tapGlobalOK('t')">✓ OK</button>
-                </div>
-                <div class="defect-grid" id="grid_t"></div>
-                <input class="other-inp" id="oi_t" placeholder="其他說明 / Khác...">
+        <!-- 勾高 card -->
+        <div class="prob-card" id="card_cao">
+            <div class="prob-head">
+                <span class="prob-title">⚠ Cao móc / 勾高</span>
+                <button class="remove-btn" onclick="toggleProblem('cao')">×</button>
             </div>
-            <hr class="divider">
-            <div class="ap-side">
-                <div class="ap-side-hd">
-                    <span class="ap-side-lbl">Bên phải / 右側</span>
-                    <button class="gok-btn on" id="gok_p" onclick="tapGlobalOK('p')">✓ OK</button>
+            <div class="prob-body">
+                <div class="trio-block">
+                    <div class="side-lbl">Bên trái / 左側</div>
+                    <div class="trio-grid">
+                        <div class="trio-cell"><span class="trio-sublbl">Bên kiếm<br>邊界側</span><input class="trio-inp" id="cao_tk" inputmode="decimal" oninput="onFill(this)"></div>
+                        <div class="trio-cell"><span class="trio-sublbl">Giữa<br>中間</span><input class="trio-inp" id="cao_tg" inputmode="decimal" oninput="onFill(this)"></div>
+                        <div class="trio-cell"><span class="trio-sublbl">Bên kim<br>針側</span><input class="trio-inp" id="cao_tm" inputmode="decimal" oninput="onFill(this)"></div>
+                    </div>
                 </div>
-                <div class="defect-grid" id="grid_p"></div>
-                <input class="other-inp" id="oi_p" placeholder="其他說明 / Khác...">
+                <hr class="divider">
+                <div class="trio-block">
+                    <div class="side-lbl">Bên phải / 右側</div>
+                    <div class="trio-grid">
+                        <div class="trio-cell"><span class="trio-sublbl">Bên kiếm<br>邊界側</span><input class="trio-inp" id="cao_pk" inputmode="decimal" oninput="onFill(this)"></div>
+                        <div class="trio-cell"><span class="trio-sublbl">Giữa<br>中間</span><input class="trio-inp" id="cao_pg" inputmode="decimal" oninput="onFill(this)"></div>
+                        <div class="trio-cell"><span class="trio-sublbl">Bên kim<br>針側</span><input class="trio-inp" id="cao_pm" inputmode="decimal" oninput="onFill(this)"></div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
 
+        <!-- 電熱 card -->
+        <div class="prob-card" id="card_nhiet">
+            <div class="prob-head">
+                <span class="prob-title">⚠ Nhiệt / 電熱</span>
+                <button class="remove-btn" onclick="toggleProblem('nhiet')">×</button>
+            </div>
+            <div class="prob-body">
+                <div class="trio-block">
+                    <div class="side-lbl">Bên trái / 左側</div>
+                    <div class="trio-grid">
+                        <div class="trio-cell"><span class="trio-sublbl">Bên kiếm<br>邊界側</span><input class="trio-inp" id="nhiet_tk" inputmode="decimal" oninput="onFill(this)"></div>
+                        <div class="trio-cell"><span class="trio-sublbl">Giữa<br>中間</span><input class="trio-inp" id="nhiet_tg" inputmode="decimal" oninput="onFill(this)"></div>
+                        <div class="trio-cell"><span class="trio-sublbl">Bên kim<br>針側</span><input class="trio-inp" id="nhiet_tm" inputmode="decimal" oninput="onFill(this)"></div>
+                    </div>
+                </div>
+                <hr class="divider">
+                <div class="trio-block">
+                    <div class="side-lbl">Bên phải / 右側</div>
+                    <div class="trio-grid">
+                        <div class="trio-cell"><span class="trio-sublbl">Bên kiếm<br>邊界側</span><input class="trio-inp" id="nhiet_pk" inputmode="decimal" oninput="onFill(this)"></div>
+                        <div class="trio-cell"><span class="trio-sublbl">Giữa<br>中間</span><input class="trio-inp" id="nhiet_pg" inputmode="decimal" oninput="onFill(this)"></div>
+                        <div class="trio-cell"><span class="trio-sublbl">Bên kim<br>針側</span><input class="trio-inp" id="nhiet_pm" inputmode="decimal" oninput="onFill(this)"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 外觀 card -->
+        <div class="prob-card" id="card_ngoai">
+            <div class="prob-head">
+                <span class="prob-title">⚠ Ngoại quan / 外觀</span>
+                <button class="remove-btn" onclick="toggleProblem('ngoai')">×</button>
+            </div>
+            <div class="prob-body">
+                <div class="ap-side">
+                    <div class="side-lbl">Bên trái / 左側</div>
+                    <div class="defect-grid" id="grid_t"></div>
+                    <input class="other-inp" id="oi_t" placeholder="其他說明 / Khác...">
+                </div>
+                <hr class="divider">
+                <div class="ap-side">
+                    <div class="side-lbl">Bên phải / 右側</div>
+                    <div class="defect-grid" id="grid_p"></div>
+                    <input class="other-inp" id="oi_p" placeholder="其他說明 / Khác...">
+                </div>
+            </div>
+        </div>
+
+    </div><!-- /probCards -->
 </div>
+
     <div class="sub-area">
-        <button class="btn-sub" id="btnSub" onclick="submitForm()">✓ XÁC NHẬN GỬI / 確認送出</button>
-        <button class="btn-rst" onclick="resetForm()">↺ Máy mới / 新機台</button>
+        <button class="btn-sub" id="btnSub" onclick="submitForm()">⚠ 送出異常 / GỬI BÁO LỖI</button>
+        <button class="btn-rst" onclick="resetForm()">↺ 清除重填 / Làm mới</button>
     </div>
 </div>
 
@@ -248,9 +293,9 @@
 <div class="screen" id="scrOK">
     <div class="ok-wrap">
         <div class="ok-icon">✅</div>
-        <div class="ok-msg">ĐÃ LƯU THÀNH CÔNG<br>送出成功</div>
+        <div class="ok-msg">回報成功<br>Đã gửi thành công</div>
         <div class="ok-det" id="okDet"></div>
-        <button class="btn-next" onclick="resetForm();goScreen('scrMain')">Máy tiếp theo → / 下一台</button>
+        <button class="btn-next" onclick="resetForm();goScreen('scrMain')">繼續巡檢 → / Tiếp tục</button>
     </div>
 </div>
 
@@ -284,9 +329,8 @@ var DEFECTS = [
 ];
 
 var K = {name:"cfg_name", url:"cfg_url", lang:"cfg_lang"};
-var okBtnState = {rt:false, rp:false};
-var trioOK = {ct:false, cp:false};
-var defects = {t:new Set(), p:new Set()};
+var activeProblems = new Set();
+var defects = {t: new Set(), p: new Set()};
 var currentLang = "zh";
 
 window.onload = function() {
@@ -297,38 +341,38 @@ window.onload = function() {
     goScreen(localStorage.getItem(K.url) ? "scrMain" : "scrSettings");
 };
 
+// ── Lang ──
 function switchLang(lang) {
     currentLang = lang;
     localStorage.setItem(K.lang, lang);
     updateLangBtns();
-    // 更新所有 chip 標籤
-    var nameIdx = lang === "zh" ? 1 : 2;
-    var otherLabel = lang === "zh" ? "其他" : "Khác";
+    var idx = lang === "zh" ? 1 : 2;
+    var otherZh = "其他", otherVi = "Khác";
     document.querySelectorAll(".d-chip").forEach(function(chip) {
         var code = chip.dataset.code;
-        if (code === "OTHER" || !code) {
-            chip.innerHTML = "<strong>" + otherLabel + "</strong>" + (lang === "zh" ? "Khác" : "其他");
+        if (code === "OTHER") {
+            chip.innerHTML = "<strong>" + (lang === "zh" ? otherZh : otherVi) + "</strong>" + (lang === "zh" ? otherVi : otherZh);
             return;
         }
         var d = DEFECTS.find(function(x) { return x[0] === code; });
-        if (d) chip.innerHTML = "<strong>" + d[0] + "</strong>" + d[nameIdx];
+        if (d) chip.innerHTML = "<strong>" + d[0] + "</strong>" + d[idx];
     });
 }
-
 function updateLangBtns() {
     document.getElementById("lbtn_zh").classList.toggle("on", currentLang === "zh");
     document.getElementById("lbtn_vi").classList.toggle("on", currentLang === "vi");
 }
 
+// ── Grids ──
 function buildGrids() {
-    var nameIdx = currentLang === "zh" ? 1 : 2;
+    var idx = currentLang === "zh" ? 1 : 2;
     ["t","p"].forEach(function(side) {
         var grid = document.getElementById("grid_" + side);
         DEFECTS.forEach(function(d) {
             var c = document.createElement("button");
             c.className = "d-chip";
             c.dataset.code = d[0];
-            c.innerHTML = "<strong>" + d[0] + "</strong>" + d[nameIdx];
+            c.innerHTML = "<strong>" + d[0] + "</strong>" + d[idx];
             (function(s, code, ch) { c.onclick = function() { toggleDefect(s, code, ch); }; })(side, d[0], c);
             grid.appendChild(c);
         });
@@ -341,12 +385,14 @@ function buildGrids() {
     });
 }
 
+// ── Screen ──
 function goScreen(id) {
     document.querySelectorAll(".screen").forEach(function(s) { s.classList.remove("active"); });
     document.getElementById(id).classList.add("active");
     window.scrollTo(0, 0);
 }
 
+// ── Settings ──
 function loadCfg() {
     document.getElementById("cfgName").value = localStorage.getItem(K.name) || "";
     document.getElementById("cfgUrl").value  = localStorage.getItem(K.url)  || "";
@@ -360,6 +406,7 @@ function saveSettings() {
 }
 function goSettings() { loadCfg(); goScreen("scrSettings"); }
 
+// ── Toast ──
 function showToast(msg) {
     var t = document.getElementById("toast");
     t.textContent = msg;
@@ -367,45 +414,47 @@ function showToast(msg) {
     setTimeout(function() { t.classList.remove("show"); }, 3000);
 }
 
-function toggleOK(key) {
-    okBtnState[key] = !okBtnState[key];
-    var btn = document.getElementById("ok_" + key);
-    var inp = document.getElementById("v_" + key);
-    if (okBtnState[key]) {
-        btn.classList.add("on"); inp.value = ""; inp.classList.remove("filled"); inp.disabled = true;
+// ── Problem toggle ──
+function toggleProblem(type) {
+    var card = document.getElementById("card_" + type);
+    var btn  = document.getElementById("addbtn_" + type);
+    if (activeProblems.has(type)) {
+        activeProblems.delete(type);
+        card.classList.remove("show");
+        btn.classList.remove("active");
+        clearProblem(type);
     } else {
-        btn.classList.remove("on"); inp.disabled = false; inp.focus();
+        activeProblems.add(type);
+        card.classList.add("show");
+        btn.classList.add("active");
+        setTimeout(function() { card.scrollIntoView({behavior:"smooth", block:"nearest"}); }, 50);
     }
-}
-function onValInput(key, el) {
-    if (el.value) { okBtnState[key] = false; document.getElementById("ok_" + key).classList.remove("on"); }
-    el.classList.toggle("filled", !!el.value);
+    document.getElementById("emptyHint").style.display = activeProblems.size === 0 ? "block" : "none";
 }
 
-function setAllOK(g) {
-    trioOK[g] = !trioOK[g];
-    var btn = document.getElementById("aok_" + g);
-    var ids = [g+"_k", g+"_g", g+"_m"];
-    if (trioOK[g]) {
-        btn.classList.add("on");
-        ids.forEach(function(id) { var el = document.getElementById(id); el.value = "OK"; el.disabled = true; el.classList.add("ok-st"); el.classList.remove("filled"); });
-    } else {
-        btn.classList.remove("on");
-        ids.forEach(function(id) { var el = document.getElementById(id); el.value = ""; el.disabled = false; el.classList.remove("ok-st","filled"); });
+function clearProblem(type) {
+    var card = document.getElementById("card_" + type);
+    card.querySelectorAll("input").forEach(function(el) {
+        el.value = ""; el.classList.remove("filled");
+    });
+    if (type === "ngoai") {
+        defects.t.clear(); defects.p.clear();
+        document.querySelectorAll(".d-chip").forEach(function(c) { c.classList.remove("on"); });
+        ["t","p"].forEach(function(s) {
+            var oi = document.getElementById("oi_" + s);
+            oi.style.display = "none"; oi.value = "";
+        });
     }
 }
-function onTrio(g, el) {
-    trioOK[g] = false; document.getElementById("aok_" + g).classList.remove("on");
-    el.classList.toggle("filled", !!el.value); el.classList.remove("ok-st");
-}
-function onHeat(el) { el.classList.toggle("filled", !!el.value); }
 
+// ── Fill highlight ──
+function onFill(el) { el.classList.toggle("filled", !!el.value); }
+
+// ── Defect chips ──
 function toggleDefect(side, code, chip) {
     var s = defects[side];
     if (s.has(code)) { s.delete(code); chip.classList.remove("on"); }
-    else { s.add(code); chip.classList.add("on"); document.getElementById("gok_" + side).classList.remove("on"); }
-    if (s.size === 0 && !document.getElementById("oi_" + side).value)
-        document.getElementById("gok_" + side).classList.add("on");
+    else             { s.add(code);    chip.classList.add("on"); }
 }
 function toggleOtherChip(side, chip) {
     var inp = document.getElementById("oi_" + side);
@@ -413,46 +462,41 @@ function toggleOtherChip(side, chip) {
     inp.style.display = show ? "block" : "none";
     if (!show) inp.value = "";
     chip.classList.toggle("on", show);
-    if (show) { document.getElementById("gok_" + side).classList.remove("on"); inp.focus(); }
-    else if (defects[side].size === 0) { document.getElementById("gok_" + side).classList.add("on"); }
-}
-function tapGlobalOK(side) {
-    var btn = document.getElementById("gok_" + side);
-    if (btn.classList.contains("on")) return;
-    btn.classList.add("on");
-    defects[side].clear();
-    document.getElementById("grid_" + side).querySelectorAll(".d-chip").forEach(function(c) { c.classList.remove("on"); });
-    var oi = document.getElementById("oi_" + side); oi.style.display = "none"; oi.value = "";
+    if (show) inp.focus();
 }
 
-function getOV(key) {
-    if (okBtnState[key]) return "OK";
-    return document.getElementById("v_" + key).value.trim() || "-";
-}
-function getTrio(g) {
-    return [g+"_k", g+"_g", g+"_m"].map(function(id) { return document.getElementById(id).value.trim() || "-"; }).join(" / ");
+// ── Collect ──
+function getVal(id) { return document.getElementById(id).value.trim() || "-"; }
+function getTrio(prefix) {
+    return ["k","g","m"].map(function(s) { return getVal(prefix + s); }).join(" / ");
 }
 function getAppearance(side) {
-    var btn = document.getElementById("gok_" + side);
     var other = document.getElementById("oi_" + side).value.trim();
-    if (btn.classList.contains("on") && defects[side].size === 0 && !other) return "OK";
     var parts = Array.from(defects[side]);
     if (other) parts.push("其他: " + other);
-    return parts.length ? parts.join(", ") : "OK";
+    return parts.length ? parts.join(", ") : "";
 }
 
+// ── Submit ──
 async function submitForm() {
     var machine = document.getElementById("machineNum").value.trim();
     if (!machine) { showToast("請輸入機台號 / Vui lòng nhập số máy"); return; }
+    if (activeProblems.size === 0) { showToast("請至少新增一項異常 / Thêm ít nhất 1 lỗi"); return; }
+
     var payload = {
         timestamp: new Date().toLocaleString("zh-TW"),
         inspector: localStorage.getItem(K.name) || "",
         so_may: machine,
-        do_rong_trai: getOV("rt"), do_rong_phai: getOV("rp"),
-        cao_trai: getTrio("ct"), cao_phai: getTrio("cp"),
-        nhiet_trai: getTrio("nt"), nhiet_phai: getTrio("np"),
-        ngoai_quan_trai: getAppearance("t"), ngoai_quan_phai: getAppearance("p")
+        do_rong_trai:    activeProblems.has("rong")   ? getVal("rong_t")    : "",
+        do_rong_phai:    activeProblems.has("rong")   ? getVal("rong_p")    : "",
+        cao_trai:        activeProblems.has("cao")    ? getTrio("cao_t")    : "",
+        cao_phai:        activeProblems.has("cao")    ? getTrio("cao_p")    : "",
+        nhiet_trai:      activeProblems.has("nhiet")  ? getTrio("nhiet_t")  : "",
+        nhiet_phai:      activeProblems.has("nhiet")  ? getTrio("nhiet_p")  : "",
+        ngoai_quan_trai: activeProblems.has("ngoai")  ? getAppearance("t")  : "",
+        ngoai_quan_phai: activeProblems.has("ngoai")  ? getAppearance("p")  : ""
     };
+
     var btn = document.getElementById("btnSub");
     btn.textContent = "送出中..."; btn.disabled = true;
     try {
@@ -461,31 +505,21 @@ async function submitForm() {
             headers: {"Content-Type":"application/json"},
             body: JSON.stringify(payload)
         });
+        var types = Array.from(activeProblems).map(function(t) {
+            return {rong:"帶寬", cao:"勾高", nhiet:"電熱", ngoai:"外觀"}[t];
+        }).join("、");
         document.getElementById("okDet").innerHTML =
-            "機台 #" + machine + "&ensp;" + payload.timestamp + "<br>巡檢：" + payload.inspector;
+            "機台 #" + machine + "　" + payload.timestamp +
+            "<br>巡檢：" + payload.inspector +
+            "<br>異常：" + types;
         goScreen("scrOK");
     } catch(e) { showToast("送出失敗：" + e.message); }
-    finally { btn.textContent = "✓ 確認送出"; btn.disabled = false; }
+    finally { btn.textContent = "⚠ 送出異常 / GỬI BÁO LỖI"; btn.disabled = false; }
 }
 
+// ── Reset ──
 function resetForm() {
-    ["rt","rp"].forEach(function(k) {
-        okBtnState[k] = false; document.getElementById("ok_" + k).classList.remove("on");
-        var inp = document.getElementById("v_" + k); inp.value = ""; inp.disabled = false; inp.classList.remove("filled");
-    });
-    ["ct","cp"].forEach(function(g) {
-        trioOK[g] = false; document.getElementById("aok_" + g).classList.remove("on");
-        ["k","g","m"].forEach(function(s) { var el = document.getElementById(g+"_"+s); el.value = ""; el.disabled = false; el.classList.remove("ok-st","filled"); });
-    });
-    ["nt","np"].forEach(function(g) {
-        ["k","g","m"].forEach(function(s) { var el = document.getElementById(g+"_"+s); if(el){el.value=""; el.classList.remove("filled");} });
-    });
-    ["t","p"].forEach(function(side) {
-        defects[side].clear();
-        document.getElementById("grid_" + side).querySelectorAll(".d-chip").forEach(function(c) { c.classList.remove("on"); });
-        document.getElementById("gok_" + side).classList.add("on");
-        var oi = document.getElementById("oi_" + side); oi.style.display = "none"; oi.value = "";
-    });
+    Array.from(activeProblems).forEach(function(type) { toggleProblem(type); });
     document.getElementById("machineNum").value = "";
 }
 </script>
