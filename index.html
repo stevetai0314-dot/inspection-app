@@ -1,29 +1,54 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>異常回報 / Báo Lỗi Máy</title>
+    <title>異常回報 / Báo Lỗi</title>
     <style>
         * { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
         :root {
             --bg:#f0f4f8; --surf:#fff; --surf2:#f8fafc; --border:#dde3ea;
-            --text:#1e293b; --muted:#64748b; --blue:#2563eb; --blue-dk:#1d4ed8;
-            --blue-lt:#eff6ff; --green:#16a34a; --green-lt:#dcfce7; --green-dk:#15803d;
-            --red:#dc2626; --red-lt:#fef2f2; --orange:#ea580c; --orange-lt:#fff7ed;
+            --text:#1e293b; --muted:#64748b; --blue:#2563eb; --blue-lt:#eff6ff;
+            --green-lt:#dcfce7; --green-dk:#15803d;
+            --red:#dc2626; --red-lt:#fef2f2;
+            --orange:#ea580c; --orange-lt:#fff7ed; --orange-bd:#fed7aa;
             --r:12px;
         }
         body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; background:var(--bg); color:var(--text); min-height:100vh; padding-bottom:110px; }
 
         /* ── Header ── */
-        .app-header { background:#fff; padding:13px 16px; position:sticky; top:0; z-index:100; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; box-shadow:0 1px 4px rgba(0,0,0,.06); }
-        .hd-left .hd-title { font-size:13px; color:var(--red); letter-spacing:2px; font-weight:800; }
-        .hd-left .hd-sub   { font-size:10px; color:var(--muted); margin-top:2px; }
+        .app-header {
+            background:#fff; padding:12px 16px; position:sticky; top:0; z-index:100;
+            border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;
+            box-shadow:0 1px 4px rgba(0,0,0,.07);
+        }
+        .hd-title { font-size:13px; color:var(--red); letter-spacing:2px; font-weight:800; }
+        .hd-sub   { font-size:10px; color:var(--muted); margin-top:2px; }
         .hd-right { display:flex; align-items:center; gap:8px; }
         .lang-toggle { display:flex; border:1.5px solid var(--border); border-radius:20px; overflow:hidden; background:var(--surf2); }
-        .lang-btn { background:none; border:none; color:var(--muted); font-size:11px; font-weight:700; padding:5px 11px; cursor:pointer; transition:all .15s; }
+        .lang-btn { background:none; border:none; color:var(--muted); font-size:11px; font-weight:700; padding:5px 12px; cursor:pointer; transition:all .15s; }
         .lang-btn.on { background:var(--blue); color:#fff; }
-        .gear-btn { background:none; border:none; color:var(--muted); font-size:20px; cursor:pointer; padding:4px 6px; }
+        .gear-btn { background:none; border:none; color:var(--muted); font-size:20px; cursor:pointer; padding:4px; }
+
+        /* ── Sticky add bar ── */
+        .sticky-add {
+            position:sticky; top:52px; z-index:50;
+            background:var(--bg); padding:10px 14px 10px;
+            border-bottom:1px solid var(--border);
+            box-shadow:0 2px 6px rgba(0,0,0,.05);
+        }
+        .add-bar-lbl { font-size:10px; color:var(--muted); letter-spacing:1.5px; text-transform:uppercase; font-weight:700; margin-bottom:8px; }
+        .add-row { display:flex; flex-wrap:wrap; gap:7px; }
+        .add-btn {
+            display:flex; align-items:center; gap:5px;
+            padding:8px 13px; border-radius:9px;
+            border:2px dashed var(--border); background:var(--surf);
+            color:var(--muted); font-size:12px; font-weight:700;
+            cursor:pointer; transition:all .2s; white-space:nowrap;
+        }
+        .add-btn .ic { font-size:15px; transition:transform .2s; }
+        .add-btn.active { border-style:solid; border-color:var(--orange); background:var(--orange-lt); color:var(--orange); }
+        .add-btn.active .ic { transform:rotate(45deg); }
 
         /* ── Screens ── */
         .screen { display:none; } .screen.active { display:block; }
@@ -32,66 +57,55 @@
         .set-body { padding:20px 16px; }
         .set-desc { font-size:13px; color:var(--muted); margin-bottom:22px; line-height:1.7; }
         .set-group { margin-bottom:16px; }
-        .set-lbl { font-size:11px; color:var(--muted); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:6px; font-weight:600; }
-        .set-inp { width:100%; background:var(--surf); border:2px solid var(--border); border-radius:10px; color:var(--text); font-size:14px; padding:12px 14px; outline:none; }
+        .set-lbl { font-size:11px; color:var(--muted); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:6px; font-weight:700; }
+        .set-inp { width:100%; background:var(--surf); border:2px solid var(--border); border-radius:10px; color:var(--text); font-size:15px; padding:12px 14px; outline:none; }
         .set-inp:focus { border-color:var(--blue); }
-        .btn-save { width:100%; background:var(--blue); border:none; border-radius:var(--r); color:#fff; font-size:16px; padding:16px; cursor:pointer; font-weight:700; margin-top:8px; box-shadow:0 2px 8px rgba(37,99,235,.3); }
+        .btn-save { width:100%; background:var(--blue); border:none; border-radius:var(--r); color:#fff; font-size:16px; padding:16px; cursor:pointer; font-weight:700; margin-top:8px; }
 
-        /* ── Main form ── */
+        /* ── Form body ── */
         .form-body { padding:14px; }
 
-        /* Machine number */
+        /* Machine */
         .machine-card { background:var(--surf); border:2px solid var(--border); border-radius:var(--r); padding:14px; margin-bottom:14px; box-shadow:0 1px 3px rgba(0,0,0,.05); }
-        .machine-lbl { font-size:11px; color:var(--muted); letter-spacing:1.5px; text-transform:uppercase; font-weight:600; margin-bottom:8px; }
+        .machine-lbl { font-size:11px; color:var(--muted); letter-spacing:1.5px; text-transform:uppercase; font-weight:700; margin-bottom:8px; }
         .machine-inp { width:100%; background:var(--surf2); border:2px solid var(--border); border-radius:10px; color:var(--text); font-size:36px; font-weight:800; padding:10px; text-align:center; outline:none; letter-spacing:4px; }
         .machine-inp:focus { border-color:var(--blue); box-shadow:0 0 0 3px rgba(37,99,235,.1); }
         .machine-inp::placeholder { font-size:14px; letter-spacing:1px; color:#cbd5e1; font-weight:normal; }
 
-        /* Add problem row */
-        .add-section-lbl { font-size:11px; color:var(--muted); letter-spacing:1.5px; text-transform:uppercase; font-weight:600; margin-bottom:10px; }
-        .add-row { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px; }
-        .add-btn {
-            display:flex; align-items:center; gap:6px;
-            padding:10px 15px; border-radius:10px;
-            border:2px dashed var(--border); background:var(--surf);
-            color:var(--muted); font-size:13px; font-weight:600;
-            cursor:pointer; transition:all .2s;
-        }
-        .add-btn .plus { font-size:16px; line-height:1; }
-        .add-btn.active { border-style:solid; border-color:var(--orange); background:var(--orange-lt); color:var(--orange); }
-        .add-btn.active .plus { transform:rotate(45deg); display:inline-block; }
+        /* Empty hint */
+        .empty-hint { text-align:center; padding:30px 0 10px; color:#94a3b8; font-size:13px; line-height:1.8; }
 
-        /* Problem cards */
+        /* Problem card */
         .prob-card { background:var(--surf); border:2px solid var(--orange); border-radius:var(--r); margin-bottom:12px; overflow:hidden; box-shadow:0 2px 8px rgba(234,88,12,.1); display:none; }
         .prob-card.show { display:block; }
-        .prob-head { background:var(--orange-lt); padding:11px 15px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #fed7aa; }
+        .prob-head { background:var(--orange-lt); padding:11px 15px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--orange-bd); }
         .prob-title { font-size:12px; color:var(--orange); letter-spacing:1.5px; text-transform:uppercase; font-weight:700; }
-        .remove-btn { background:none; border:none; color:#f97316; font-size:20px; cursor:pointer; line-height:1; padding:0 2px; }
+        .remove-btn { background:none; border:none; color:var(--orange); font-size:22px; cursor:pointer; line-height:1; }
         .prob-body { padding:14px 15px; }
 
-        /* Input rows */
-        .side-lbl { font-size:11px; font-weight:700; color:var(--text); margin-bottom:8px; }
+        /* Inputs */
+        .side-lbl { font-size:11px; font-weight:700; color:var(--text); letter-spacing:.5px; margin-bottom:8px; }
         .val-row { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
         .val-row:last-child { margin-bottom:0; }
-        .val-side { font-size:12px; color:var(--muted); flex:0 0 54px; font-weight:500; }
+        .val-side { font-size:12px; color:var(--muted); flex:0 0 50px; font-weight:600; }
         .val-inp { flex:1; height:46px; background:var(--surf2); border:2px solid var(--border); border-radius:10px; color:var(--text); font-size:16px; padding:0 12px; outline:none; text-align:center; transition:all .15s; }
         .val-inp:focus { border-color:var(--orange); box-shadow:0 0 0 3px rgba(234,88,12,.1); }
         .val-inp.filled { background:var(--orange-lt); border-color:var(--orange); color:var(--orange); font-weight:600; }
 
-        /* Triple inputs */
+        /* Triple */
         .trio-block { margin-bottom:14px; }
         .trio-block:last-child { margin-bottom:0; }
         .trio-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
         .trio-cell { display:flex; flex-direction:column; align-items:center; gap:5px; }
-        .trio-sublbl { font-size:10px; color:var(--muted); text-align:center; line-height:1.3; }
+        .trio-sublbl { font-size:10px; color:var(--muted); text-align:center; line-height:1.4; }
         .trio-inp { width:100%; height:50px; background:var(--surf2); border:2px solid var(--border); border-radius:10px; color:var(--text); font-size:16px; text-align:center; outline:none; transition:all .15s; }
-        .trio-inp:focus { border-color:var(--orange); box-shadow:0 0 0 3px rgba(234,88,12,.1); }
+        .trio-inp:focus  { border-color:var(--orange); box-shadow:0 0 0 3px rgba(234,88,12,.1); }
         .trio-inp.filled { background:var(--orange-lt); border-color:var(--orange); color:var(--orange); font-weight:600; }
 
         /* Divider */
         .divider { border:none; border-top:1px solid var(--border); margin:14px 0; }
 
-        /* Appearance */
+        /* Defect chips */
         .ap-side { margin-bottom:16px; }
         .ap-side:last-child { margin-bottom:0; }
         .defect-grid { display:flex; flex-wrap:wrap; gap:7px; margin-top:8px; }
@@ -102,12 +116,9 @@
         .other-inp { width:100%; background:var(--surf2); border:2px solid var(--border); border-radius:10px; color:var(--text); font-size:14px; padding:10px 14px; outline:none; margin-top:9px; display:none; }
         .other-inp:focus { border-color:var(--orange); }
 
-        /* Empty hint */
-        .empty-hint { text-align:center; padding:20px 0 8px; color:#94a3b8; font-size:13px; }
-
         /* Submit */
         .sub-area { padding:12px 14px 20px; position:sticky; bottom:0; background:linear-gradient(to top,var(--bg) 70%,transparent); }
-        .btn-sub { width:100%; background:var(--red); border:none; border-radius:var(--r); color:#fff; font-size:17px; font-weight:800; padding:17px; cursor:pointer; letter-spacing:2px; box-shadow:0 3px 10px rgba(220,38,38,.35); }
+        .btn-sub { width:100%; background:var(--red); border:none; border-radius:var(--r); color:#fff; font-size:17px; font-weight:800; padding:17px; cursor:pointer; letter-spacing:1px; box-shadow:0 3px 10px rgba(220,38,38,.35); }
         .btn-sub:disabled { opacity:.5; box-shadow:none; }
         .btn-rst { width:100%; background:#fff; border:1.5px solid var(--border); border-radius:var(--r); color:var(--muted); font-size:14px; padding:12px; cursor:pointer; margin-top:8px; }
 
@@ -116,10 +127,10 @@
         .ok-icon { font-size:72px; }
         .ok-msg  { font-size:22px; color:var(--green-dk); font-weight:800; line-height:1.4; }
         .ok-det  { font-size:13px; color:var(--muted); line-height:1.8; }
-        .btn-next { background:var(--blue); border:none; border-radius:var(--r); color:#fff; font-size:16px; padding:15px 32px; cursor:pointer; font-weight:700; box-shadow:0 2px 8px rgba(37,99,235,.3); }
+        .btn-next { background:var(--blue); border:none; border-radius:var(--r); color:#fff; font-size:16px; padding:15px 32px; cursor:pointer; font-weight:700; }
 
         /* Toast */
-        .toast { position:fixed; top:16px; left:50%; transform:translateX(-50%) translateY(-100px); background:var(--red); color:#fff; padding:10px 22px; border-radius:30px; font-size:13px; transition:transform .3s; z-index:999; pointer-events:none; white-space:nowrap; box-shadow:0 4px 12px rgba(0,0,0,.2); }
+        .toast { position:fixed; top:16px; left:50%; transform:translateX(-50%) translateY(-100px); background:var(--red); color:#fff; padding:10px 22px; border-radius:30px; font-size:13px; transition:transform .3s; z-index:999; pointer-events:none; white-space:nowrap; }
         .toast.show { transform:translateX(-50%) translateY(0); }
     </style>
 </head>
@@ -128,8 +139,8 @@
 
 <!-- HEADER -->
 <div class="app-header">
-    <div class="hd-left">
-        <div class="hd-title">⚠ 異常回報 / BÁO LỖI</div>
+    <div>
+        <div class="hd-title">⚠ <span data-zh="異常回報" data-vi="BÁO LỖI MÁY">異常回報</span></div>
         <div class="hd-sub">Q0-QR-006 ＋ Q0-QR-017</div>
     </div>
     <div class="hd-right">
@@ -144,144 +155,194 @@
 <!-- SETTINGS -->
 <div class="screen" id="scrSettings">
     <div class="set-body">
-        <p class="set-desc">設定一次，之後不需要重填。<br>Thiết lập một lần, không cần nhập lại.</p>
+        <p class="set-desc" data-zh="設定一次，之後不需要重填。" data-vi="Thiết lập một lần, không cần nhập lại.">設定一次，之後不需要重填。</p>
         <div class="set-group">
-            <div class="set-lbl">巡檢人員 / Tên người kiểm</div>
-            <input class="set-inp" type="text" id="cfgName" placeholder="EX: STEVE">
+            <div class="set-lbl" data-zh="巡檢人員" data-vi="Tên người kiểm">巡檢人員</div>
+            <input class="set-inp" type="text" id="cfgName" placeholder="STEVE">
         </div>
-        <button class="btn-save" onclick="saveSettings()">LƯU VÀ BẮT ĐẦU →</button>
+        <button class="btn-save" onclick="saveSettings()" data-zh="儲存並開始 →" data-vi="LƯU VÀ BẮT ĐẦU →">儲存並開始 →</button>
     </div>
 </div>
 
 <!-- MAIN -->
 <div class="screen" id="scrMain">
-<div class="form-body">
 
-    <!-- 機台號 -->
-    <div class="machine-card">
-        <div class="machine-lbl">Số máy / 機台號</div>
-        <input class="machine-inp" type="number" id="machineNum" inputmode="numeric" placeholder="輸入機台號">
+    <!-- Sticky add bar -->
+    <div class="sticky-add">
+        <div class="add-bar-lbl" data-zh="點選新增異常項目" data-vi="Thêm lỗi">點選新增異常項目</div>
+        <div class="add-row">
+            <button class="add-btn" id="addbtn_rong" onclick="toggleProblem('rong')">
+                <span class="ic">＋</span><span data-zh="帶寬" data-vi="Độ rộng">帶寬</span>
+            </button>
+            <button class="add-btn" id="addbtn_cao" onclick="toggleProblem('cao')">
+                <span class="ic">＋</span><span data-zh="勾高" data-vi="Cao móc">勾高</span>
+            </button>
+            <button class="add-btn" id="addbtn_nhiet" onclick="toggleProblem('nhiet')">
+                <span class="ic">＋</span><span data-zh="電熱" data-vi="Nhiệt">電熱</span>
+            </button>
+            <button class="add-btn" id="addbtn_ngoai" onclick="toggleProblem('ngoai')">
+                <span class="ic">＋</span><span data-zh="外觀" data-vi="Ngoại quan">外觀</span>
+            </button>
+        </div>
     </div>
 
-    <!-- 新增異常 -->
-    <div class="add-section-lbl">新增異常項目 / Thêm lỗi</div>
-    <div class="add-row">
-        <button class="add-btn" id="addbtn_rong" onclick="toggleProblem('rong')">
-            <span class="plus">＋</span>帶寬 Độ rộng
-        </button>
-        <button class="add-btn" id="addbtn_cao" onclick="toggleProblem('cao')">
-            <span class="plus">＋</span>勾高 Cao móc
-        </button>
-        <button class="add-btn" id="addbtn_nhiet" onclick="toggleProblem('nhiet')">
-            <span class="plus">＋</span>電熱 Nhiệt
-        </button>
-        <button class="add-btn" id="addbtn_ngoai" onclick="toggleProblem('ngoai')">
-            <span class="plus">＋</span>外觀 Ngoại quan
-        </button>
-    </div>
+    <div class="form-body">
 
-    <div id="probCards">
-        <p class="empty-hint" id="emptyHint">↑ 點選上方異常項目開始記錄</p>
+        <!-- 機台號 -->
+        <div class="machine-card">
+            <div class="machine-lbl" data-zh="機台號" data-vi="Số máy">機台號</div>
+            <input class="machine-inp" type="number" id="machineNum" inputmode="numeric"
+                   data-ph-zh="輸入機台號" data-ph-vi="Nhập số máy" placeholder="輸入機台號">
+        </div>
 
-        <!-- 帶寬 card -->
+        <!-- Empty hint -->
+        <p class="empty-hint" id="emptyHint"
+           data-zh="↑ 點選上方項目新增異常" data-vi="↑ Nhấn phía trên để thêm lỗi">
+            ↑ 點選上方項目新增異常
+        </p>
+
+        <!-- 帶寬 -->
         <div class="prob-card" id="card_rong">
             <div class="prob-head">
-                <span class="prob-title">⚠ Độ rộng / 帶寬</span>
+                <span class="prob-title" data-zh="⚠ 帶寬異常" data-vi="⚠ Lỗi Độ rộng">⚠ 帶寬異常</span>
                 <button class="remove-btn" onclick="toggleProblem('rong')">×</button>
             </div>
             <div class="prob-body">
                 <div class="val-row">
-                    <span class="val-side">Trái 左</span>
-                    <input class="val-inp" id="rong_t" inputmode="text" placeholder="-1 / +2" oninput="onFill(this)">
+                    <span class="val-side" data-zh="左" data-vi="Trái">左</span>
+                    <input class="val-inp" id="rong_t" inputmode="text"
+                           data-ph-zh="-1 / +2" data-ph-vi="-1 / +2" placeholder="-1 / +2"
+                           oninput="onFill(this)">
                 </div>
                 <div class="val-row">
-                    <span class="val-side">Phải 右</span>
-                    <input class="val-inp" id="rong_p" inputmode="text" placeholder="-1 / +2" oninput="onFill(this)">
+                    <span class="val-side" data-zh="右" data-vi="Phải">右</span>
+                    <input class="val-inp" id="rong_p" inputmode="text"
+                           data-ph-zh="-1 / +2" data-ph-vi="-1 / +2" placeholder="-1 / +2"
+                           oninput="onFill(this)">
                 </div>
             </div>
         </div>
 
-        <!-- 勾高 card -->
+        <!-- 勾高 -->
         <div class="prob-card" id="card_cao">
             <div class="prob-head">
-                <span class="prob-title">⚠ Cao móc / 勾高</span>
+                <span class="prob-title" data-zh="⚠ 勾高異常" data-vi="⚠ Lỗi Cao móc">⚠ 勾高異常</span>
                 <button class="remove-btn" onclick="toggleProblem('cao')">×</button>
             </div>
             <div class="prob-body">
                 <div class="trio-block">
-                    <div class="side-lbl">Bên trái / 左側</div>
+                    <div class="side-lbl" data-zh="左側" data-vi="Bên trái">左側</div>
                     <div class="trio-grid">
-                        <div class="trio-cell"><span class="trio-sublbl">Bên kiếm<br>邊界側</span><input class="trio-inp" id="cao_tk" inputmode="decimal" oninput="onFill(this)"></div>
-                        <div class="trio-cell"><span class="trio-sublbl">Giữa<br>中間</span><input class="trio-inp" id="cao_tg" inputmode="decimal" oninput="onFill(this)"></div>
-                        <div class="trio-cell"><span class="trio-sublbl">Bên kim<br>針側</span><input class="trio-inp" id="cao_tm" inputmode="decimal" oninput="onFill(this)"></div>
+                        <div class="trio-cell">
+                            <span class="trio-sublbl" data-zh="邊界側" data-vi="Bên kiếm">邊界側</span>
+                            <input class="trio-inp" id="cao_tk" inputmode="decimal" oninput="onFill(this)">
+                        </div>
+                        <div class="trio-cell">
+                            <span class="trio-sublbl" data-zh="中間" data-vi="Giữa">中間</span>
+                            <input class="trio-inp" id="cao_tg" inputmode="decimal" oninput="onFill(this)">
+                        </div>
+                        <div class="trio-cell">
+                            <span class="trio-sublbl" data-zh="針側" data-vi="Bên kim">針側</span>
+                            <input class="trio-inp" id="cao_tm" inputmode="decimal" oninput="onFill(this)">
+                        </div>
                     </div>
                 </div>
                 <hr class="divider">
                 <div class="trio-block">
-                    <div class="side-lbl">Bên phải / 右側</div>
+                    <div class="side-lbl" data-zh="右側" data-vi="Bên phải">右側</div>
                     <div class="trio-grid">
-                        <div class="trio-cell"><span class="trio-sublbl">Bên kiếm<br>邊界側</span><input class="trio-inp" id="cao_pk" inputmode="decimal" oninput="onFill(this)"></div>
-                        <div class="trio-cell"><span class="trio-sublbl">Giữa<br>中間</span><input class="trio-inp" id="cao_pg" inputmode="decimal" oninput="onFill(this)"></div>
-                        <div class="trio-cell"><span class="trio-sublbl">Bên kim<br>針側</span><input class="trio-inp" id="cao_pm" inputmode="decimal" oninput="onFill(this)"></div>
+                        <div class="trio-cell">
+                            <span class="trio-sublbl" data-zh="邊界側" data-vi="Bên kiếm">邊界側</span>
+                            <input class="trio-inp" id="cao_pk" inputmode="decimal" oninput="onFill(this)">
+                        </div>
+                        <div class="trio-cell">
+                            <span class="trio-sublbl" data-zh="中間" data-vi="Giữa">中間</span>
+                            <input class="trio-inp" id="cao_pg" inputmode="decimal" oninput="onFill(this)">
+                        </div>
+                        <div class="trio-cell">
+                            <span class="trio-sublbl" data-zh="針側" data-vi="Bên kim">針側</span>
+                            <input class="trio-inp" id="cao_pm" inputmode="decimal" oninput="onFill(this)">
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- 電熱 card -->
+        <!-- 電熱 -->
         <div class="prob-card" id="card_nhiet">
             <div class="prob-head">
-                <span class="prob-title">⚠ Nhiệt / 電熱</span>
+                <span class="prob-title" data-zh="⚠ 電熱異常" data-vi="⚠ Lỗi Nhiệt">⚠ 電熱異常</span>
                 <button class="remove-btn" onclick="toggleProblem('nhiet')">×</button>
             </div>
             <div class="prob-body">
                 <div class="trio-block">
-                    <div class="side-lbl">Bên trái / 左側</div>
+                    <div class="side-lbl" data-zh="左側" data-vi="Bên trái">左側</div>
                     <div class="trio-grid">
-                        <div class="trio-cell"><span class="trio-sublbl">Bên kiếm<br>邊界側</span><input class="trio-inp" id="nhiet_tk" inputmode="decimal" oninput="onFill(this)"></div>
-                        <div class="trio-cell"><span class="trio-sublbl">Giữa<br>中間</span><input class="trio-inp" id="nhiet_tg" inputmode="decimal" oninput="onFill(this)"></div>
-                        <div class="trio-cell"><span class="trio-sublbl">Bên kim<br>針側</span><input class="trio-inp" id="nhiet_tm" inputmode="decimal" oninput="onFill(this)"></div>
+                        <div class="trio-cell">
+                            <span class="trio-sublbl" data-zh="邊界側" data-vi="Bên kiếm">邊界側</span>
+                            <input class="trio-inp" id="nhiet_tk" inputmode="decimal" oninput="onFill(this)">
+                        </div>
+                        <div class="trio-cell">
+                            <span class="trio-sublbl" data-zh="中間" data-vi="Giữa">中間</span>
+                            <input class="trio-inp" id="nhiet_tg" inputmode="decimal" oninput="onFill(this)">
+                        </div>
+                        <div class="trio-cell">
+                            <span class="trio-sublbl" data-zh="針側" data-vi="Bên kim">針側</span>
+                            <input class="trio-inp" id="nhiet_tm" inputmode="decimal" oninput="onFill(this)">
+                        </div>
                     </div>
                 </div>
                 <hr class="divider">
                 <div class="trio-block">
-                    <div class="side-lbl">Bên phải / 右側</div>
+                    <div class="side-lbl" data-zh="右側" data-vi="Bên phải">右側</div>
                     <div class="trio-grid">
-                        <div class="trio-cell"><span class="trio-sublbl">Bên kiếm<br>邊界側</span><input class="trio-inp" id="nhiet_pk" inputmode="decimal" oninput="onFill(this)"></div>
-                        <div class="trio-cell"><span class="trio-sublbl">Giữa<br>中間</span><input class="trio-inp" id="nhiet_pg" inputmode="decimal" oninput="onFill(this)"></div>
-                        <div class="trio-cell"><span class="trio-sublbl">Bên kim<br>針側</span><input class="trio-inp" id="nhiet_pm" inputmode="decimal" oninput="onFill(this)"></div>
+                        <div class="trio-cell">
+                            <span class="trio-sublbl" data-zh="邊界側" data-vi="Bên kiếm">邊界側</span>
+                            <input class="trio-inp" id="nhiet_pk" inputmode="decimal" oninput="onFill(this)">
+                        </div>
+                        <div class="trio-cell">
+                            <span class="trio-sublbl" data-zh="中間" data-vi="Giữa">中間</span>
+                            <input class="trio-inp" id="nhiet_pg" inputmode="decimal" oninput="onFill(this)">
+                        </div>
+                        <div class="trio-cell">
+                            <span class="trio-sublbl" data-zh="針側" data-vi="Bên kim">針側</span>
+                            <input class="trio-inp" id="nhiet_pm" inputmode="decimal" oninput="onFill(this)">
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- 外觀 card -->
+        <!-- 外觀 -->
         <div class="prob-card" id="card_ngoai">
             <div class="prob-head">
-                <span class="prob-title">⚠ Ngoại quan / 外觀</span>
+                <span class="prob-title" data-zh="⚠ 外觀異常" data-vi="⚠ Lỗi Ngoại quan">⚠ 外觀異常</span>
                 <button class="remove-btn" onclick="toggleProblem('ngoai')">×</button>
             </div>
             <div class="prob-body">
                 <div class="ap-side">
-                    <div class="side-lbl">Bên trái / 左側</div>
+                    <div class="side-lbl" data-zh="左側" data-vi="Bên trái">左側</div>
                     <div class="defect-grid" id="grid_t"></div>
-                    <input class="other-inp" id="oi_t" placeholder="其他說明 / Khác...">
+                    <input class="other-inp" id="oi_t"
+                           data-ph-zh="其他說明..." data-ph-vi="Khác..." placeholder="其他說明...">
                 </div>
                 <hr class="divider">
                 <div class="ap-side">
-                    <div class="side-lbl">Bên phải / 右側</div>
+                    <div class="side-lbl" data-zh="右側" data-vi="Bên phải">右側</div>
                     <div class="defect-grid" id="grid_p"></div>
-                    <input class="other-inp" id="oi_p" placeholder="其他說明 / Khác...">
+                    <input class="other-inp" id="oi_p"
+                           data-ph-zh="其他說明..." data-ph-vi="Khác..." placeholder="其他說明...">
                 </div>
             </div>
         </div>
 
-    </div><!-- /probCards -->
-</div>
+    </div>
 
     <div class="sub-area">
-        <button class="btn-sub" id="btnSub" onclick="submitForm()">⚠ 送出異常 / GỬI BÁO LỖI</button>
-        <button class="btn-rst" onclick="resetForm()">↺ 清除重填 / Làm mới</button>
+        <button class="btn-sub" id="btnSub" onclick="submitForm()"
+                data-zh="⚠ 送出異常回報" data-vi="⚠ GỬI BÁO LỖI">⚠ 送出異常回報</button>
+        <button class="btn-rst" onclick="resetForm()"
+                data-zh="↺ 清除重填" data-vi="↺ Làm mới">↺ 清除重填</button>
     </div>
 </div>
 
@@ -289,9 +350,10 @@
 <div class="screen" id="scrOK">
     <div class="ok-wrap">
         <div class="ok-icon">✅</div>
-        <div class="ok-msg">回報成功<br>Đã gửi thành công</div>
+        <div class="ok-msg" data-zh="回報成功" data-vi="Đã gửi thành công">回報成功</div>
         <div class="ok-det" id="okDet"></div>
-        <button class="btn-next" onclick="resetForm();goScreen('scrMain')">繼續巡檢 → / Tiếp tục</button>
+        <button class="btn-next" onclick="resetForm();goScreen('scrMain')"
+                data-zh="繼續巡檢 →" data-vi="Tiếp tục →">繼續巡檢 →</button>
     </div>
 </div>
 
@@ -327,37 +389,48 @@ var DEFECTS = [
 var GAS_URL = "https://script.google.com/macros/s/AKfycbxsMjbyUo10RGuUwDxZH_j0-nhkkZzKQLDvUbeu95mmQ2A9Lp5-JFGQt1A8aaMegAK5-A/exec";
 var K = {name:"cfg_name", lang:"cfg_lang"};
 var activeProblems = new Set();
-var defects = {t: new Set(), p: new Set()};
+var defects = {t:new Set(), p:new Set()};
 var currentLang = "zh";
 
 window.onload = function() {
     currentLang = localStorage.getItem(K.lang) || "zh";
-    updateLangBtns();
     buildGrids();
+    applyLang();
     loadCfg();
     goScreen(localStorage.getItem(K.name) ? "scrMain" : "scrSettings");
 };
 
-// ── Lang ──
+// ── Language ──
 function switchLang(lang) {
     currentLang = lang;
     localStorage.setItem(K.lang, lang);
-    updateLangBtns();
-    var idx = lang === "zh" ? 1 : 2;
-    var otherZh = "其他", otherVi = "Khác";
+    applyLang();
+}
+
+function applyLang() {
+    var zh = currentLang === "zh";
+    document.getElementById("lbtn_zh").classList.toggle("on", zh);
+    document.getElementById("lbtn_vi").classList.toggle("on", !zh);
+
+    // text nodes
+    document.querySelectorAll("[data-zh]").forEach(function(el) {
+        el.textContent = zh ? el.dataset.zh : el.dataset.vi;
+    });
+    // placeholders
+    document.querySelectorAll("[data-ph-zh]").forEach(function(el) {
+        el.placeholder = zh ? el.dataset.phZh : el.dataset.phVi;
+    });
+    // defect chips
+    var idx = zh ? 1 : 2;
     document.querySelectorAll(".d-chip").forEach(function(chip) {
         var code = chip.dataset.code;
         if (code === "OTHER") {
-            chip.innerHTML = "<strong>" + (lang === "zh" ? otherZh : otherVi) + "</strong>" + (lang === "zh" ? otherVi : otherZh);
+            chip.innerHTML = "<strong>" + (zh ? "其他" : "Khác") + "</strong>";
             return;
         }
         var d = DEFECTS.find(function(x) { return x[0] === code; });
         if (d) chip.innerHTML = "<strong>" + d[0] + "</strong>" + d[idx];
     });
-}
-function updateLangBtns() {
-    document.getElementById("lbtn_zh").classList.toggle("on", currentLang === "zh");
-    document.getElementById("lbtn_vi").classList.toggle("on", currentLang === "vi");
 }
 
 // ── Grids ──
@@ -376,7 +449,7 @@ function buildGrids() {
         var oc = document.createElement("button");
         oc.className = "d-chip";
         oc.dataset.code = "OTHER";
-        oc.innerHTML = "<strong>" + (currentLang === "zh" ? "其他" : "Khác") + "</strong>" + (currentLang === "zh" ? "Khác" : "其他");
+        oc.innerHTML = "<strong>" + (currentLang === "zh" ? "其他" : "Khác") + "</strong>";
         (function(s, ch) { oc.onclick = function() { toggleOtherChip(s, ch); }; })(side, oc);
         grid.appendChild(oc);
     });
@@ -395,7 +468,7 @@ function loadCfg() {
 }
 function saveSettings() {
     var name = document.getElementById("cfgName").value.trim();
-    if (!name) { showToast("請輸入你的名字 / Vui lòng nhập tên"); return; }
+    if (!name) { showToast(currentLang === "zh" ? "請輸入名字" : "Vui lòng nhập tên"); return; }
     localStorage.setItem(K.name, name);
     goScreen("scrMain");
 }
@@ -422,30 +495,25 @@ function toggleProblem(type) {
         activeProblems.add(type);
         card.classList.add("show");
         btn.classList.add("active");
-        setTimeout(function() { card.scrollIntoView({behavior:"smooth", block:"nearest"}); }, 50);
+        setTimeout(function() { card.scrollIntoView({behavior:"smooth", block:"nearest"}); }, 60);
     }
-    document.getElementById("emptyHint").style.display = activeProblems.size === 0 ? "block" : "none";
+    document.getElementById("emptyHint").style.display = activeProblems.size === 0 ? "" : "none";
 }
 
 function clearProblem(type) {
     var card = document.getElementById("card_" + type);
-    card.querySelectorAll("input").forEach(function(el) {
-        el.value = ""; el.classList.remove("filled");
-    });
+    card.querySelectorAll("input").forEach(function(el) { el.value = ""; el.classList.remove("filled"); });
     if (type === "ngoai") {
         defects.t.clear(); defects.p.clear();
         document.querySelectorAll(".d-chip").forEach(function(c) { c.classList.remove("on"); });
-        ["t","p"].forEach(function(s) {
-            var oi = document.getElementById("oi_" + s);
-            oi.style.display = "none"; oi.value = "";
-        });
+        ["t","p"].forEach(function(s) { var oi = document.getElementById("oi_"+s); oi.style.display="none"; oi.value=""; });
     }
 }
 
-// ── Fill highlight ──
+// ── Fill ──
 function onFill(el) { el.classList.toggle("filled", !!el.value); }
 
-// ── Defect chips ──
+// ── Defects ──
 function toggleDefect(side, code, chip) {
     var s = defects[side];
     if (s.has(code)) { s.delete(code); chip.classList.remove("on"); }
@@ -462,59 +530,62 @@ function toggleOtherChip(side, chip) {
 
 // ── Collect ──
 function getVal(id) { return document.getElementById(id).value.trim() || "-"; }
-function getTrio(prefix) {
-    return ["k","g","m"].map(function(s) { return getVal(prefix + s); }).join(" / ");
-}
+function getTrio(pre) { return ["k","g","m"].map(function(s){return getVal(pre+s);}).join(" / "); }
 function getAppearance(side) {
-    var other = document.getElementById("oi_" + side).value.trim();
+    var other = document.getElementById("oi_"+side).value.trim();
     var parts = Array.from(defects[side]);
-    if (other) parts.push("其他: " + other);
-    return parts.length ? parts.join(", ") : "";
+    if (other) parts.push((currentLang==="zh"?"其他":"Khác")+": "+other);
+    return parts.join(", ");
 }
 
 // ── Submit ──
 async function submitForm() {
     var machine = document.getElementById("machineNum").value.trim();
-    if (!machine) { showToast("請輸入機台號 / Vui lòng nhập số máy"); return; }
-    if (activeProblems.size === 0) { showToast("請至少新增一項異常 / Thêm ít nhất 1 lỗi"); return; }
+    if (!machine) { showToast(currentLang==="zh" ? "請輸入機台號" : "Vui lòng nhập số máy"); return; }
+    if (activeProblems.size === 0) { showToast(currentLang==="zh" ? "請至少新增一項異常" : "Thêm ít nhất 1 lỗi"); return; }
 
+    var has = function(t) { return activeProblems.has(t); };
     var payload = {
-        timestamp: new Date().toLocaleString("zh-TW"),
-        inspector: localStorage.getItem(K.name) || "",
-        so_may: machine,
-        do_rong_trai:    activeProblems.has("rong")   ? getVal("rong_t")    : "",
-        do_rong_phai:    activeProblems.has("rong")   ? getVal("rong_p")    : "",
-        cao_trai:        activeProblems.has("cao")    ? getTrio("cao_t")    : "",
-        cao_phai:        activeProblems.has("cao")    ? getTrio("cao_p")    : "",
-        nhiet_trai:      activeProblems.has("nhiet")  ? getTrio("nhiet_t")  : "",
-        nhiet_phai:      activeProblems.has("nhiet")  ? getTrio("nhiet_p")  : "",
-        ngoai_quan_trai: activeProblems.has("ngoai")  ? getAppearance("t")  : "",
-        ngoai_quan_phai: activeProblems.has("ngoai")  ? getAppearance("p")  : ""
+        timestamp:       new Date().toLocaleString("zh-TW"),
+        inspector:       localStorage.getItem(K.name) || "",
+        so_may:          machine,
+        do_rong_trai:    has("rong")  ? getVal("rong_t")   : "",
+        do_rong_phai:    has("rong")  ? getVal("rong_p")   : "",
+        cao_trai:        has("cao")   ? getTrio("cao_t")   : "",
+        cao_phai:        has("cao")   ? getTrio("cao_p")   : "",
+        nhiet_trai:      has("nhiet") ? getTrio("nhiet_t") : "",
+        nhiet_phai:      has("nhiet") ? getTrio("nhiet_p") : "",
+        ngoai_quan_trai: has("ngoai") ? getAppearance("t") : "",
+        ngoai_quan_phai: has("ngoai") ? getAppearance("p") : ""
     };
 
     var btn = document.getElementById("btnSub");
-    btn.textContent = "送出中..."; btn.disabled = true;
+    btn.disabled = true;
+    btn.textContent = currentLang==="zh" ? "送出中..." : "Đang gửi...";
     try {
         await fetch(GAS_URL, {
-            method: "POST", mode: "no-cors",
-            headers: {"Content-Type":"application/json"},
-            body: JSON.stringify(payload)
+            method:"POST", mode:"no-cors",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify(payload)
         });
-        var types = Array.from(activeProblems).map(function(t) {
-            return {rong:"帶寬", cao:"勾高", nhiet:"電熱", ngoai:"外觀"}[t];
-        }).join("、");
+        var labels = {rong:["帶寬","Độ rộng"], cao:["勾高","Cao móc"], nhiet:["電熱","Nhiệt"], ngoai:["外觀","Ngoại quan"]};
+        var li = currentLang==="zh" ? 0 : 1;
+        var types = Array.from(activeProblems).map(function(t){return labels[t][li];}).join("、");
         document.getElementById("okDet").innerHTML =
-            "機台 #" + machine + "　" + payload.timestamp +
-            "<br>巡檢：" + payload.inspector +
-            "<br>異常：" + types;
+            (currentLang==="zh"?"機台":"Máy")+" #"+machine+"　"+payload.timestamp+
+            "<br>"+(currentLang==="zh"?"巡檢：":"Người kiểm: ")+payload.inspector+
+            "<br>"+(currentLang==="zh"?"異常：":"Lỗi: ")+types;
         goScreen("scrOK");
-    } catch(e) { showToast("送出失敗：" + e.message); }
-    finally { btn.textContent = "⚠ 送出異常 / GỬI BÁO LỖI"; btn.disabled = false; }
+    } catch(e) { showToast((currentLang==="zh"?"送出失敗：":"Lỗi: ")+e.message); }
+    finally {
+        btn.disabled = false;
+        btn.textContent = currentLang==="zh" ? "⚠ 送出異常回報" : "⚠ GỬI BÁO LỖI";
+    }
 }
 
 // ── Reset ──
 function resetForm() {
-    Array.from(activeProblems).forEach(function(type) { toggleProblem(type); });
+    Array.from(activeProblems).slice().forEach(function(t) { toggleProblem(t); });
     document.getElementById("machineNum").value = "";
 }
 </script>
