@@ -81,6 +81,10 @@
         .btn-next { background:var(--blue-dk); border:none; border-radius:var(--r); color:#fff; font-size:16px; padding:15px 32px; cursor:pointer; margin-top:10px; letter-spacing:1px; }
         .toast { position:fixed; top:16px; left:50%; transform:translateX(-50%) translateY(-100px); background:var(--red); color:#fff; padding:10px 22px; border-radius:30px; font-size:13px; transition:transform .3s; z-index:999; pointer-events:none; white-space:nowrap; }
         .toast.show { transform:translateX(-50%) translateY(0); }
+        .hd-right { display:flex; align-items:center; gap:8px; }
+        .lang-toggle { display:flex; border:1.5px solid var(--border); border-radius:20px; overflow:hidden; }
+        .lang-btn { background:none; border:none; color:var(--muted); font-size:11px; font-weight:700; padding:5px 10px; cursor:pointer; letter-spacing:1px; transition:all .15s; }
+        .lang-btn.on { background:var(--blue-dk); color:#fff; }
     </style>
 </head>
 <body>
@@ -91,7 +95,13 @@
         <div class="hd-title">巡檢表 / KIỂM TRA MÁY</div>
         <div class="hd-sub">Q0-QR-006 ＋ Q0-QR-017</div>
     </div>
-    <button class="gear-btn" onclick="goSettings()">⚙️</button>
+    <div class="hd-right">
+        <div class="lang-toggle">
+            <button class="lang-btn on" id="lbtn_zh" onclick="switchLang('zh')">中</button>
+            <button class="lang-btn" id="lbtn_vi" onclick="switchLang('vi')">VI</button>
+        </div>
+        <button class="gear-btn" onclick="goSettings()">⚙️</button>
+    </div>
 </div>
 
 <!-- SETTINGS -->
@@ -272,32 +282,59 @@ var DEFECTS = [
     ["M08","勾嚴重毛邊","Cắt móc trắng đầu"]
 ];
 
-var K = {name:"cfg_name", url:"cfg_url"};
+var K = {name:"cfg_name", url:"cfg_url", lang:"cfg_lang"};
 var okBtnState = {rt:false, rp:false};
 var trioOK = {ct:false, cp:false};
 var defects = {t:new Set(), p:new Set()};
+var currentLang = "zh";
 
 window.onload = function() {
+    currentLang = localStorage.getItem(K.lang) || "zh";
+    updateLangBtns();
     buildGrids();
     loadCfg();
     goScreen(localStorage.getItem(K.url) ? "scrMain" : "scrSettings");
 };
 
+function switchLang(lang) {
+    currentLang = lang;
+    localStorage.setItem(K.lang, lang);
+    updateLangBtns();
+    // 更新所有 chip 標籤
+    var nameIdx = lang === "zh" ? 1 : 2;
+    var otherLabel = lang === "zh" ? "其他" : "Khác";
+    document.querySelectorAll(".d-chip").forEach(function(chip) {
+        var code = chip.dataset.code;
+        if (code === "OTHER" || !code) {
+            chip.innerHTML = "<strong>" + otherLabel + "</strong>" + (lang === "zh" ? "Khác" : "其他");
+            return;
+        }
+        var d = DEFECTS.find(function(x) { return x[0] === code; });
+        if (d) chip.innerHTML = "<strong>" + d[0] + "</strong>" + d[nameIdx];
+    });
+}
+
+function updateLangBtns() {
+    document.getElementById("lbtn_zh").classList.toggle("on", currentLang === "zh");
+    document.getElementById("lbtn_vi").classList.toggle("on", currentLang === "vi");
+}
+
 function buildGrids() {
+    var nameIdx = currentLang === "zh" ? 1 : 2;
     ["t","p"].forEach(function(side) {
         var grid = document.getElementById("grid_" + side);
         DEFECTS.forEach(function(d) {
             var c = document.createElement("button");
             c.className = "d-chip";
             c.dataset.code = d[0];
-            c.innerHTML = "<strong>" + d[0] + "</strong>" + d[1];
-            c.title = d[2];
+            c.innerHTML = "<strong>" + d[0] + "</strong>" + d[nameIdx];
             (function(s, code, ch) { c.onclick = function() { toggleDefect(s, code, ch); }; })(side, d[0], c);
             grid.appendChild(c);
         });
         var oc = document.createElement("button");
         oc.className = "d-chip";
-        oc.innerHTML = "<strong>其他</strong>Khác";
+        oc.dataset.code = "OTHER";
+        oc.innerHTML = "<strong>" + (currentLang === "zh" ? "其他" : "Khác") + "</strong>" + (currentLang === "zh" ? "Khác" : "其他");
         (function(s, ch) { oc.onclick = function() { toggleOtherChip(s, ch); }; })(side, oc);
         grid.appendChild(oc);
     });
