@@ -149,10 +149,6 @@
             <div class="set-lbl">巡檢人員 / Tên người kiểm</div>
             <input class="set-inp" type="text" id="cfgName" placeholder="EX: STEVE">
         </div>
-        <div class="set-group">
-            <div class="set-lbl">Google Apps Script URL</div>
-            <input class="set-inp" type="url" id="cfgUrl" placeholder="https://script.google.com/...">
-        </div>
         <button class="btn-save" onclick="saveSettings()">LƯU VÀ BẮT ĐẦU →</button>
     </div>
 </div>
@@ -328,7 +324,8 @@ var DEFECTS = [
     ["M08","勾嚴重毛邊","Cắt móc trắng đầu"]
 ];
 
-var K = {name:"cfg_name", url:"cfg_url", lang:"cfg_lang"};
+var GAS_URL = "https://script.google.com/macros/s/AKfycbxsMjbyUo10RGuUwDxZH_j0-nhkkZzKQLDvUbeu95mmQ2A9Lp5-JFGQt1A8aaMegAK5-A/exec";
+var K = {name:"cfg_name", lang:"cfg_lang"};
 var activeProblems = new Set();
 var defects = {t: new Set(), p: new Set()};
 var currentLang = "zh";
@@ -338,7 +335,7 @@ window.onload = function() {
     updateLangBtns();
     buildGrids();
     loadCfg();
-    goScreen(localStorage.getItem(K.url) ? "scrMain" : "scrSettings");
+    goScreen(localStorage.getItem(K.name) ? "scrMain" : "scrSettings");
 };
 
 // ── Lang ──
@@ -395,13 +392,11 @@ function goScreen(id) {
 // ── Settings ──
 function loadCfg() {
     document.getElementById("cfgName").value = localStorage.getItem(K.name) || "";
-    document.getElementById("cfgUrl").value  = localStorage.getItem(K.url)  || "";
 }
 function saveSettings() {
-    var url = document.getElementById("cfgUrl").value.trim();
-    if (!url) { showToast("請填入 Google Apps Script URL"); return; }
-    localStorage.setItem(K.name, document.getElementById("cfgName").value.trim());
-    localStorage.setItem(K.url, url);
+    var name = document.getElementById("cfgName").value.trim();
+    if (!name) { showToast("請輸入你的名字 / Vui lòng nhập tên"); return; }
+    localStorage.setItem(K.name, name);
     goScreen("scrMain");
 }
 function goSettings() { loadCfg(); goScreen("scrSettings"); }
@@ -500,7 +495,7 @@ async function submitForm() {
     var btn = document.getElementById("btnSub");
     btn.textContent = "送出中..."; btn.disabled = true;
     try {
-        await fetch(localStorage.getItem(K.url), {
+        await fetch(GAS_URL, {
             method: "POST", mode: "no-cors",
             headers: {"Content-Type":"application/json"},
             body: JSON.stringify(payload)
