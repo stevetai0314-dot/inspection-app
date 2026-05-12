@@ -28,6 +28,12 @@
         .lang-toggle { display:flex; border:1.5px solid var(--border); border-radius:20px; overflow:hidden; background:var(--surf2); }
         .lang-btn { background:none; border:none; color:var(--muted); font-size:11px; font-weight:700; padding:5px 12px; cursor:pointer; transition:all .15s; }
         .lang-btn.on { background:var(--blue); color:#fff; }
+        .upload-badge {
+            display:none; align-items:center; gap:4px;
+            background:var(--orange); border:none; border-radius:20px;
+            color:#fff; font-size:11px; font-weight:700; padding:5px 10px;
+            cursor:pointer; white-space:nowrap;
+        }
         .gear-btn { background:none; border:none; color:var(--muted); font-size:20px; cursor:pointer; padding:4px; }
 
         /* ── Sticky add bar ── */
@@ -126,12 +132,16 @@
         .ok-wrap { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:75vh; gap:16px; text-align:center; padding:24px; }
         .ok-icon { font-size:72px; }
         .ok-msg  { font-size:22px; color:var(--green-dk); font-weight:800; line-height:1.4; }
+        .ok-tag  { font-size:12px; font-weight:700; padding:5px 14px; border-radius:20px; }
+        .ok-tag.uploaded { background:var(--green-lt); color:var(--green-dk); }
+        .ok-tag.pending  { background:var(--orange-lt); color:var(--orange); border:1px solid var(--orange-bd); }
         .ok-det  { font-size:13px; color:var(--muted); line-height:1.8; }
         .btn-next { background:var(--blue); border:none; border-radius:var(--r); color:#fff; font-size:16px; padding:15px 32px; cursor:pointer; font-weight:700; }
 
         /* Toast */
         .toast { position:fixed; top:16px; left:50%; transform:translateX(-50%) translateY(-100px); background:var(--red); color:#fff; padding:10px 22px; border-radius:30px; font-size:13px; transition:transform .3s; z-index:999; pointer-events:none; white-space:nowrap; }
         .toast.show { transform:translateX(-50%) translateY(0); }
+        .toast.ok { background:var(--green-dk); }
     </style>
 </head>
 <body>
@@ -144,6 +154,7 @@
         <div class="hd-sub">Q0-QR-006 ＋ Q0-QR-017</div>
     </div>
     <div class="hd-right">
+        <button class="upload-badge" id="uploadBadge" onclick="uploadQueue()"></button>
         <div class="lang-toggle">
             <button class="lang-btn on" id="lbtn_zh" onclick="switchLang('zh')">中</button>
             <button class="lang-btn" id="lbtn_vi" onclick="switchLang('vi')">VI</button>
@@ -349,8 +360,9 @@
 <!-- SUCCESS -->
 <div class="screen" id="scrOK">
     <div class="ok-wrap">
-        <div class="ok-icon">✅</div>
-        <div class="ok-msg" data-zh="回報成功" data-vi="Đã gửi thành công">回報成功</div>
+        <div class="ok-icon" id="okIcon">✅</div>
+        <div class="ok-msg" id="okMsg">回報成功</div>
+        <div class="ok-tag" id="okTag"></div>
         <div class="ok-det" id="okDet"></div>
         <button class="btn-next" onclick="resetForm();goScreen('scrMain')"
                 data-zh="繼續巡檢 →" data-vi="Tiếp tục →">繼續巡檢 →</button>
@@ -388,15 +400,76 @@ var DEFECTS = [
 
 var GAS_URL = "https://script.google.com/macros/s/AKfycbxsMjbyUo10RGuUwDxZH_j0-nhkkZzKQLDvUbeu95mmQ2A9Lp5-JFGQt1A8aaMegAK5-A/exec";
 var K = {name:"cfg_name", lang:"cfg_lang"};
+var QUEUE_KEY = "pending_queue";
 var activeProblems = new Set();
 var defects = {t:new Set(), p:new Set()};
 var currentLang = "zh";
+
+// ── Offline Queue ──
+function getQueue() {
+    try { return JSON.parse(localStorage.getItem(QUEUE_KEY) || "[]"); } catch(e) { return []; }
+}
+function saveQueue(q) {
+    localStorage.setItem(QUEUE_KEY, JSON.stringify(q));
+}
+function enqueue(payload) {
+    var q = getQueue();
+    q.push(payload);
+    saveQueue(q);
+    updateBadge();
+}
+function dequeue(id) {
+    saveQueue(getQueue().filter(function(p) { return p._id !== id; }));
+    updateBadge();
+}
+function updateBadge() {
+    var n = getQueue().length;
+    var el = document.getElementById("uploadBadge");
+    if (n > 0) {
+        el.textContent = "⏳ " + n;
+        el.style.display = "flex";
+    } else {
+        el.style.display = "none";
+    }
+}
+
+async function uploadOne(payload) {
+    await fetch(GAS_URL, {
+        method:"POST", mode:"no-cors",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify(payload)
+    });
+    dequeue(payload._id);
+}
+
+async function uploadQueue() {
+    var q = getQueue();
+    if (q.length === 0) return;
+    var badge = document.getElementById("uploadBadge");
+    badge.textContent = currentLang==="zh" ? "上傳中..." : "Đang tải...";
+    var failed = 0;
+    for (var i = 0; i < q.length; i++) {
+        try { await uploadOne(q[i]); }
+        catch(e) { failed++; }
+    }
+    updateBadge();
+    if (failed === 0) {
+        showToast(currentLang==="zh" ? "全部上傳完成 ✓" : "Đã tải lên xong ✓", true);
+    } else {
+        showToast((currentLang==="zh" ? "失敗 " : "Lỗi ") + failed + (currentLang==="zh" ? " 筆，稍後再試" : " mục, thử lại sau"));
+    }
+}
+
+window.addEventListener("online", function() {
+    if (getQueue().length > 0) uploadQueue();
+});
 
 window.onload = function() {
     currentLang = localStorage.getItem(K.lang) || "zh";
     buildGrids();
     applyLang();
     loadCfg();
+    updateBadge();
     goScreen(localStorage.getItem(K.name) ? "scrMain" : "scrSettings");
 };
 
@@ -412,15 +485,12 @@ function applyLang() {
     document.getElementById("lbtn_zh").classList.toggle("on", zh);
     document.getElementById("lbtn_vi").classList.toggle("on", !zh);
 
-    // text nodes
     document.querySelectorAll("[data-zh]").forEach(function(el) {
         el.textContent = zh ? el.dataset.zh : el.dataset.vi;
     });
-    // placeholders
     document.querySelectorAll("[data-ph-zh]").forEach(function(el) {
         el.placeholder = zh ? el.dataset.phZh : el.dataset.phVi;
     });
-    // defect chips
     var idx = zh ? 1 : 2;
     document.querySelectorAll(".d-chip").forEach(function(chip) {
         var code = chip.dataset.code;
@@ -475,10 +545,10 @@ function saveSettings() {
 function goSettings() { loadCfg(); goScreen("scrSettings"); }
 
 // ── Toast ──
-function showToast(msg) {
+function showToast(msg, isOk) {
     var t = document.getElementById("toast");
     t.textContent = msg;
-    t.classList.add("show");
+    t.className = "toast show" + (isOk ? " ok" : "");
     setTimeout(function() { t.classList.remove("show"); }, 3000);
 }
 
@@ -546,6 +616,7 @@ async function submitForm() {
 
     var has = function(t) { return activeProblems.has(t); };
     var payload = {
+        _id:             Date.now(),
         timestamp:       new Date().toLocaleString("zh-TW"),
         inspector:       localStorage.getItem(K.name) || "",
         so_may:          machine,
@@ -559,28 +630,55 @@ async function submitForm() {
         ngoai_quan_phai: has("ngoai") ? getAppearance("p") : ""
     };
 
+    // Store locally first — data is safe regardless of network
+    enqueue(payload);
+
     var btn = document.getElementById("btnSub");
     btn.disabled = true;
     btn.textContent = currentLang==="zh" ? "送出中..." : "Đang gửi...";
-    try {
-        await fetch(GAS_URL, {
-            method:"POST", mode:"no-cors",
-            headers:{"Content-Type":"application/json"},
-            body:JSON.stringify(payload)
-        });
-        var labels = {rong:["帶寬","Độ rộng"], cao:["勾高","Cao móc"], nhiet:["電熱","Nhiệt"], ngoai:["外觀","Ngoại quan"]};
-        var li = currentLang==="zh" ? 0 : 1;
-        var types = Array.from(activeProblems).map(function(t){return labels[t][li];}).join("、");
-        document.getElementById("okDet").innerHTML =
-            (currentLang==="zh"?"機台":"Máy")+" #"+machine+"　"+payload.timestamp+
-            "<br>"+(currentLang==="zh"?"巡檢：":"Người kiểm: ")+payload.inspector+
-            "<br>"+(currentLang==="zh"?"異常：":"Lỗi: ")+types;
-        goScreen("scrOK");
-    } catch(e) { showToast((currentLang==="zh"?"送出失敗：":"Lỗi: ")+e.message); }
-    finally {
-        btn.disabled = false;
-        btn.textContent = currentLang==="zh" ? "⚠ 送出異常回報" : "⚠ GỬI BÁO LỖI";
+
+    // Build detail text
+    var labels = {rong:["帶寬","Độ rộng"], cao:["勾高","Cao móc"], nhiet:["電熱","Nhiệt"], ngoai:["外觀","Ngoại quan"]};
+    var li = currentLang==="zh" ? 0 : 1;
+    var types = Array.from(activeProblems).map(function(t){return labels[t][li];}).join("、");
+    document.getElementById("okDet").innerHTML =
+        (currentLang==="zh"?"機台":"Máy")+" #"+machine+"　"+payload.timestamp+
+        "<br>"+(currentLang==="zh"?"巡檢：":"Người kiểm: ")+payload.inspector+
+        "<br>"+(currentLang==="zh"?"異常：":"Lỗi: ")+types;
+
+    // Try to upload immediately
+    var uploaded = false;
+    if (navigator.onLine) {
+        try {
+            await fetch(GAS_URL, {
+                method:"POST", mode:"no-cors",
+                headers:{"Content-Type":"application/json"},
+                body:JSON.stringify(payload)
+            });
+            dequeue(payload._id);
+            uploaded = true;
+        } catch(e) {}
     }
+
+    // Show result
+    var tag = document.getElementById("okTag");
+    var msg = document.getElementById("okMsg");
+    var icon = document.getElementById("okIcon");
+    if (uploaded) {
+        icon.textContent = "✅";
+        msg.textContent = currentLang==="zh" ? "回報成功" : "Đã gửi thành công";
+        tag.className = "ok-tag uploaded";
+        tag.textContent = currentLang==="zh" ? "✓ 已上傳" : "✓ Đã tải lên";
+    } else {
+        icon.textContent = "📱";
+        msg.textContent = currentLang==="zh" ? "已暫存本機" : "Đã lưu tạm";
+        tag.className = "ok-tag pending";
+        tag.textContent = currentLang==="zh" ? "⏳ 有網路時自動上傳" : "⏳ Sẽ tự động tải khi có mạng";
+    }
+
+    goScreen("scrOK");
+    btn.disabled = false;
+    btn.textContent = currentLang==="zh" ? "⚠ 送出異常回報" : "⚠ GỬI BÁO LỖI";
 }
 
 // ── Reset ──
