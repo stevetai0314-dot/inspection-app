@@ -30,9 +30,16 @@
 - Google Apps Script (GAS) 接收 POST 請求，寫入 Google Sheets
 - 前端以 `fetch + mode:no-cors` 送出 JSON，不需要後端 CORS 設定
 
+### 離線佇列
+- 送出時先存入 `localStorage` 佇列，資料不會因網路中斷而遺失
+- 有網路時立即上傳，成功後刪除本機那筆
+- 無網路時顯示「已暫存本機」，手機重新連線後自動補傳（`online` 事件觸發）
+- Header 右上角顯示待傳筆數 badge，也可手動點選立即上傳
+
 ### 資料流
 ```
-巡檢員手機 → HTML 表單 → GAS Endpoint → Google Sheets
+巡檢員手機 → localStorage 佇列 → GAS Endpoint → Google Sheets
+                    ↑ 無網路時暫存，有網路後自動補傳
 ```
 
 ---
@@ -52,6 +59,9 @@
 
 ### 4. 外觀缺陷用 Code + 名稱雙欄 chip
 外觀缺陷共 25 種（D、Y、S、H、W、M 系列），對老員工來說 code 已經是慣用語言，對新員工來說有中越文說明。選中後 chip 變紅，一眼看出已勾選哪些。
+
+### 5. 離線優先設計
+廠區面積大、網路訊號不穩定。送出時先把資料存進本機，不等網路回應就顯示「已暫存」成功畫面，讓巡檢員可以繼續走下一台。資料不會因為網路斷線而卡住或遺失。
 
 ---
 
