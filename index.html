@@ -38,7 +38,7 @@
 
         /* ── Sticky add bar ── */
         .sticky-add {
-            position:sticky; top:94px; z-index:50;
+            position:sticky; top:52px; z-index:50;
             background:var(--bg); padding:10px 14px 10px;
             border-bottom:1px solid var(--border);
             box-shadow:0 2px 6px rgba(0,0,0,.05);
@@ -143,20 +143,22 @@
         .toast.show { transform:translateX(-50%) translateY(0); }
         .toast.ok { background:var(--green-dk); }
 
-        /* ── Tab bar ── */
-        .tab-bar { display:none; background:#fff; border-bottom:1px solid var(--border); position:sticky; top:52px; z-index:80; }
-        .tab-btn { flex:1; background:none; border:none; border-bottom:3px solid transparent; color:var(--muted); font-size:13px; font-weight:700; padding:10px; cursor:pointer; }
-        .tab-btn.active { color:var(--blue); border-bottom-color:var(--blue); }
-
-        /* ── Checklist ── */
+        /* ── Checklist screen ── */
+        .list-hd { background:#fff; position:sticky; top:52px; z-index:80; border-bottom:1px solid var(--border); }
+        .list-back-row { display:flex; align-items:center; padding:8px 14px 4px; gap:8px; }
+        .list-back-btn { background:none; border:none; color:var(--blue); font-size:13px; font-weight:700; cursor:pointer; padding:4px 0; }
+        .zone-pills { display:flex; gap:7px; padding:8px 14px 10px; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+        .zone-pills::-webkit-scrollbar { display:none; }
+        .zone-pill { flex-shrink:0; background:var(--surf2); border:1.5px solid var(--border); border-radius:20px; color:var(--muted); font-size:12px; font-weight:700; padding:7px 13px; cursor:pointer; white-space:nowrap; transition:all .15s; }
+        .zone-pill.active { background:var(--blue); border-color:var(--blue); color:#fff; }
+        .z-badge { display:inline-block; background:var(--orange); color:#fff; border-radius:10px; font-size:10px; font-weight:800; padding:1px 5px; margin-left:4px; }
+        .zone-pill.active .z-badge { background:rgba(255,255,255,.35); }
         .list-body { padding:12px 14px 100px; }
-        .zone-sec { margin-bottom:20px; }
-        .zone-ttl { font-size:11px; color:var(--muted); letter-spacing:1.5px; text-transform:uppercase; font-weight:700; margin-bottom:8px; }
-        .chip-grid { display:flex; flex-wrap:wrap; gap:5px; }
-        .m-chip { display:flex; flex-direction:column; align-items:center; justify-content:center; width:46px; min-height:36px; border-radius:8px; font-size:12px; font-weight:800; line-height:1.3; }
+        .chip-grid { display:flex; flex-wrap:wrap; gap:6px; }
+        .m-chip { display:flex; flex-direction:column; align-items:center; justify-content:center; width:52px; min-height:42px; border-radius:9px; font-size:13px; font-weight:800; line-height:1.3; }
         .m-chip.ok  { background:#f1f5f9; color:#94a3b8; border:1px solid #e2e8f0; }
-        .m-chip.alr { background:var(--orange-lt); color:var(--orange); border:1.5px solid var(--orange-bd); cursor:pointer; }
-        .m-chip .warn { font-size:9px; }
+        .m-chip.alr { background:var(--orange); color:#fff; border:none; cursor:pointer; box-shadow:0 2px 8px rgba(234,88,12,.4); }
+        .m-chip .warn { font-size:9px; opacity:.85; }
         .list-loading { text-align:center; padding:40px; color:var(--muted); font-size:13px; }
 
         /* ── Alert popup ── */
@@ -186,14 +188,9 @@
             <button class="lang-btn on" id="lbtn_zh" onclick="switchLang('zh')">中</button>
             <button class="lang-btn" id="lbtn_vi" onclick="switchLang('vi')">VI</button>
         </div>
+        <button class="gear-btn" onclick="goList()">📋</button>
         <button class="gear-btn" onclick="goSettings()">⚙️</button>
     </div>
-</div>
-
-<!-- TAB BAR -->
-<div class="tab-bar" id="tabBar">
-    <button class="tab-btn active" id="tab_report" onclick="switchTab('report')" data-zh="異常回報" data-vi="BÁO LỖI">異常回報</button>
-    <button class="tab-btn" id="tab_list" onclick="switchTab('list')" data-zh="巡檢清單" data-vi="DANH SÁCH">巡檢清單</button>
 </div>
 
 <!-- SETTINGS -->
@@ -392,8 +389,14 @@
 
 <!-- CHECKLIST -->
 <div class="screen" id="scrList">
+    <div class="list-hd">
+        <div class="list-back-row">
+            <button class="list-back-btn" onclick="goScreen('scrMain')">← <span data-zh="回報表單" data-vi="Báo lỗi">回報表單</span></button>
+        </div>
+        <div class="zone-pills" id="zonePills"></div>
+    </div>
     <div class="list-body" id="listBody">
-        <div class="list-loading" id="listLoading">載入中...</div>
+        <div class="list-loading">載入中...</div>
     </div>
 </div>
 
@@ -456,22 +459,17 @@ var currentLang = "zh";
 
 // ── Zone / checklist data ──
 var ZONES = [
-  { zh:"織一 第一區", vi:"Khu 1 - Xưởng 1",
-    m:[1,2,179,4,181,6,183,8,185,10,187,12,189,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,151,152] },
-  { zh:"織一 第二區", vi:"Khu 2 - Xưởng 1",
-    m:[51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,153,154] },
-  { zh:"織一 第三區", vi:"Khu 3 - Xưởng 1",
-    m:[101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,155,156] },
-  { zh:"織一 第四區", vi:"Khu 4 - Xưởng 1",
-    m:[157,158,159,160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,176,177,178,3,180,5,182,7,184,9,186,11,188,13,190,191,192,193,194,195] },
-  { zh:"織二 第一區", vi:"Khu 1 - Xưởng 2",
-    m:[201,202,203,204,205,206,207,208,209,210,211,212,213,214,215,216,217,218,219,220,221,222,223,224,225,226,227,228,229,230,231,232,233,234,235,236,237,238,239,240,241,242,243,244,245,246,247,248,249,250,251,252,253,254,255,256,257,258,259,260,261,262,263,264,265,266,267,268,269,270,271,272,273,274,275,276,277,278,279,280] },
-  { zh:"織二 第二區", vi:"Khu 2 - Xưởng 2",
-    m:[281,282,283,284,285,286,287,288,289,290,291,292,293,294,295,296,297,298,299,300,301,302,303,304,305,306,307,308,309,310,311,312,313,314,315,316,317] }
+  { zh:"織一①", vi:"Xưởng1-①", m:[1,2,179,4,181,6,183,8,185,10,187,12,189,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,151,152] },
+  { zh:"織一②", vi:"Xưởng1-②", m:[51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,153,154] },
+  { zh:"織一③", vi:"Xưởng1-③", m:[101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,155,156] },
+  { zh:"織一④", vi:"Xưởng1-④", m:[157,158,159,160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,176,177,178,3,180,5,182,7,184,9,186,11,188,13,190,191,192,193,194,195] },
+  { zh:"織二①", vi:"Xưởng2-①", m:[201,202,203,204,205,206,207,208,209,210,211,212,213,214,215,216,217,218,219,220,221,222,223,224,225,226,227,228,229,230,231,232,233,234,235,236,237,238,239,240,241,242,243,244,245,246,247,248,249,250,251,252,253,254,255,256,257,258,259,260,261,262,263,264,265,266,267,268,269,270,271,272,273,274,275,276,277,278,279,280] },
+  { zh:"織二②", vi:"Xưởng2-②", m:[281,282,283,284,285,286,287,288,289,290,291,292,293,294,295,296,297,298,299,300,301,302,303,304,305,306,307,308,309,310,311,312,313,314,315,316,317] }
 ];
 
 var yesterdayAlerts = {};
 var listBuilt = false;
+var currentZone = 0;
 
 // ── Checklist ──
 async function fetchAlerts() {
@@ -481,28 +479,49 @@ async function fetchAlerts() {
     } catch(e) { yesterdayAlerts = {}; }
 }
 
+function goList() {
+    goScreen("scrList");
+    if (!listBuilt) buildChecklist();
+    else { renderZonePills(); renderZone(currentZone); }
+}
+
 async function buildChecklist() {
-    document.getElementById("listLoading").style.display = "block";
-    document.getElementById("listBody").innerHTML = '<div class="list-loading" id="listLoading">載入中...</div>';
+    document.getElementById("listBody").innerHTML = '<div class="list-loading">' + (currentLang === "zh" ? "載入中..." : "Đang tải...") + '</div>';
     await fetchAlerts();
     listBuilt = true;
+    renderZonePills();
+    renderZone(currentZone);
+}
 
+function renderZonePills() {
     var zh = currentLang === "zh";
     var html = "";
-    ZONES.forEach(function(zone) {
-        var alertCount = zone.m.filter(function(m) { return yesterdayAlerts[String(m)]; }).length;
-        var badge = alertCount > 0 ? ' <span style="color:var(--orange)">⚠' + alertCount + '</span>' : "";
-        html += '<div class="zone-sec"><div class="zone-ttl">' + (zh ? zone.zh : zone.vi) + badge + '</div><div class="chip-grid">';
-        zone.m.forEach(function(m) {
-            var a = yesterdayAlerts[String(m)];
-            if (a && a.length) {
-                html += '<div class="m-chip alr" onclick="showPopup(' + m + ')">' + m + '<span class="warn">⚠</span></div>';
-            } else {
-                html += '<div class="m-chip ok">' + m + '</div>';
-            }
-        });
-        html += '</div></div>';
+    ZONES.forEach(function(zone, i) {
+        var cnt = zone.m.filter(function(m) { return yesterdayAlerts[String(m)]; }).length;
+        var badge = cnt > 0 ? '<span class="z-badge">' + cnt + '</span>' : "";
+        html += '<button class="zone-pill' + (i === currentZone ? " active" : "") + '" onclick="selectZone(' + i + ')">' + (zh ? zone.zh : zone.vi) + badge + '</button>';
     });
+    document.getElementById("zonePills").innerHTML = html;
+}
+
+function selectZone(i) {
+    currentZone = i;
+    renderZonePills();
+    renderZone(i);
+}
+
+function renderZone(i) {
+    var zone = ZONES[i];
+    var html = '<div class="chip-grid">';
+    zone.m.forEach(function(m) {
+        var a = yesterdayAlerts[String(m)];
+        if (a && a.length) {
+            html += '<div class="m-chip alr" onclick="showPopup(' + m + ')">' + m + '<span class="warn">⚠</span></div>';
+        } else {
+            html += '<div class="m-chip ok">' + m + '</div>';
+        }
+    });
+    html += '</div>';
     document.getElementById("listBody").innerHTML = html;
 }
 
@@ -520,17 +539,6 @@ function showPopup(mNo) {
 function closePopup() {
     document.getElementById("pop").classList.remove("on");
     document.getElementById("ov").classList.remove("on");
-}
-
-function switchTab(tab) {
-    document.getElementById("tab_report").classList.toggle("active", tab === "report");
-    document.getElementById("tab_list").classList.toggle("active", tab === "list");
-    if (tab === "report") {
-        goScreen(localStorage.getItem(K.name) ? "scrMain" : "scrSettings");
-    } else {
-        goScreen("scrList");
-        if (!listBuilt) buildChecklist();
-    }
 }
 
 // ── Offline Queue ──
@@ -659,10 +667,6 @@ function goScreen(id) {
     document.querySelectorAll(".screen").forEach(function(s) { s.classList.remove("active"); });
     document.getElementById(id).classList.add("active");
     window.scrollTo(0, 0);
-    var showTab = (id === "scrMain" || id === "scrList");
-    document.getElementById("tabBar").style.display = showTab ? "flex" : "none";
-    if (id === "scrMain") { document.getElementById("tab_report").classList.add("active"); document.getElementById("tab_list").classList.remove("active"); }
-    if (id === "scrList") { document.getElementById("tab_list").classList.add("active"); document.getElementById("tab_report").classList.remove("active"); }
 }
 
 // ── Settings ──
