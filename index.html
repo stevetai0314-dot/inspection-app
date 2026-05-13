@@ -481,11 +481,27 @@ async function uploadQueue() {
 window.addEventListener("online", function() { if (getQueue().length > 0) uploadQueue(); });
 
 // ── Alerts ──
-async function fetchAlerts() {
-    try {
-        var res = await fetch(GAS_URL);
-        yesterdayAlerts = await res.json();
-    } catch(e) { yesterdayAlerts = {}; }
+function fetchAlerts() {
+    return new Promise(function(resolve) {
+        var cb = '_cb' + Date.now();
+        var done = false;
+        var finish = function(data) {
+            if (done) return;
+            done = true;
+            yesterdayAlerts = data || {};
+            delete window[cb];
+            var s = document.getElementById(cb);
+            if (s) s.parentNode.removeChild(s);
+            resolve();
+        };
+        window[cb] = finish;
+        var script = document.createElement('script');
+        script.id = cb;
+        script.src = GAS_URL + '?callback=' + cb;
+        script.onerror = function() { finish({}); };
+        setTimeout(function() { finish({}); }, 8000);
+        document.head.appendChild(script);
+    });
 }
 
 // ── Zone screen ──
@@ -552,7 +568,7 @@ function saveSettings() {
     localStorage.setItem(K.name, name);
     goScreen("scrZone");
     buildZoneGrid();
-    fetchAlerts().then(buildZoneGrid);
+    fetchAlerts().then(function() { buildZoneGrid(); });
 }
 function goSettings() { loadCfg(); goScreen("scrSettings"); }
 
@@ -727,7 +743,11 @@ window.onload = function() {
     if (localStorage.getItem(K.name)) {
         goScreen("scrZone");
         buildZoneGrid();
-        fetchAlerts().then(buildZoneGrid);
+        fetchAlerts().then(function() {
+            buildZoneGrid();
+            var active = document.querySelector(".screen.active");
+            if (active && active.id === "scrList") goMachines(selectedZone);
+        });
     } else {
         goScreen("scrSettings");
     }
