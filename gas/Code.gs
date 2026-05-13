@@ -56,7 +56,7 @@ function doGet(e) {
 
     for (var i = 1; i < rows.length; i++) {
       var r = rows[i];
-      var rowDate = (r[0] instanceof Date)
+      var rowDate = (r[0] && typeof r[0].getTime === 'function')
           ? Utilities.formatDate(r[0], TZ, "yyyy/MM/dd")
           : String(r[0]).trim();
       if (rowDate !== yStr) continue;
