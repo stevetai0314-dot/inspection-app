@@ -158,6 +158,15 @@
         .ok-det  { font-size:13px; color:var(--muted); line-height:1.8; }
         .btn-next { background:var(--blue); border:none; border-radius:var(--r); color:#fff; font-size:16px; padding:15px 32px; cursor:pointer; font-weight:700; }
 
+        /* Yesterday reference card */
+        .yest-ref { background:var(--orange-lt); border:1.5px solid var(--orange-bd); border-radius:10px; padding:10px 14px; margin-bottom:12px; }
+        .yest-ref-ttl { font-size:10px; color:var(--orange); font-weight:700; letter-spacing:1px; text-transform:uppercase; margin-bottom:8px; }
+        .yest-row { display:flex; align-items:baseline; gap:6px; font-size:12px; margin-bottom:5px; flex-wrap:wrap; }
+        .yest-row:last-child { margin-bottom:0; }
+        .yest-type { font-weight:800; color:var(--orange); min-width:34px; }
+        .yest-side { color:var(--muted); font-size:11px; }
+        .yest-val  { color:var(--text); font-weight:600; margin-right:8px; }
+
         /* Toast */
         .toast { position:fixed; top:16px; left:50%; transform:translateX(-50%) translateY(-100px); background:var(--red); color:#fff; padding:10px 22px; border-radius:30px; font-size:13px; transition:transform .3s; z-index:999; pointer-events:none; white-space:nowrap; }
         .toast.show { transform:translateX(-50%) translateY(0); }
@@ -240,6 +249,8 @@
     </div>
 
     <div class="form-body">
+        <div class="yest-ref" id="yesterdayRef" style="display:none"></div>
+
         <p class="empty-hint" id="emptyHint"
            data-zh="↑ 點選上方項目新增異常" data-vi="↑ Nhấn phía trên để thêm lỗi">
             ↑ 點選上方項目新增異常
@@ -528,8 +539,9 @@ function goMachines(zoneIdx) {
     var html = "";
     zone.m.forEach(function(m) {
         var a = yesterdayAlerts[String(m)];
-        var cls = (a && a.length) ? "alr" : "ok";
-        html += '<div class="m-chip ' + cls + '" onclick="goForm(' + m + ')">' + m + (a && a.length ? '<span class="warn">⚠</span>' : '') + '</div>';
+        var hasAlert = a && Object.keys(a).length > 0;
+        var cls = hasAlert ? "alr" : "ok";
+        html += '<div class="m-chip ' + cls + '" onclick="goForm(' + m + ')">' + m + (hasAlert ? '<span class="warn">⚠</span>' : '') + '</div>';
     });
     document.getElementById("machGrid").innerHTML = html;
     goScreen("scrList");
@@ -541,14 +553,30 @@ function goForm(mNo) {
     resetForm();
     var zh = currentLang === "zh";
     document.getElementById("formMachTag").textContent = "#" + mNo;
-    var alerts = yesterdayAlerts[String(mNo)] || [];
+    var alerts = yesterdayAlerts[String(mNo)];
     var tag = document.getElementById("formYestTag");
-    if (alerts.length) {
-        var types = zh ? alerts : alerts.map(function(t) { return TYPE_MAP[t] || t; });
-        tag.textContent = (zh ? "⚠ 昨日：" : "⚠ Hôm qua: ") + types.join("、");
+    var ref = document.getElementById("yesterdayRef");
+    if (alerts && Object.keys(alerts).length > 0) {
+        var types = Object.keys(alerts);
+        var typeLabels = zh ? types : types.map(function(t) { return TYPE_MAP[t] || t; });
+        tag.textContent = (zh ? "⚠ 昨日：" : "⚠ Hôm qua: ") + typeLabels.join("、");
         tag.style.display = "";
+        var html = '<div class="yest-ref-ttl">' + (zh ? "⚠ 昨日數值" : "⚠ Giá trị hôm qua") + '</div>';
+        types.forEach(function(type) {
+            var vals = alerts[type];
+            var lbl = zh ? type : (TYPE_MAP[type] || type);
+            var lL = zh ? "左" : "T"; var rL = zh ? "右" : "P";
+            html += '<div class="yest-row">';
+            html += '<span class="yest-type">' + lbl + '</span>';
+            html += '<span class="yest-side">' + lL + '</span><span class="yest-val">' + (vals[0] || "-") + '</span>';
+            html += '<span class="yest-side">' + rL + '</span><span class="yest-val">' + (vals[1] || "-") + '</span>';
+            html += '</div>';
+        });
+        ref.innerHTML = html;
+        ref.style.display = "";
     } else {
         tag.style.display = "none";
+        ref.style.display = "none";
     }
     goScreen("scrMain");
 }

@@ -45,7 +45,7 @@ function doGet(e) {
     var ss = SpreadsheetApp.getActiveSpreadsheet();
     var sheet = ss.getSheetByName(SHEET_NAME);
 
-    if (!sheet || sheet.getLastRow() <= 1) return jsonOut({});
+    if (!sheet || sheet.getLastRow() <= 1) return respond({}, e);
 
     var yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
@@ -63,19 +63,30 @@ function doGet(e) {
 
       var mNo = String(r[3]).trim();
       if (!mNo) continue;
-      if (!result[mNo]) result[mNo] = [];
+      if (!result[mNo]) result[mNo] = {};
 
-      if ((r[4] !== "" || r[5] !== "") && result[mNo].indexOf("帶寬") < 0) result[mNo].push("帶寬");
-      if ((r[6] !== "" || r[7] !== "") && result[mNo].indexOf("勾高") < 0) result[mNo].push("勾高");
-      if ((r[8] !== "" || r[9] !== "") && result[mNo].indexOf("電熱") < 0) result[mNo].push("電熱");
-      if ((r[10]!== "" || r[11]!== "") && result[mNo].indexOf("外觀") < 0) result[mNo].push("外觀");
+      if (r[4] !== "" || r[5] !== "") result[mNo]["帶寬"] = [String(r[4]), String(r[5])];
+      if (r[6] !== "" || r[7] !== "") result[mNo]["勾高"] = [String(r[6]), String(r[7])];
+      if (r[8] !== "" || r[9] !== "") result[mNo]["電熱"] = [String(r[8]), String(r[9])];
+      if (r[10]!== "" || r[11]!== "") result[mNo]["外觀"] = [String(r[10]), String(r[11])];
     }
 
-    return jsonOut(result);
+    return respond(result, e);
 
   } catch (err) {
-    return jsonOut({});
+    return respond({}, e);
   }
+}
+
+function respond(obj, e) {
+  var json = JSON.stringify(obj);
+  var cb = e && e.parameter && e.parameter.callback;
+  if (cb) {
+    return ContentService.createTextOutput(cb + '(' + json + ')')
+        .setMimeType(ContentService.MimeType.JAVASCRIPT);
+  }
+  return ContentService.createTextOutput(json)
+      .setMimeType(ContentService.MimeType.JSON);
 }
 
 function jsonOut(obj) {
