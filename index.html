@@ -36,13 +36,52 @@
         }
         .gear-btn { background:none; border:none; color:var(--muted); font-size:20px; cursor:pointer; padding:4px; }
 
-        /* ── Sticky add bar ── */
+        /* ── Screens ── */
+        .screen { display:none; } .screen.active { display:block; }
+
+        /* ── Settings ── */
+        .set-body { padding:20px 16px; }
+        .set-desc { font-size:13px; color:var(--muted); margin-bottom:22px; line-height:1.7; }
+        .set-group { margin-bottom:16px; }
+        .set-lbl { font-size:11px; color:var(--muted); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:6px; font-weight:700; }
+        .set-inp { width:100%; background:var(--surf); border:2px solid var(--border); border-radius:10px; color:var(--text); font-size:15px; padding:12px 14px; outline:none; }
+        .set-inp:focus { border-color:var(--blue); }
+        .btn-save { width:100%; background:var(--blue); border:none; border-radius:var(--r); color:#fff; font-size:16px; padding:16px; cursor:pointer; font-weight:700; margin-top:8px; }
+
+        /* ── Zone selection ── */
+        .zone-page { padding:16px; }
+        .zone-page-ttl { font-size:11px; color:var(--muted); letter-spacing:1.5px; text-transform:uppercase; font-weight:700; margin-bottom:14px; }
+        .zone-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+        .zone-card { background:#fff; border:2px solid var(--border); border-radius:var(--r); padding:18px 12px; cursor:pointer; text-align:center; transition:all .15s; box-shadow:0 1px 3px rgba(0,0,0,.05); }
+        .zone-card.has-alert { border-color:var(--orange); background:var(--orange-lt); }
+        .zone-card:active { transform:scale(.97); }
+        .zone-name  { font-size:16px; font-weight:800; color:var(--text); margin-bottom:4px; }
+        .zone-count { font-size:11px; color:var(--muted); }
+        .zone-alert { font-size:12px; color:var(--orange); font-weight:700; margin-top:8px; }
+
+        /* ── Machine list ── */
+        .mach-hd { background:#fff; position:sticky; top:52px; z-index:80; border-bottom:1px solid var(--border); padding:10px 16px; display:flex; align-items:center; gap:10px; box-shadow:0 1px 4px rgba(0,0,0,.05); }
+        .mach-back-btn  { background:none; border:none; color:var(--blue); font-size:14px; font-weight:700; cursor:pointer; flex-shrink:0; }
+        .mach-zone-lbl  { font-size:15px; font-weight:800; color:var(--text); }
+        .mach-body { padding:12px 14px 100px; }
+        .chip-grid { display:flex; flex-wrap:wrap; gap:6px; }
+        .m-chip { display:flex; flex-direction:column; align-items:center; justify-content:center; width:52px; min-height:42px; border-radius:9px; font-size:13px; font-weight:800; line-height:1.3; cursor:pointer; transition:transform .1s; }
+        .m-chip:active { transform:scale(.92); }
+        .m-chip.ok  { background:#f1f5f9; color:#94a3b8; border:1px solid #e2e8f0; }
+        .m-chip.alr { background:var(--orange); color:#fff; border:none; box-shadow:0 2px 8px rgba(234,88,12,.4); }
+        .m-chip .warn { font-size:9px; opacity:.85; }
+
+        /* ── Form sticky bar ── */
         .sticky-add {
             position:sticky; top:52px; z-index:50;
-            background:var(--bg); padding:10px 14px 10px;
+            background:var(--bg); padding:8px 14px 10px;
             border-bottom:1px solid var(--border);
             box-shadow:0 2px 6px rgba(0,0,0,.05);
         }
+        .form-nav-row { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+        .form-back-btn { background:none; border:none; color:var(--blue); font-size:13px; font-weight:700; cursor:pointer; padding:0; flex-shrink:0; }
+        .form-mach-tag { font-size:18px; font-weight:800; color:var(--text); }
+        .form-yest-tag { font-size:11px; color:var(--orange); font-weight:700; background:var(--orange-lt); border:1px solid var(--orange-bd); border-radius:6px; padding:3px 8px; margin-left:auto; white-space:nowrap; }
         .add-bar-lbl { font-size:10px; color:var(--muted); letter-spacing:1.5px; text-transform:uppercase; font-weight:700; margin-bottom:8px; }
         .add-row { display:flex; flex-wrap:wrap; gap:7px; }
         .add-btn {
@@ -56,27 +95,8 @@
         .add-btn.active { border-style:solid; border-color:var(--orange); background:var(--orange-lt); color:var(--orange); }
         .add-btn.active .ic { transform:rotate(45deg); }
 
-        /* ── Screens ── */
-        .screen { display:none; } .screen.active { display:block; }
-
-        /* ── Settings ── */
-        .set-body { padding:20px 16px; }
-        .set-desc { font-size:13px; color:var(--muted); margin-bottom:22px; line-height:1.7; }
-        .set-group { margin-bottom:16px; }
-        .set-lbl { font-size:11px; color:var(--muted); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:6px; font-weight:700; }
-        .set-inp { width:100%; background:var(--surf); border:2px solid var(--border); border-radius:10px; color:var(--text); font-size:15px; padding:12px 14px; outline:none; }
-        .set-inp:focus { border-color:var(--blue); }
-        .btn-save { width:100%; background:var(--blue); border:none; border-radius:var(--r); color:#fff; font-size:16px; padding:16px; cursor:pointer; font-weight:700; margin-top:8px; }
-
         /* ── Form body ── */
         .form-body { padding:14px; }
-
-        /* Machine */
-        .machine-card { background:var(--surf); border:2px solid var(--border); border-radius:var(--r); padding:14px; margin-bottom:14px; box-shadow:0 1px 3px rgba(0,0,0,.05); }
-        .machine-lbl { font-size:11px; color:var(--muted); letter-spacing:1.5px; text-transform:uppercase; font-weight:700; margin-bottom:8px; }
-        .machine-inp { width:100%; background:var(--surf2); border:2px solid var(--border); border-radius:10px; color:var(--text); font-size:36px; font-weight:800; padding:10px; text-align:center; outline:none; letter-spacing:4px; }
-        .machine-inp:focus { border-color:var(--blue); box-shadow:0 0 0 3px rgba(37,99,235,.1); }
-        .machine-inp::placeholder { font-size:14px; letter-spacing:1px; color:#cbd5e1; font-weight:normal; }
 
         /* Empty hint */
         .empty-hint { text-align:center; padding:30px 0 10px; color:#94a3b8; font-size:13px; line-height:1.8; }
@@ -142,35 +162,6 @@
         .toast { position:fixed; top:16px; left:50%; transform:translateX(-50%) translateY(-100px); background:var(--red); color:#fff; padding:10px 22px; border-radius:30px; font-size:13px; transition:transform .3s; z-index:999; pointer-events:none; white-space:nowrap; }
         .toast.show { transform:translateX(-50%) translateY(0); }
         .toast.ok { background:var(--green-dk); }
-
-        /* ── Checklist screen ── */
-        .list-hd { background:#fff; position:sticky; top:52px; z-index:80; border-bottom:1px solid var(--border); }
-        .list-back-row { display:flex; align-items:center; padding:8px 14px 4px; gap:8px; }
-        .list-back-btn { background:none; border:none; color:var(--blue); font-size:13px; font-weight:700; cursor:pointer; padding:4px 0; }
-        .zone-pills { display:flex; gap:7px; padding:8px 14px 10px; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
-        .zone-pills::-webkit-scrollbar { display:none; }
-        .zone-pill { flex-shrink:0; background:var(--surf2); border:1.5px solid var(--border); border-radius:20px; color:var(--muted); font-size:12px; font-weight:700; padding:7px 13px; cursor:pointer; white-space:nowrap; transition:all .15s; }
-        .zone-pill.active { background:var(--blue); border-color:var(--blue); color:#fff; }
-        .z-badge { display:inline-block; background:var(--orange); color:#fff; border-radius:10px; font-size:10px; font-weight:800; padding:1px 5px; margin-left:4px; }
-        .zone-pill.active .z-badge { background:rgba(255,255,255,.35); }
-        .list-body { padding:12px 14px 100px; }
-        .chip-grid { display:flex; flex-wrap:wrap; gap:6px; }
-        .m-chip { display:flex; flex-direction:column; align-items:center; justify-content:center; width:52px; min-height:42px; border-radius:9px; font-size:13px; font-weight:800; line-height:1.3; }
-        .m-chip.ok  { background:#f1f5f9; color:#94a3b8; border:1px solid #e2e8f0; }
-        .m-chip.alr { background:var(--orange); color:#fff; border:none; cursor:pointer; box-shadow:0 2px 8px rgba(234,88,12,.4); }
-        .m-chip .warn { font-size:9px; opacity:.85; }
-        .list-loading { text-align:center; padding:40px; color:var(--muted); font-size:13px; }
-
-        /* ── Alert popup ── */
-        .ov  { display:none; position:fixed; inset:0; background:rgba(0,0,0,.35); z-index:200; }
-        .ov.on { display:block; }
-        .pop { display:none; position:fixed; bottom:0; left:0; right:0; background:#fff; border-radius:16px 16px 0 0; padding:24px 20px 36px; z-index:201; box-shadow:0 -4px 24px rgba(0,0,0,.15); }
-        .pop.on { display:block; }
-        .pop-mach  { font-size:22px; font-weight:800; margin-bottom:2px; }
-        .pop-lbl   { font-size:11px; color:var(--muted); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:14px; }
-        .pop-types { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:22px; }
-        .pop-type  { background:var(--orange-lt); color:var(--orange); border:1px solid var(--orange-bd); border-radius:20px; font-size:13px; font-weight:700; padding:6px 16px; }
-        .pop-close { width:100%; background:var(--surf2); border:1.5px solid var(--border); border-radius:var(--r); color:var(--muted); font-size:15px; font-weight:700; padding:14px; cursor:pointer; }
     </style>
 </head>
 <body>
@@ -188,7 +179,6 @@
             <button class="lang-btn on" id="lbtn_zh" onclick="switchLang('zh')">中</button>
             <button class="lang-btn" id="lbtn_vi" onclick="switchLang('vi')">VI</button>
         </div>
-        <button class="gear-btn" onclick="goList()">📋</button>
         <button class="gear-btn" onclick="goSettings()">⚙️</button>
     </div>
 </div>
@@ -205,11 +195,33 @@
     </div>
 </div>
 
-<!-- MAIN -->
-<div class="screen" id="scrMain">
+<!-- ZONE SELECT -->
+<div class="screen" id="scrZone">
+    <div class="zone-page">
+        <div class="zone-page-ttl" data-zh="選擇巡檢區域" data-vi="Chọn khu vực">選擇巡檢區域</div>
+        <div class="zone-grid" id="zoneGrid"></div>
+    </div>
+</div>
 
-    <!-- Sticky add bar -->
+<!-- MACHINE LIST -->
+<div class="screen" id="scrList">
+    <div class="mach-hd">
+        <button class="mach-back-btn" onclick="goScreen('scrZone')">←</button>
+        <span class="mach-zone-lbl" id="machZoneName"></span>
+    </div>
+    <div class="mach-body">
+        <div class="chip-grid" id="machGrid"></div>
+    </div>
+</div>
+
+<!-- FORM -->
+<div class="screen" id="scrMain">
     <div class="sticky-add">
+        <div class="form-nav-row">
+            <button class="form-back-btn" onclick="goScreen('scrList')">←</button>
+            <span class="form-mach-tag" id="formMachTag"></span>
+            <span class="form-yest-tag" id="formYestTag" style="display:none"></span>
+        </div>
         <div class="add-bar-lbl" data-zh="點選新增異常項目" data-vi="Thêm lỗi">點選新增異常項目</div>
         <div class="add-row">
             <button class="add-btn" id="addbtn_rong" onclick="toggleProblem('rong')">
@@ -228,15 +240,6 @@
     </div>
 
     <div class="form-body">
-
-        <!-- 機台號 -->
-        <div class="machine-card">
-            <div class="machine-lbl" data-zh="機台號" data-vi="Số máy">機台號</div>
-            <input class="machine-inp" type="number" id="machineNum" inputmode="numeric"
-                   data-ph-zh="輸入機台號" data-ph-vi="Nhập số máy" placeholder="輸入機台號">
-        </div>
-
-        <!-- Empty hint -->
         <p class="empty-hint" id="emptyHint"
            data-zh="↑ 點選上方項目新增異常" data-vi="↑ Nhấn phía trên để thêm lỗi">
             ↑ 點選上方項目新增異常
@@ -376,7 +379,6 @@
                 </div>
             </div>
         </div>
-
     </div>
 
     <div class="sub-area">
@@ -387,19 +389,6 @@
     </div>
 </div>
 
-<!-- CHECKLIST -->
-<div class="screen" id="scrList">
-    <div class="list-hd">
-        <div class="list-back-row">
-            <button class="list-back-btn" onclick="goScreen('scrMain')">← <span data-zh="回報表單" data-vi="Báo lỗi">回報表單</span></button>
-        </div>
-        <div class="zone-pills" id="zonePills"></div>
-    </div>
-    <div class="list-body" id="listBody">
-        <div class="list-loading">載入中...</div>
-    </div>
-</div>
-
 <!-- SUCCESS -->
 <div class="screen" id="scrOK">
     <div class="ok-wrap">
@@ -407,18 +396,9 @@
         <div class="ok-msg" id="okMsg">回報成功</div>
         <div class="ok-tag" id="okTag"></div>
         <div class="ok-det" id="okDet"></div>
-        <button class="btn-next" onclick="resetForm();goScreen('scrMain')"
+        <button class="btn-next" onclick="resetForm();goScreen('scrList')"
                 data-zh="繼續巡檢 →" data-vi="Tiếp tục →">繼續巡檢 →</button>
     </div>
-</div>
-
-<!-- ALERT POPUP -->
-<div class="ov" id="ov" onclick="closePopup()"></div>
-<div class="pop" id="pop">
-    <div class="pop-mach" id="popMach"></div>
-    <div class="pop-lbl" data-zh="昨日異常項目" data-vi="Lỗi hôm qua">昨日異常項目</div>
-    <div class="pop-types" id="popTypes"></div>
-    <button class="pop-close" onclick="closePopup()" data-zh="關閉" data-vi="Đóng">關閉</button>
 </div>
 
 <script>
@@ -456,8 +436,11 @@ var QUEUE_KEY = "pending_queue";
 var activeProblems = new Set();
 var defects = {t:new Set(), p:new Set()};
 var currentLang = "zh";
+var selectedZone = 0;
+var selectedMachine = null;
+var yesterdayAlerts = {};
+var TYPE_MAP = {"帶寬":"Độ rộng","勾高":"Cao móc","電熱":"Nhiệt","外觀":"Ngoại quan"};
 
-// ── Zone / checklist data ──
 var ZONES = [
   { zh:"織一①", vi:"Xưởng1-①", m:[1,2,179,4,181,6,183,8,185,10,187,12,189,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,151,152] },
   { zh:"織一②", vi:"Xưởng1-②", m:[51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,153,154] },
@@ -467,11 +450,37 @@ var ZONES = [
   { zh:"織二②", vi:"Xưởng2-②", m:[281,282,283,284,285,286,287,288,289,290,291,292,293,294,295,296,297,298,299,300,301,302,303,304,305,306,307,308,309,310,311,312,313,314,315,316,317] }
 ];
 
-var yesterdayAlerts = {};
-var listBuilt = false;
-var currentZone = 0;
+// ── Offline Queue ──
+function getQueue() {
+    try { return JSON.parse(localStorage.getItem(QUEUE_KEY) || "[]"); } catch(e) { return []; }
+}
+function saveQueue(q) { localStorage.setItem(QUEUE_KEY, JSON.stringify(q)); }
+function enqueue(payload) { var q = getQueue(); q.push(payload); saveQueue(q); updateBadge(); }
+function dequeue(id) { saveQueue(getQueue().filter(function(p) { return p._id !== id; })); updateBadge(); }
+function updateBadge() {
+    var n = getQueue().length;
+    var el = document.getElementById("uploadBadge");
+    if (n > 0) { el.textContent = "⏳ " + n; el.style.display = "flex"; }
+    else { el.style.display = "none"; }
+}
 
-// ── Checklist ──
+async function uploadOne(payload) {
+    await fetch(GAS_URL, { method:"POST", mode:"no-cors", headers:{"Content-Type":"application/json"}, body:JSON.stringify(payload) });
+    dequeue(payload._id);
+}
+async function uploadQueue() {
+    var q = getQueue();
+    if (q.length === 0) return;
+    document.getElementById("uploadBadge").textContent = currentLang==="zh" ? "上傳中..." : "Đang tải...";
+    var failed = 0;
+    for (var i = 0; i < q.length; i++) { try { await uploadOne(q[i]); } catch(e) { failed++; } }
+    updateBadge();
+    showToast(failed === 0 ? (currentLang==="zh" ? "全部上傳完成 ✓" : "Đã tải lên xong ✓") :
+        (currentLang==="zh" ? "失敗 " : "Lỗi ") + failed + (currentLang==="zh" ? " 筆，稍後再試" : " mục"), failed === 0);
+}
+window.addEventListener("online", function() { if (getQueue().length > 0) uploadQueue(); });
+
+// ── Alerts ──
 async function fetchAlerts() {
     try {
         var res = await fetch(GAS_URL);
@@ -479,187 +488,53 @@ async function fetchAlerts() {
     } catch(e) { yesterdayAlerts = {}; }
 }
 
-function goList() {
-    goScreen("scrList");
-    if (!listBuilt) buildChecklist();
-    else { renderZonePills(); renderZone(currentZone); }
-}
-
-async function buildChecklist() {
-    document.getElementById("listBody").innerHTML = '<div class="list-loading">' + (currentLang === "zh" ? "載入中..." : "Đang tải...") + '</div>';
-    await fetchAlerts();
-    listBuilt = true;
-    renderZonePills();
-    renderZone(currentZone);
-}
-
-function renderZonePills() {
+// ── Zone screen ──
+function buildZoneGrid() {
     var zh = currentLang === "zh";
     var html = "";
     ZONES.forEach(function(zone, i) {
         var cnt = zone.m.filter(function(m) { return yesterdayAlerts[String(m)]; }).length;
-        var badge = cnt > 0 ? '<span class="z-badge">' + cnt + '</span>' : "";
-        html += '<button class="zone-pill' + (i === currentZone ? " active" : "") + '" onclick="selectZone(' + i + ')">' + (zh ? zone.zh : zone.vi) + badge + '</button>';
+        html += '<div class="zone-card' + (cnt > 0 ? " has-alert" : "") + '" onclick="goMachines(' + i + ')">';
+        html += '<div class="zone-name">' + (zh ? zone.zh : zone.vi) + '</div>';
+        html += '<div class="zone-count">' + zone.m.length + (zh ? " 台" : " máy") + '</div>';
+        if (cnt > 0) html += '<div class="zone-alert">⚠ ' + cnt + (zh ? " 台" : " máy") + '</div>';
+        html += '</div>';
     });
-    document.getElementById("zonePills").innerHTML = html;
+    document.getElementById("zoneGrid").innerHTML = html;
 }
 
-function selectZone(i) {
-    currentZone = i;
-    renderZonePills();
-    renderZone(i);
-}
-
-function renderZone(i) {
-    var zone = ZONES[i];
-    var html = '<div class="chip-grid">';
+// ── Machine list screen ──
+function goMachines(zoneIdx) {
+    selectedZone = zoneIdx;
+    var zone = ZONES[zoneIdx];
+    var zh = currentLang === "zh";
+    document.getElementById("machZoneName").textContent = zh ? zone.zh : zone.vi;
+    var html = "";
     zone.m.forEach(function(m) {
         var a = yesterdayAlerts[String(m)];
-        if (a && a.length) {
-            html += '<div class="m-chip alr" onclick="showPopup(' + m + ')">' + m + '<span class="warn">⚠</span></div>';
-        } else {
-            html += '<div class="m-chip ok">' + m + '</div>';
-        }
+        var cls = (a && a.length) ? "alr" : "ok";
+        html += '<div class="m-chip ' + cls + '" onclick="goForm(' + m + ')">' + m + (a && a.length ? '<span class="warn">⚠</span>' : '') + '</div>';
     });
-    html += '</div>';
-    document.getElementById("listBody").innerHTML = html;
+    document.getElementById("machGrid").innerHTML = html;
+    goScreen("scrList");
 }
 
-function showPopup(mNo) {
+// ── Form screen ──
+function goForm(mNo) {
+    selectedMachine = mNo;
+    resetForm();
     var zh = currentLang === "zh";
-    var types = yesterdayAlerts[String(mNo)] || [];
-    var typeMap = { "帶寬":"Độ rộng", "勾高":"Cao móc", "電熱":"Nhiệt", "外觀":"Ngoại quan" };
-    document.getElementById("popMach").textContent = (zh ? "機台 #" : "Máy #") + mNo;
-    document.getElementById("popTypes").innerHTML = types.map(function(t) {
-        return '<span class="pop-type">' + (zh ? t : (typeMap[t] || t)) + '</span>';
-    }).join("");
-    document.getElementById("pop").classList.add("on");
-    document.getElementById("ov").classList.add("on");
-}
-function closePopup() {
-    document.getElementById("pop").classList.remove("on");
-    document.getElementById("ov").classList.remove("on");
-}
-
-// ── Offline Queue ──
-function getQueue() {
-    try { return JSON.parse(localStorage.getItem(QUEUE_KEY) || "[]"); } catch(e) { return []; }
-}
-function saveQueue(q) {
-    localStorage.setItem(QUEUE_KEY, JSON.stringify(q));
-}
-function enqueue(payload) {
-    var q = getQueue();
-    q.push(payload);
-    saveQueue(q);
-    updateBadge();
-}
-function dequeue(id) {
-    saveQueue(getQueue().filter(function(p) { return p._id !== id; }));
-    updateBadge();
-}
-function updateBadge() {
-    var n = getQueue().length;
-    var el = document.getElementById("uploadBadge");
-    if (n > 0) {
-        el.textContent = "⏳ " + n;
-        el.style.display = "flex";
+    document.getElementById("formMachTag").textContent = "#" + mNo;
+    var alerts = yesterdayAlerts[String(mNo)] || [];
+    var tag = document.getElementById("formYestTag");
+    if (alerts.length) {
+        var types = zh ? alerts : alerts.map(function(t) { return TYPE_MAP[t] || t; });
+        tag.textContent = (zh ? "⚠ 昨日：" : "⚠ Hôm qua: ") + types.join("、");
+        tag.style.display = "";
     } else {
-        el.style.display = "none";
+        tag.style.display = "none";
     }
-}
-
-async function uploadOne(payload) {
-    await fetch(GAS_URL, {
-        method:"POST", mode:"no-cors",
-        headers:{"Content-Type":"application/json"},
-        body:JSON.stringify(payload)
-    });
-    dequeue(payload._id);
-}
-
-async function uploadQueue() {
-    var q = getQueue();
-    if (q.length === 0) return;
-    var badge = document.getElementById("uploadBadge");
-    badge.textContent = currentLang==="zh" ? "上傳中..." : "Đang tải...";
-    var failed = 0;
-    for (var i = 0; i < q.length; i++) {
-        try { await uploadOne(q[i]); }
-        catch(e) { failed++; }
-    }
-    updateBadge();
-    if (failed === 0) {
-        showToast(currentLang==="zh" ? "全部上傳完成 ✓" : "Đã tải lên xong ✓", true);
-    } else {
-        showToast((currentLang==="zh" ? "失敗 " : "Lỗi ") + failed + (currentLang==="zh" ? " 筆，稍後再試" : " mục, thử lại sau"));
-    }
-}
-
-window.addEventListener("online", function() {
-    if (getQueue().length > 0) uploadQueue();
-});
-
-window.onload = function() {
-    currentLang = localStorage.getItem(K.lang) || "zh";
-    buildGrids();
-    applyLang();
-    loadCfg();
-    updateBadge();
-    var startScreen = localStorage.getItem(K.name) ? "scrMain" : "scrSettings";
-    goScreen(startScreen);
-};
-
-// ── Language ──
-function switchLang(lang) {
-    currentLang = lang;
-    localStorage.setItem(K.lang, lang);
-    applyLang();
-}
-
-function applyLang() {
-    var zh = currentLang === "zh";
-    document.getElementById("lbtn_zh").classList.toggle("on", zh);
-    document.getElementById("lbtn_vi").classList.toggle("on", !zh);
-
-    document.querySelectorAll("[data-zh]").forEach(function(el) {
-        el.textContent = zh ? el.dataset.zh : el.dataset.vi;
-    });
-    document.querySelectorAll("[data-ph-zh]").forEach(function(el) {
-        el.placeholder = zh ? el.dataset.phZh : el.dataset.phVi;
-    });
-    var idx = zh ? 1 : 2;
-    document.querySelectorAll(".d-chip").forEach(function(chip) {
-        var code = chip.dataset.code;
-        if (code === "OTHER") {
-            chip.innerHTML = "<strong>" + (zh ? "其他" : "Khác") + "</strong>";
-            return;
-        }
-        var d = DEFECTS.find(function(x) { return x[0] === code; });
-        if (d) chip.innerHTML = "<strong>" + d[0] + "</strong>" + d[idx];
-    });
-}
-
-// ── Grids ──
-function buildGrids() {
-    var idx = currentLang === "zh" ? 1 : 2;
-    ["t","p"].forEach(function(side) {
-        var grid = document.getElementById("grid_" + side);
-        DEFECTS.forEach(function(d) {
-            var c = document.createElement("button");
-            c.className = "d-chip";
-            c.dataset.code = d[0];
-            c.innerHTML = "<strong>" + d[0] + "</strong>" + d[idx];
-            (function(s, code, ch) { c.onclick = function() { toggleDefect(s, code, ch); }; })(side, d[0], c);
-            grid.appendChild(c);
-        });
-        var oc = document.createElement("button");
-        oc.className = "d-chip";
-        oc.dataset.code = "OTHER";
-        oc.innerHTML = "<strong>" + (currentLang === "zh" ? "其他" : "Khác") + "</strong>";
-        (function(s, ch) { oc.onclick = function() { toggleOtherChip(s, ch); }; })(side, oc);
-        grid.appendChild(oc);
-    });
+    goScreen("scrMain");
 }
 
 // ── Screen ──
@@ -670,14 +545,14 @@ function goScreen(id) {
 }
 
 // ── Settings ──
-function loadCfg() {
-    document.getElementById("cfgName").value = localStorage.getItem(K.name) || "";
-}
+function loadCfg() { document.getElementById("cfgName").value = localStorage.getItem(K.name) || ""; }
 function saveSettings() {
     var name = document.getElementById("cfgName").value.trim();
     if (!name) { showToast(currentLang === "zh" ? "請輸入名字" : "Vui lòng nhập tên"); return; }
     localStorage.setItem(K.name, name);
-    goScreen("scrMain");
+    goScreen("scrZone");
+    buildZoneGrid();
+    fetchAlerts().then(buildZoneGrid);
 }
 function goSettings() { loadCfg(); goScreen("scrSettings"); }
 
@@ -689,24 +564,69 @@ function showToast(msg, isOk) {
     setTimeout(function() { t.classList.remove("show"); }, 3000);
 }
 
+// ── Language ──
+function switchLang(lang) {
+    currentLang = lang;
+    localStorage.setItem(K.lang, lang);
+    applyLang();
+    var active = document.querySelector(".screen.active");
+    if (active) {
+        if (active.id === "scrZone") buildZoneGrid();
+        if (active.id === "scrList") goMachines(selectedZone);
+        if (active.id === "scrMain" && selectedMachine) goForm(selectedMachine);
+    }
+}
+function applyLang() {
+    var zh = currentLang === "zh";
+    document.getElementById("lbtn_zh").classList.toggle("on", zh);
+    document.getElementById("lbtn_vi").classList.toggle("on", !zh);
+    document.querySelectorAll("[data-zh]").forEach(function(el) {
+        el.textContent = zh ? el.dataset.zh : el.dataset.vi;
+    });
+    document.querySelectorAll("[data-ph-zh]").forEach(function(el) {
+        el.placeholder = zh ? el.dataset.phZh : el.dataset.phVi;
+    });
+    var idx = zh ? 1 : 2;
+    document.querySelectorAll(".d-chip").forEach(function(chip) {
+        var code = chip.dataset.code;
+        if (code === "OTHER") { chip.innerHTML = "<strong>" + (zh ? "其他" : "Khác") + "</strong>"; return; }
+        var d = DEFECTS.find(function(x) { return x[0] === code; });
+        if (d) chip.innerHTML = "<strong>" + d[0] + "</strong>" + d[idx];
+    });
+}
+
+// ── Defect grids ──
+function buildGrids() {
+    var idx = currentLang === "zh" ? 1 : 2;
+    ["t","p"].forEach(function(side) {
+        var grid = document.getElementById("grid_" + side);
+        DEFECTS.forEach(function(d) {
+            var c = document.createElement("button");
+            c.className = "d-chip"; c.dataset.code = d[0];
+            c.innerHTML = "<strong>" + d[0] + "</strong>" + d[idx];
+            (function(s, code, ch) { c.onclick = function() { toggleDefect(s, code, ch); }; })(side, d[0], c);
+            grid.appendChild(c);
+        });
+        var oc = document.createElement("button");
+        oc.className = "d-chip"; oc.dataset.code = "OTHER";
+        oc.innerHTML = "<strong>" + (currentLang === "zh" ? "其他" : "Khác") + "</strong>";
+        (function(s, ch) { oc.onclick = function() { toggleOtherChip(s, ch); }; })(side, oc);
+        grid.appendChild(oc);
+    });
+}
+
 // ── Problem toggle ──
 function toggleProblem(type) {
     var card = document.getElementById("card_" + type);
     var btn  = document.getElementById("addbtn_" + type);
     if (activeProblems.has(type)) {
-        activeProblems.delete(type);
-        card.classList.remove("show");
-        btn.classList.remove("active");
-        clearProblem(type);
+        activeProblems.delete(type); card.classList.remove("show"); btn.classList.remove("active"); clearProblem(type);
     } else {
-        activeProblems.add(type);
-        card.classList.add("show");
-        btn.classList.add("active");
+        activeProblems.add(type); card.classList.add("show"); btn.classList.add("active");
         setTimeout(function() { card.scrollIntoView({behavior:"smooth", block:"nearest"}); }, 60);
     }
     document.getElementById("emptyHint").style.display = activeProblems.size === 0 ? "" : "none";
 }
-
 function clearProblem(type) {
     var card = document.getElementById("card_" + type);
     card.querySelectorAll("input").forEach(function(el) { el.value = ""; el.classList.remove("filled"); });
@@ -716,11 +636,7 @@ function clearProblem(type) {
         ["t","p"].forEach(function(s) { var oi = document.getElementById("oi_"+s); oi.style.display="none"; oi.value=""; });
     }
 }
-
-// ── Fill ──
 function onFill(el) { el.classList.toggle("filled", !!el.value); }
-
-// ── Defects ──
 function toggleDefect(side, code, chip) {
     var s = defects[side];
     if (s.has(code)) { s.delete(code); chip.classList.remove("on"); }
@@ -747,10 +663,8 @@ function getAppearance(side) {
 
 // ── Submit ──
 async function submitForm() {
-    var machine = document.getElementById("machineNum").value.trim();
-    if (!machine) { showToast(currentLang==="zh" ? "請輸入機台號" : "Vui lòng nhập số máy"); return; }
     if (activeProblems.size === 0) { showToast(currentLang==="zh" ? "請至少新增一項異常" : "Thêm ít nhất 1 lỗi"); return; }
-
+    var machine = String(selectedMachine);
     var has = function(t) { return activeProblems.has(t); };
     var payload = {
         _id:             Date.now(),
@@ -766,15 +680,10 @@ async function submitForm() {
         ngoai_quan_trai: has("ngoai") ? getAppearance("t") : "",
         ngoai_quan_phai: has("ngoai") ? getAppearance("p") : ""
     };
-
-    // Store locally first — data is safe regardless of network
     enqueue(payload);
-
     var btn = document.getElementById("btnSub");
     btn.disabled = true;
     btn.textContent = currentLang==="zh" ? "送出中..." : "Đang gửi...";
-
-    // Build detail text
     var labels = {rong:["帶寬","Độ rộng"], cao:["勾高","Cao móc"], nhiet:["電熱","Nhiệt"], ngoai:["外觀","Ngoại quan"]};
     var li = currentLang==="zh" ? 0 : 1;
     var types = Array.from(activeProblems).map(function(t){return labels[t][li];}).join("、");
@@ -782,37 +691,22 @@ async function submitForm() {
         (currentLang==="zh"?"機台":"Máy")+" #"+machine+"　"+payload.timestamp+
         "<br>"+(currentLang==="zh"?"巡檢：":"Người kiểm: ")+payload.inspector+
         "<br>"+(currentLang==="zh"?"異常：":"Lỗi: ")+types;
-
-    // Try to upload immediately
     var uploaded = false;
     if (navigator.onLine) {
         try {
-            await fetch(GAS_URL, {
-                method:"POST", mode:"no-cors",
-                headers:{"Content-Type":"application/json"},
-                body:JSON.stringify(payload)
-            });
+            await fetch(GAS_URL, { method:"POST", mode:"no-cors", headers:{"Content-Type":"application/json"}, body:JSON.stringify(payload) });
             dequeue(payload._id);
             uploaded = true;
         } catch(e) {}
     }
-
-    // Show result
-    var tag = document.getElementById("okTag");
-    var msg = document.getElementById("okMsg");
-    var icon = document.getElementById("okIcon");
+    var tag = document.getElementById("okTag"), msg = document.getElementById("okMsg"), icon = document.getElementById("okIcon");
     if (uploaded) {
-        icon.textContent = "✅";
-        msg.textContent = currentLang==="zh" ? "回報成功" : "Đã gửi thành công";
-        tag.className = "ok-tag uploaded";
-        tag.textContent = currentLang==="zh" ? "✓ 已上傳" : "✓ Đã tải lên";
+        icon.textContent = "✅"; msg.textContent = currentLang==="zh" ? "回報成功" : "Đã gửi thành công";
+        tag.className = "ok-tag uploaded"; tag.textContent = currentLang==="zh" ? "✓ 已上傳" : "✓ Đã tải lên";
     } else {
-        icon.textContent = "📱";
-        msg.textContent = currentLang==="zh" ? "已暫存本機" : "Đã lưu tạm";
-        tag.className = "ok-tag pending";
-        tag.textContent = currentLang==="zh" ? "⏳ 有網路時自動上傳" : "⏳ Sẽ tự động tải khi có mạng";
+        icon.textContent = "📱"; msg.textContent = currentLang==="zh" ? "已暫存本機" : "Đã lưu tạm";
+        tag.className = "ok-tag pending"; tag.textContent = currentLang==="zh" ? "⏳ 有網路時自動上傳" : "⏳ Sẽ tự động tải khi có mạng";
     }
-
     goScreen("scrOK");
     btn.disabled = false;
     btn.textContent = currentLang==="zh" ? "⚠ 送出異常回報" : "⚠ GỬI BÁO LỖI";
@@ -821,8 +715,23 @@ async function submitForm() {
 // ── Reset ──
 function resetForm() {
     Array.from(activeProblems).slice().forEach(function(t) { toggleProblem(t); });
-    document.getElementById("machineNum").value = "";
 }
+
+// ── Init ──
+window.onload = function() {
+    currentLang = localStorage.getItem(K.lang) || "zh";
+    buildGrids();
+    applyLang();
+    loadCfg();
+    updateBadge();
+    if (localStorage.getItem(K.name)) {
+        goScreen("scrZone");
+        buildZoneGrid();
+        fetchAlerts().then(buildZoneGrid);
+    } else {
+        goScreen("scrSettings");
+    }
+};
 </script>
 </body>
 </html>
