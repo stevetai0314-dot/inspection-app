@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>巡檢異常記錄 - 系統流程圖</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; padding: 24px; background: #f0f2f5; margin: 0; }
+    h1 { color: #e65100; margin-bottom: 4px; }
+    .subtitle { color: #888; font-size: 14px; margin-bottom: 24px; }
+    .card { background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+    .card h2 { color: #333; margin-top: 0; font-size: 16px; border-left: 4px solid #e65100; padding-left: 10px; }
+    .notes { background: #fff3e0; border-radius: 8px; padding: 16px; }
+    .notes h3 { color: #e65100; margin-top: 0; font-size: 14px; }
+    .notes ul { margin: 0; padding-left: 20px; font-size: 13px; color: #333; }
+    .notes li { margin-bottom: 6px; }
+    .tag { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: bold; margin-right: 4px; }
+    .tag-orange { background: #fce8b2; color: #e65100; }
+    .tag-blue { background: #e8f0fe; color: #1a73e8; }
+    .tag-green { background: #e6f4ea; color: #1e8e3e; }
+  </style>
+</head>
+<body>
+  <h1>巡檢異常記錄 系統流程圖</h1>
+  <p class="subtitle">inspection-app · GitHub Pages + Google Apps Script + Google Sheets · 走過沒問題就不登記</p>
+
+  <div class="card">
+    <h2>巡檢主流程</h2>
+    <div class="mermaid">
+graph TD
+    A([開啟頁面]) --> B[JSONP 載入前日異常清單]
+    B --> C[異常機台顯示 ⚠ 警示]
+    C --> D[選擇工段 Zone]
+    D --> E[依走動路線顯示機台 chip]
+    E --> F{巡視機台}
+    F -- 正常走過 --> E
+    F -- 發現異常 --> G[點選機台]
+    G --> H[Toggle 問題類型\nSet 記錄]
+    H --> I[填寫異常細節]
+    I --> J[點送出]
+    J --> K{網路狀態}
+    K -- 有網路 --> L[POST to GAS]
+    K -- 無網路 --> M[存 localStorage\n_id: timestamp]
+    M --> N([上線後自動補傳])
+    L & N --> O[(Sheets 異常紀錄)]
+    O --> P[重置表單]
+    P --> E
+
+    style F fill:#e6f4ea,stroke:#1e8e3e
+    style G fill:#fce8e8,stroke:#d32f2f
+    style H fill:#fce8b2,stroke:#e65100
+    style M fill:#fff3e0,stroke:#ffb74d
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>異常記錄邏輯（只記例外）</h2>
+    <div class="mermaid">
+graph LR
+    A[點選問題類型] --> B{已在 Set 內?}
+    B -- 是 --> C[從 Set 移除\nToggle 關閉]
+    B -- 否 --> D[加入 Set\nToggle 開啟]
+    C & D --> E[顯示細節輸入欄]
+    E --> F[送出時建立 payload]
+    F --> G{問題類型\n在 Set 內?}
+    G -- 是 --> H[帶入該欄位的值]
+    G -- 否 --> I[該欄位送空字串]
+    H & I --> J[POST payload]
+
+    style D fill:#fce8e8,stroke:#d32f2f
+    style C fill:#e6f4ea,stroke:#1e8e3e
+    style I fill:#f5f5f5,stroke:#ccc
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>走動路線與前日異常</h2>
+    <div class="mermaid">
+graph TD
+    A[ZONES 定義\n每個 Zone 有 machines 陣列] --> B[陣列順序 = 走動路線\n不做排序]
+    B --> C[工人照畫面順序\n逐台巡視]
+    D[JSONP GET 前日異常] --> E[異常機台 ID 清單]
+    E --> F{渲染機台 chip 時}
+    F -- 在異常清單內 --> G[加上 ⚠ 樣式]
+    F -- 正常 --> H[一般樣式]
+    G & H --> I[工人優先注意 ⚠ 機台]
+
+    style G fill:#fce8e8,stroke:#d32f2f
+    style B fill:#fce8b2,stroke:#e65100
+    </div>
+  </div>
+
+  <div class="card notes">
+    <h3>重點說明</h3>
+    <ul>
+      <li><span class="tag tag-orange">核心設計原則</span>「走過去沒問題，就不登記」— 只有例外才需要記錄，平均每筆約 30 秒</li>
+      <li><span class="tag tag-blue">Set 追蹤</span> 用 JavaScript Set 管理已選擇的問題類型，toggle 開/關，送出時只帶選中的欄位</li>
+      <li><span class="tag tag-green">前日異常</span> 用 JSONP 方式繞過 CORS 限制從 GAS GET 資料，在機台上標示 ⚠ 提醒工人特別注意</li>
+      <li>走動路線用 ZONES 陣列定義，陣列順序就是實際路線，不是機台號碼順序</li>
+      <li>離線佇列用 timestamp 作為 _id 去重，上線後自動批次補傳</li>
+    </ul>
+  </div>
+
+  <script>mermaid.initialize({ startOnLoad: true, theme: 'default', flowchart: { curve: 'basis' } });</script>
+</body>
+</html>
