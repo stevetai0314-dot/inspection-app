@@ -1,0 +1,33 @@
+{
+  "app": "inspection-app",
+  "description": "工廠機台巡檢異常記錄，走過沒問題就不登記，只記例外",
+  "url": "https://stevetai0314-dot.github.io/inspection-app/",
+  "tech": {
+    "frontend": "Vanilla HTML/JS, GitHub Pages",
+    "backend": "Google Apps Script",
+    "storage": "Google Sheets + localStorage queue",
+    "cors_workaround": "JSONP for GET requests"
+  },
+  "core_design_principle": "走過去沒問題，就不登記 — 只有異常才需要記錄，約 30 秒每筆",
+  "zones": {
+    "key_principle": "machines 陣列順序 = 實際走動路線，不排序",
+    "previous_day_anomalies": "頁面載入時 JSONP GET，異常機台顯示 ⚠"
+  },
+  "anomaly_recording": {
+    "tracking": "JavaScript Set 追蹤已選問題類型",
+    "toggle": "點選問題卡片 → 加入/移出 Set",
+    "payload": "只有 Set 內的問題類型才帶值，其餘送空字串"
+  },
+  "offline_queue": {
+    "key": "pending_queue",
+    "strategy": "push-with-timestamp-id",
+    "dedup": "_id: Date.now()",
+    "auto_flush_on": "window.online"
+  },
+  "gas": {
+    "sheets": {
+      "異常紀錄": "巡檢異常記錄"
+    }
+  },
+  "languages": ["zh-TW", "vi"]
+}
