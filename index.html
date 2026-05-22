@@ -171,6 +171,19 @@
         .toast { position:fixed; top:16px; left:50%; transform:translateX(-50%) translateY(-100px); background:var(--red); color:#fff; padding:10px 22px; border-radius:30px; font-size:13px; transition:transform .3s; z-index:999; pointer-events:none; white-space:nowrap; }
         .toast.show { transform:translateX(-50%) translateY(0); }
         .toast.ok { background:var(--green-dk); }
+
+        /* Stepper — 帶寬 */
+        .step-wrap { display:flex; align-items:center; gap:6px; flex:1; }
+        .step-btn { flex:1; height:46px; border:none; border-radius:9px; font-size:15px; font-weight:800; cursor:pointer; background:#e2e8f0; color:#475569; transition:transform .1s; }
+        .step-btn:active { transform:scale(.93); background:#cbd5e1; }
+        .step-val-disp { flex:0 0 62px; height:46px; background:var(--orange-lt); border:2px solid var(--orange); border-radius:10px; color:var(--orange); font-size:20px; font-weight:800; display:flex; align-items:center; justify-content:center; }
+
+        /* Stepper — 勾高 */
+        .trio-step { display:flex; flex-direction:column; align-items:center; gap:3px; width:100%; }
+        .trio-step-val { width:100%; height:36px; background:var(--orange-lt); border:2px solid var(--orange); border-radius:8px; color:var(--orange); font-size:15px; font-weight:800; display:flex; align-items:center; justify-content:center; }
+        .trio-step-btns { display:grid; grid-template-columns:1fr 1fr; gap:3px; width:100%; }
+        .trio-step-btn { height:27px; border:none; border-radius:6px; font-size:11px; font-weight:800; cursor:pointer; background:#e2e8f0; color:#475569; transition:transform .1s; }
+        .trio-step-btn:active { transform:scale(.9); background:#cbd5e1; }
     </style>
 </head>
 <body>
@@ -265,15 +278,21 @@
             <div class="prob-body">
                 <div class="val-row">
                     <span class="val-side" data-zh="左" data-vi="Trái">左</span>
-                    <input class="val-inp" id="rong_t" inputmode="text"
-                           data-ph-zh="-1 / +2" data-ph-vi="-1 / +2" placeholder="-1 / +2"
-                           oninput="onFill(this)">
+                    <div class="step-wrap">
+                        <button class="step-btn" onclick="adjustStep('rong_t',-1,0)">−1</button>
+                        <div class="step-val-disp" id="rong_t_disp">0</div>
+                        <button class="step-btn" onclick="adjustStep('rong_t',1,0)">+1</button>
+                        <input type="hidden" id="rong_t" value="0">
+                    </div>
                 </div>
                 <div class="val-row">
                     <span class="val-side" data-zh="右" data-vi="Phải">右</span>
-                    <input class="val-inp" id="rong_p" inputmode="text"
-                           data-ph-zh="-1 / +2" data-ph-vi="-1 / +2" placeholder="-1 / +2"
-                           oninput="onFill(this)">
+                    <div class="step-wrap">
+                        <button class="step-btn" onclick="adjustStep('rong_p',-1,0)">−1</button>
+                        <div class="step-val-disp" id="rong_p_disp">0</div>
+                        <button class="step-btn" onclick="adjustStep('rong_p',1,0)">+1</button>
+                        <input type="hidden" id="rong_p" value="0">
+                    </div>
                 </div>
             </div>
         </div>
@@ -290,15 +309,42 @@
                     <div class="trio-grid">
                         <div class="trio-cell">
                             <span class="trio-sublbl" data-zh="邊界側" data-vi="Bên kiếm">邊界側</span>
-                            <input class="trio-inp" id="cao_tk" inputmode="decimal" oninput="onFill(this)">
+                            <div class="trio-step">
+                                <div class="trio-step-val" id="cao_tk_disp">2.00</div>
+                                <div class="trio-step-btns">
+                                    <button class="trio-step-btn" onclick="adjustStep('cao_tk',0.1,2)">+.1</button>
+                                    <button class="trio-step-btn" onclick="adjustStep('cao_tk',-0.1,2)">−.1</button>
+                                    <button class="trio-step-btn" onclick="adjustStep('cao_tk',0.01,2)">+.01</button>
+                                    <button class="trio-step-btn" onclick="adjustStep('cao_tk',-0.01,2)">−.01</button>
+                                </div>
+                                <input type="hidden" id="cao_tk" value="2.00">
+                            </div>
                         </div>
                         <div class="trio-cell">
                             <span class="trio-sublbl" data-zh="中間" data-vi="Giữa">中間</span>
-                            <input class="trio-inp" id="cao_tg" inputmode="decimal" oninput="onFill(this)">
+                            <div class="trio-step">
+                                <div class="trio-step-val" id="cao_tg_disp">2.00</div>
+                                <div class="trio-step-btns">
+                                    <button class="trio-step-btn" onclick="adjustStep('cao_tg',0.1,2)">+.1</button>
+                                    <button class="trio-step-btn" onclick="adjustStep('cao_tg',-0.1,2)">−.1</button>
+                                    <button class="trio-step-btn" onclick="adjustStep('cao_tg',0.01,2)">+.01</button>
+                                    <button class="trio-step-btn" onclick="adjustStep('cao_tg',-0.01,2)">−.01</button>
+                                </div>
+                                <input type="hidden" id="cao_tg" value="2.00">
+                            </div>
                         </div>
                         <div class="trio-cell">
                             <span class="trio-sublbl" data-zh="針側" data-vi="Bên kim">針側</span>
-                            <input class="trio-inp" id="cao_tm" inputmode="decimal" oninput="onFill(this)">
+                            <div class="trio-step">
+                                <div class="trio-step-val" id="cao_tm_disp">2.00</div>
+                                <div class="trio-step-btns">
+                                    <button class="trio-step-btn" onclick="adjustStep('cao_tm',0.1,2)">+.1</button>
+                                    <button class="trio-step-btn" onclick="adjustStep('cao_tm',-0.1,2)">−.1</button>
+                                    <button class="trio-step-btn" onclick="adjustStep('cao_tm',0.01,2)">+.01</button>
+                                    <button class="trio-step-btn" onclick="adjustStep('cao_tm',-0.01,2)">−.01</button>
+                                </div>
+                                <input type="hidden" id="cao_tm" value="2.00">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -308,15 +354,42 @@
                     <div class="trio-grid">
                         <div class="trio-cell">
                             <span class="trio-sublbl" data-zh="邊界側" data-vi="Bên kiếm">邊界側</span>
-                            <input class="trio-inp" id="cao_pk" inputmode="decimal" oninput="onFill(this)">
+                            <div class="trio-step">
+                                <div class="trio-step-val" id="cao_pk_disp">2.00</div>
+                                <div class="trio-step-btns">
+                                    <button class="trio-step-btn" onclick="adjustStep('cao_pk',0.1,2)">+.1</button>
+                                    <button class="trio-step-btn" onclick="adjustStep('cao_pk',-0.1,2)">−.1</button>
+                                    <button class="trio-step-btn" onclick="adjustStep('cao_pk',0.01,2)">+.01</button>
+                                    <button class="trio-step-btn" onclick="adjustStep('cao_pk',-0.01,2)">−.01</button>
+                                </div>
+                                <input type="hidden" id="cao_pk" value="2.00">
+                            </div>
                         </div>
                         <div class="trio-cell">
                             <span class="trio-sublbl" data-zh="中間" data-vi="Giữa">中間</span>
-                            <input class="trio-inp" id="cao_pg" inputmode="decimal" oninput="onFill(this)">
+                            <div class="trio-step">
+                                <div class="trio-step-val" id="cao_pg_disp">2.00</div>
+                                <div class="trio-step-btns">
+                                    <button class="trio-step-btn" onclick="adjustStep('cao_pg',0.1,2)">+.1</button>
+                                    <button class="trio-step-btn" onclick="adjustStep('cao_pg',-0.1,2)">−.1</button>
+                                    <button class="trio-step-btn" onclick="adjustStep('cao_pg',0.01,2)">+.01</button>
+                                    <button class="trio-step-btn" onclick="adjustStep('cao_pg',-0.01,2)">−.01</button>
+                                </div>
+                                <input type="hidden" id="cao_pg" value="2.00">
+                            </div>
                         </div>
                         <div class="trio-cell">
                             <span class="trio-sublbl" data-zh="針側" data-vi="Bên kim">針側</span>
-                            <input class="trio-inp" id="cao_pm" inputmode="decimal" oninput="onFill(this)">
+                            <div class="trio-step">
+                                <div class="trio-step-val" id="cao_pm_disp">2.00</div>
+                                <div class="trio-step-btns">
+                                    <button class="trio-step-btn" onclick="adjustStep('cao_pm',0.1,2)">+.1</button>
+                                    <button class="trio-step-btn" onclick="adjustStep('cao_pm',-0.1,2)">−.1</button>
+                                    <button class="trio-step-btn" onclick="adjustStep('cao_pm',0.01,2)">+.01</button>
+                                    <button class="trio-step-btn" onclick="adjustStep('cao_pm',-0.01,2)">−.01</button>
+                                </div>
+                                <input type="hidden" id="cao_pm" value="2.00">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -667,6 +740,7 @@ function toggleProblem(type) {
         activeProblems.delete(type); card.classList.remove("show"); btn.classList.remove("active"); clearProblem(type);
     } else {
         activeProblems.add(type); card.classList.add("show"); btn.classList.add("active");
+        initSteppers(type);
         setTimeout(function() { card.scrollIntoView({behavior:"smooth", block:"nearest"}); }, 60);
     }
     document.getElementById("emptyHint").style.display = activeProblems.size === 0 ? "" : "none";
@@ -681,6 +755,28 @@ function clearProblem(type) {
     }
 }
 function onFill(el) { el.classList.toggle("filled", !!el.value); }
+function adjustStep(id, delta, decimals) {
+    var inp = document.getElementById(id);
+    var cur = parseFloat(inp.value) || 0;
+    var factor = Math.pow(10, decimals);
+    var next = Math.round((cur + delta) * factor) / factor;
+    var disp = decimals > 0 ? next.toFixed(decimals) : String(next);
+    inp.value = disp;
+    document.getElementById(id + '_disp').textContent = disp;
+}
+function initSteppers(type) {
+    if (type === "rong") {
+        ["rong_t","rong_p"].forEach(function(id) {
+            document.getElementById(id).value = "0";
+            document.getElementById(id + "_disp").textContent = "0";
+        });
+    } else if (type === "cao") {
+        ["cao_tk","cao_tg","cao_tm","cao_pk","cao_pg","cao_pm"].forEach(function(id) {
+            document.getElementById(id).value = "2.00";
+            document.getElementById(id + "_disp").textContent = "2.00";
+        });
+    }
+}
 function toggleDefect(side, code, chip) {
     var s = defects[side];
     if (s.has(code)) { s.delete(code); chip.classList.remove("on"); }
