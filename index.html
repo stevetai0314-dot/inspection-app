@@ -408,15 +408,42 @@
                     <div class="trio-grid">
                         <div class="trio-cell">
                             <span class="trio-sublbl" data-zh="邊界側" data-vi="Bên kiếm">邊界側</span>
-                            <input class="trio-inp" id="nhiet_tk" inputmode="decimal" oninput="onFill(this)">
+                            <div class="trio-step">
+                                <div class="trio-step-val" id="nhiet_tk_disp">90</div>
+                                <div class="trio-step-btns">
+                                    <button class="trio-step-btn" onclick="adjustStep('nhiet_tk',-1,0)">−1</button>
+                                    <button class="trio-step-btn" onclick="adjustStep('nhiet_tk',1,0)">+1</button>
+                                    <button class="trio-step-btn" onclick="adjustStep('nhiet_tk',-10,0)">−10</button>
+                                    <button class="trio-step-btn" onclick="adjustStep('nhiet_tk',10,0)">+10</button>
+                                </div>
+                                <input type="hidden" id="nhiet_tk" value="90">
+                            </div>
                         </div>
                         <div class="trio-cell">
                             <span class="trio-sublbl" data-zh="中間" data-vi="Giữa">中間</span>
-                            <input class="trio-inp" id="nhiet_tg" inputmode="decimal" oninput="onFill(this)">
+                            <div class="trio-step">
+                                <div class="trio-step-val" id="nhiet_tg_disp">90</div>
+                                <div class="trio-step-btns">
+                                    <button class="trio-step-btn" onclick="adjustStep('nhiet_tg',-1,0)">−1</button>
+                                    <button class="trio-step-btn" onclick="adjustStep('nhiet_tg',1,0)">+1</button>
+                                    <button class="trio-step-btn" onclick="adjustStep('nhiet_tg',-10,0)">−10</button>
+                                    <button class="trio-step-btn" onclick="adjustStep('nhiet_tg',10,0)">+10</button>
+                                </div>
+                                <input type="hidden" id="nhiet_tg" value="90">
+                            </div>
                         </div>
                         <div class="trio-cell">
                             <span class="trio-sublbl" data-zh="針側" data-vi="Bên kim">針側</span>
-                            <input class="trio-inp" id="nhiet_tm" inputmode="decimal" oninput="onFill(this)">
+                            <div class="trio-step">
+                                <div class="trio-step-val" id="nhiet_tm_disp">90</div>
+                                <div class="trio-step-btns">
+                                    <button class="trio-step-btn" onclick="adjustStep('nhiet_tm',-1,0)">−1</button>
+                                    <button class="trio-step-btn" onclick="adjustStep('nhiet_tm',1,0)">+1</button>
+                                    <button class="trio-step-btn" onclick="adjustStep('nhiet_tm',-10,0)">−10</button>
+                                    <button class="trio-step-btn" onclick="adjustStep('nhiet_tm',10,0)">+10</button>
+                                </div>
+                                <input type="hidden" id="nhiet_tm" value="90">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -426,15 +453,42 @@
                     <div class="trio-grid">
                         <div class="trio-cell">
                             <span class="trio-sublbl" data-zh="邊界側" data-vi="Bên kiếm">邊界側</span>
-                            <input class="trio-inp" id="nhiet_pk" inputmode="decimal" oninput="onFill(this)">
+                            <div class="trio-step">
+                                <div class="trio-step-val" id="nhiet_pk_disp">90</div>
+                                <div class="trio-step-btns">
+                                    <button class="trio-step-btn" onclick="adjustStep('nhiet_pk',-1,0)">−1</button>
+                                    <button class="trio-step-btn" onclick="adjustStep('nhiet_pk',1,0)">+1</button>
+                                    <button class="trio-step-btn" onclick="adjustStep('nhiet_pk',-10,0)">−10</button>
+                                    <button class="trio-step-btn" onclick="adjustStep('nhiet_pk',10,0)">+10</button>
+                                </div>
+                                <input type="hidden" id="nhiet_pk" value="90">
+                            </div>
                         </div>
                         <div class="trio-cell">
                             <span class="trio-sublbl" data-zh="中間" data-vi="Giữa">中間</span>
-                            <input class="trio-inp" id="nhiet_pg" inputmode="decimal" oninput="onFill(this)">
+                            <div class="trio-step">
+                                <div class="trio-step-val" id="nhiet_pg_disp">90</div>
+                                <div class="trio-step-btns">
+                                    <button class="trio-step-btn" onclick="adjustStep('nhiet_pg',-1,0)">−1</button>
+                                    <button class="trio-step-btn" onclick="adjustStep('nhiet_pg',1,0)">+1</button>
+                                    <button class="trio-step-btn" onclick="adjustStep('nhiet_pg',-10,0)">−10</button>
+                                    <button class="trio-step-btn" onclick="adjustStep('nhiet_pg',10,0)">+10</button>
+                                </div>
+                                <input type="hidden" id="nhiet_pg" value="90">
+                            </div>
                         </div>
                         <div class="trio-cell">
                             <span class="trio-sublbl" data-zh="針側" data-vi="Bên kim">針側</span>
-                            <input class="trio-inp" id="nhiet_pm" inputmode="decimal" oninput="onFill(this)">
+                            <div class="trio-step">
+                                <div class="trio-step-val" id="nhiet_pm_disp">90</div>
+                                <div class="trio-step-btns">
+                                    <button class="trio-step-btn" onclick="adjustStep('nhiet_pm',-1,0)">−1</button>
+                                    <button class="trio-step-btn" onclick="adjustStep('nhiet_pm',1,0)">+1</button>
+                                    <button class="trio-step-btn" onclick="adjustStep('nhiet_pm',-10,0)">−10</button>
+                                    <button class="trio-step-btn" onclick="adjustStep('nhiet_pm',10,0)">+10</button>
+                                </div>
+                                <input type="hidden" id="nhiet_pm" value="90">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -774,6 +828,11 @@ function initSteppers(type) {
         ["cao_tk","cao_tg","cao_tm","cao_pk","cao_pg","cao_pm"].forEach(function(id) {
             document.getElementById(id).value = "2.00";
             document.getElementById(id + "_disp").textContent = "2.00";
+        });
+    } else if (type === "nhiet") {
+        ["nhiet_tk","nhiet_tg","nhiet_tm","nhiet_pk","nhiet_pg","nhiet_pm"].forEach(function(id) {
+            document.getElementById(id).value = "90";
+            document.getElementById(id + "_disp").textContent = "90";
         });
     }
 }
