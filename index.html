@@ -35,7 +35,7 @@
         .screen { display:none; } .screen.active { display:block; }
 
         /* Settings */
-        .set-body { padding:20px 20px; max-width:480px; margin:0 auto; }
+        .set-body { padding:20px; max-width:480px; margin:0 auto; }
         .set-desc { font-size:13px; color:var(--muted); margin-bottom:22px; line-height:1.7; }
         .set-group { margin-bottom:16px; }
         .set-lbl { font-size:11px; color:var(--muted); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:6px; font-weight:700; }
@@ -43,28 +43,25 @@
         .set-inp:focus { border-color:var(--blue); }
         .btn-save { width:100%; background:var(--blue); border:none; border-radius:var(--r); color:#fff; font-size:16px; padding:16px; cursor:pointer; font-weight:700; margin-top:8px; }
 
-        /* Zone */
-        .zone-page { padding:20px; max-width:600px; margin:0 auto; }
-        .zone-page-ttl { font-size:11px; color:var(--muted); letter-spacing:1.5px; text-transform:uppercase; font-weight:700; margin-bottom:14px; }
-        .zone-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-        .zone-card { background:#fff; border:2px solid var(--border); border-radius:var(--r); padding:18px 12px; cursor:pointer; text-align:center; transition:all .15s; }
-        .zone-card.has-alert { border-color:var(--orange); background:var(--orange-lt); }
-        .zone-card:hover { box-shadow:0 2px 8px rgba(0,0,0,.1); }
-        .zone-name  { font-size:16px; font-weight:800; color:var(--text); margin-bottom:4px; }
-        .zone-count { font-size:11px; color:var(--muted); }
-        .zone-alert { font-size:12px; color:var(--orange); font-weight:700; margin-top:8px; }
-
-        /* Machine list */
-        .mach-hd { background:#fff; position:sticky; top:52px; z-index:80; border-bottom:1px solid var(--border); padding:10px 20px; display:flex; align-items:center; gap:10px; }
-        .mach-back-btn { background:none; border:none; color:var(--blue); font-size:14px; font-weight:700; cursor:pointer; }
-        .mach-zone-lbl { font-size:15px; font-weight:800; }
-        .mach-body { padding:14px 20px 60px; max-width:900px; }
-        .chip-grid { display:flex; flex-wrap:wrap; gap:6px; }
-        .m-chip { display:flex; flex-direction:column; align-items:center; justify-content:center; width:52px; min-height:42px; border-radius:9px; font-size:13px; font-weight:800; line-height:1.3; cursor:pointer; transition:transform .1s; }
-        .m-chip:hover { transform:scale(1.05); }
-        .m-chip.ok  { background:#f1f5f9; color:#94a3b8; border:1px solid #e2e8f0; }
-        .m-chip.alr { background:var(--orange); color:#fff; border:none; }
-        .m-chip .warn { font-size:9px; opacity:.85; }
+        /* Machine input screen */
+        .mi-wrap {
+            display:flex; flex-direction:column; align-items:center; justify-content:center;
+            min-height:calc(100vh - 53px); gap:12px; padding:40px 20px;
+        }
+        .mi-lbl { font-size:11px; font-weight:700; color:var(--muted); letter-spacing:2px; text-transform:uppercase; }
+        .mi-inp {
+            width:100%; max-width:280px; height:90px; font-size:52px; font-weight:800;
+            text-align:center; border:3px solid var(--border); border-radius:var(--r);
+            background:var(--surf); color:var(--text); outline:none; transition:border-color .15s;
+        }
+        .mi-inp:focus { border-color:var(--orange); box-shadow:0 0 0 4px rgba(234,88,12,.1); }
+        .mi-hint { font-size:12px; color:var(--muted); }
+        .mi-yest {
+            font-size:13px; color:var(--orange); font-weight:700;
+            background:var(--orange-lt); border:1px solid var(--orange-bd);
+            border-radius:8px; padding:6px 16px; display:none;
+        }
+        .mi-who { font-size:12px; color:var(--muted); margin-top:8px; }
 
         /* Form top bar */
         .form-top {
@@ -96,7 +93,6 @@
 
         .dk-sec-body { padding:16px 18px 18px; border-top:1.5px solid var(--border); }
 
-        /* Shared input */
         .dk-inp {
             width:100%; height:52px; background:var(--surf2); border:2px solid var(--border);
             border-radius:10px; color:var(--text); font-size:22px; font-weight:600;
@@ -105,11 +101,9 @@
         .dk-inp:focus { border-color:var(--orange); box-shadow:0 0 0 3px rgba(234,88,12,.1); background:#fff; }
         .dk-inp.filled { background:var(--orange-lt); border-color:var(--orange); color:var(--orange); }
 
-        /* 帶寬 */
         .rong-grid { display:grid; grid-template-columns:28px 1fr 28px 1fr; align-items:center; gap:10px 14px; }
         .rong-grid label { font-size:13px; font-weight:700; color:var(--muted); text-align:center; }
 
-        /* Trio (勾高 / 電熱) */
         .trio-block { margin-bottom:14px; }
         .trio-block:last-child { margin-bottom:0; }
         .side-lbl { font-size:11px; font-weight:700; color:var(--text); letter-spacing:.5px; margin-bottom:8px; }
@@ -118,7 +112,6 @@
         .trio-lbl { font-size:10px; color:var(--muted); text-align:center; }
         .divider { border:none; border-top:1px solid var(--border); margin:14px 0; }
 
-        /* 外觀 chips */
         .ap-side { margin-bottom:14px; }
         .ap-side:last-child { margin-bottom:0; }
         .defect-grid { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
@@ -130,7 +123,6 @@
         .other-inp { width:100%; background:var(--surf2); border:2px solid var(--border); border-radius:10px; color:var(--text); font-size:14px; padding:10px 14px; outline:none; margin-top:8px; display:none; }
         .other-inp:focus { border-color:var(--orange); }
 
-        /* Yesterday ref */
         .yest-ref { background:var(--orange-lt); border:1.5px solid var(--orange-bd); border-radius:10px; padding:10px 14px; margin:12px 20px 0; max-width:760px; margin-left:auto; margin-right:auto; }
         .yest-ref-ttl { font-size:10px; color:var(--orange); font-weight:700; letter-spacing:1px; text-transform:uppercase; margin-bottom:6px; }
         .yest-row { display:flex; align-items:baseline; gap:6px; font-size:12px; margin-bottom:4px; flex-wrap:wrap; }
@@ -139,7 +131,6 @@
         .yest-side { color:var(--muted); font-size:11px; }
         .yest-val  { color:var(--text); font-weight:600; margin-right:8px; }
 
-        /* Submit */
         .dk-sub { margin-top:12px; }
         .btn-sub { width:100%; background:var(--red); border:none; border-radius:var(--r); color:#fff; font-size:17px; font-weight:800; padding:17px; cursor:pointer; letter-spacing:1px; box-shadow:0 3px 10px rgba(220,38,38,.35); }
         .btn-sub:focus { outline:3px solid var(--red); outline-offset:2px; }
@@ -147,14 +138,15 @@
         .btn-rst { width:100%; background:#fff; border:1.5px solid var(--border); border-radius:var(--r); color:var(--muted); font-size:14px; padding:12px; cursor:pointer; margin-top:8px; }
 
         /* Success */
-        .ok-wrap { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:75vh; gap:16px; text-align:center; padding:24px; }
-        .ok-icon { font-size:72px; }
-        .ok-msg  { font-size:22px; color:var(--green-dk); font-weight:800; line-height:1.4; }
+        .ok-wrap { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:calc(100vh - 53px); gap:14px; text-align:center; padding:24px; }
+        .ok-icon { font-size:64px; }
+        .ok-msg  { font-size:22px; color:var(--green-dk); font-weight:800; }
         .ok-tag  { font-size:12px; font-weight:700; padding:5px 14px; border-radius:20px; }
         .ok-tag.uploaded { background:var(--green-lt); color:var(--green-dk); }
         .ok-tag.pending  { background:var(--orange-lt); color:var(--orange); border:1px solid var(--orange-bd); }
         .ok-det  { font-size:13px; color:var(--muted); line-height:1.8; }
-        .btn-next { background:var(--blue); border:none; border-radius:var(--r); color:#fff; font-size:16px; padding:15px 32px; cursor:pointer; font-weight:700; }
+        .btn-next { background:var(--blue); border:none; border-radius:var(--r); color:#fff; font-size:16px; padding:14px 36px; cursor:pointer; font-weight:700; margin-top:4px; }
+        .btn-next:focus { outline:3px solid var(--blue); outline-offset:2px; }
 
         /* Toast */
         .toast { position:fixed; top:16px; left:50%; transform:translateX(-50%) translateY(-100px); background:var(--red); color:#fff; padding:10px 22px; border-radius:30px; font-size:13px; transition:transform .3s; z-index:999; pointer-events:none; white-space:nowrap; }
@@ -193,32 +185,25 @@
     </div>
 </div>
 
-<!-- ZONE SELECT -->
-<div class="screen" id="scrZone">
-    <div class="zone-page">
-        <div class="zone-page-ttl" data-zh="選擇巡檢區域" data-vi="Chọn khu vực">選擇巡檢區域</div>
-        <div class="zone-grid" id="zoneGrid"></div>
-    </div>
-</div>
-
-<!-- MACHINE LIST -->
-<div class="screen" id="scrList">
-    <div class="mach-hd">
-        <button class="mach-back-btn" onclick="goScreen('scrZone')">←</button>
-        <span class="mach-zone-lbl" id="machZoneName"></span>
-    </div>
-    <div class="mach-body">
-        <div class="chip-grid" id="machGrid"></div>
+<!-- MACHINE INPUT -->
+<div class="screen" id="scrMachine">
+    <div class="mi-wrap">
+        <div class="mi-lbl" data-zh="輸入機台號" data-vi="Nhập số máy">輸入機台號</div>
+        <input class="mi-inp" id="machNoInp" type="text" inputmode="numeric"
+               autocomplete="off" autocorrect="off" spellcheck="false" placeholder="—">
+        <div class="mi-yest" id="miYest"></div>
+        <div class="mi-hint" data-zh="Enter 確認" data-vi="Enter để xác nhận">Enter 確認</div>
+        <div class="mi-who" id="miWho"></div>
     </div>
 </div>
 
 <!-- FORM -->
 <div class="screen" id="scrMain">
     <div class="form-top">
-        <button class="form-back-btn" onclick="goScreen('scrList')">←</button>
+        <button class="form-back-btn" onclick="goMachineInput()">←</button>
         <span class="form-mach-tag" id="formMachTag"></span>
         <span class="form-yest-tag" id="formYestTag" style="display:none"></span>
-        <span class="form-kbd-hint" data-zh="Tab 略過類別　Enter 填入 / 跳欄" data-vi="Tab bỏ qua　Enter điền">Tab 略過類別　Enter 填入 / 跳欄</span>
+        <span class="form-kbd-hint" data-zh="Tab 略過類別　Enter 跳欄　送出後自動回機台號" data-vi="Tab bỏ qua　Enter nhảy ô">Tab 略過類別　Enter 跳欄　送出後自動回機台號</span>
     </div>
 
     <div class="yest-ref" id="yesterdayRef" style="display:none"></div>
@@ -251,36 +236,18 @@
                 <div class="trio-block">
                     <div class="side-lbl" data-zh="左側" data-vi="Bên trái">左側</div>
                     <div class="trio-grid">
-                        <div class="trio-cell">
-                            <span class="trio-lbl" data-zh="邊界側" data-vi="Bên kiếm">邊界側</span>
-                            <input class="dk-inp" id="cao_tk" type="text" inputmode="decimal" autocomplete="off" oninput="onFill(this)">
-                        </div>
-                        <div class="trio-cell">
-                            <span class="trio-lbl" data-zh="中間" data-vi="Giữa">中間</span>
-                            <input class="dk-inp" id="cao_tg" type="text" inputmode="decimal" autocomplete="off" oninput="onFill(this)">
-                        </div>
-                        <div class="trio-cell">
-                            <span class="trio-lbl" data-zh="針側" data-vi="Bên kim">針側</span>
-                            <input class="dk-inp" id="cao_tm" type="text" inputmode="decimal" autocomplete="off" oninput="onFill(this)">
-                        </div>
+                        <div class="trio-cell"><span class="trio-lbl" data-zh="邊界側" data-vi="Bên kiếm">邊界側</span><input class="dk-inp" id="cao_tk" type="text" inputmode="decimal" autocomplete="off" oninput="onFill(this)"></div>
+                        <div class="trio-cell"><span class="trio-lbl" data-zh="中間"   data-vi="Giữa">中間</span>    <input class="dk-inp" id="cao_tg" type="text" inputmode="decimal" autocomplete="off" oninput="onFill(this)"></div>
+                        <div class="trio-cell"><span class="trio-lbl" data-zh="針側"   data-vi="Bên kim">針側</span>  <input class="dk-inp" id="cao_tm" type="text" inputmode="decimal" autocomplete="off" oninput="onFill(this)"></div>
                     </div>
                 </div>
                 <hr class="divider">
                 <div class="trio-block">
                     <div class="side-lbl" data-zh="右側" data-vi="Bên phải">右側</div>
                     <div class="trio-grid">
-                        <div class="trio-cell">
-                            <span class="trio-lbl" data-zh="邊界側" data-vi="Bên kiếm">邊界側</span>
-                            <input class="dk-inp" id="cao_pk" type="text" inputmode="decimal" autocomplete="off" oninput="onFill(this)">
-                        </div>
-                        <div class="trio-cell">
-                            <span class="trio-lbl" data-zh="中間" data-vi="Giữa">中間</span>
-                            <input class="dk-inp" id="cao_pg" type="text" inputmode="decimal" autocomplete="off" oninput="onFill(this)">
-                        </div>
-                        <div class="trio-cell">
-                            <span class="trio-lbl" data-zh="針側" data-vi="Bên kim">針側</span>
-                            <input class="dk-inp" id="cao_pm" type="text" inputmode="decimal" autocomplete="off" oninput="onFill(this)">
-                        </div>
+                        <div class="trio-cell"><span class="trio-lbl" data-zh="邊界側" data-vi="Bên kiếm">邊界側</span><input class="dk-inp" id="cao_pk" type="text" inputmode="decimal" autocomplete="off" oninput="onFill(this)"></div>
+                        <div class="trio-cell"><span class="trio-lbl" data-zh="中間"   data-vi="Giữa">中間</span>    <input class="dk-inp" id="cao_pg" type="text" inputmode="decimal" autocomplete="off" oninput="onFill(this)"></div>
+                        <div class="trio-cell"><span class="trio-lbl" data-zh="針側"   data-vi="Bên kim">針側</span>  <input class="dk-inp" id="cao_pm" type="text" inputmode="decimal" autocomplete="off" oninput="onFill(this)"></div>
                     </div>
                 </div>
             </div>
@@ -296,36 +263,18 @@
                 <div class="trio-block">
                     <div class="side-lbl" data-zh="左側" data-vi="Bên trái">左側</div>
                     <div class="trio-grid">
-                        <div class="trio-cell">
-                            <span class="trio-lbl" data-zh="邊界側" data-vi="Bên kiếm">邊界側</span>
-                            <input class="dk-inp" id="nhiet_tk" type="text" inputmode="decimal" autocomplete="off" oninput="onFill(this)">
-                        </div>
-                        <div class="trio-cell">
-                            <span class="trio-lbl" data-zh="中間" data-vi="Giữa">中間</span>
-                            <input class="dk-inp" id="nhiet_tg" type="text" inputmode="decimal" autocomplete="off" oninput="onFill(this)">
-                        </div>
-                        <div class="trio-cell">
-                            <span class="trio-lbl" data-zh="針側" data-vi="Bên kim">針側</span>
-                            <input class="dk-inp" id="nhiet_tm" type="text" inputmode="decimal" autocomplete="off" oninput="onFill(this)">
-                        </div>
+                        <div class="trio-cell"><span class="trio-lbl" data-zh="邊界側" data-vi="Bên kiếm">邊界側</span><input class="dk-inp" id="nhiet_tk" type="text" inputmode="decimal" autocomplete="off" oninput="onFill(this)"></div>
+                        <div class="trio-cell"><span class="trio-lbl" data-zh="中間"   data-vi="Giữa">中間</span>    <input class="dk-inp" id="nhiet_tg" type="text" inputmode="decimal" autocomplete="off" oninput="onFill(this)"></div>
+                        <div class="trio-cell"><span class="trio-lbl" data-zh="針側"   data-vi="Bên kim">針側</span>  <input class="dk-inp" id="nhiet_tm" type="text" inputmode="decimal" autocomplete="off" oninput="onFill(this)"></div>
                     </div>
                 </div>
                 <hr class="divider">
                 <div class="trio-block">
                     <div class="side-lbl" data-zh="右側" data-vi="Bên phải">右側</div>
                     <div class="trio-grid">
-                        <div class="trio-cell">
-                            <span class="trio-lbl" data-zh="邊界側" data-vi="Bên kiếm">邊界側</span>
-                            <input class="dk-inp" id="nhiet_pk" type="text" inputmode="decimal" autocomplete="off" oninput="onFill(this)">
-                        </div>
-                        <div class="trio-cell">
-                            <span class="trio-lbl" data-zh="中間" data-vi="Giữa">中間</span>
-                            <input class="dk-inp" id="nhiet_pg" type="text" inputmode="decimal" autocomplete="off" oninput="onFill(this)">
-                        </div>
-                        <div class="trio-cell">
-                            <span class="trio-lbl" data-zh="針側" data-vi="Bên kim">針側</span>
-                            <input class="dk-inp" id="nhiet_pm" type="text" inputmode="decimal" autocomplete="off" oninput="onFill(this)">
-                        </div>
+                        <div class="trio-cell"><span class="trio-lbl" data-zh="邊界側" data-vi="Bên kiếm">邊界側</span><input class="dk-inp" id="nhiet_pk" type="text" inputmode="decimal" autocomplete="off" oninput="onFill(this)"></div>
+                        <div class="trio-cell"><span class="trio-lbl" data-zh="中間"   data-vi="Giữa">中間</span>    <input class="dk-inp" id="nhiet_pg" type="text" inputmode="decimal" autocomplete="off" oninput="onFill(this)"></div>
+                        <div class="trio-cell"><span class="trio-lbl" data-zh="針側"   data-vi="Bên kim">針側</span>  <input class="dk-inp" id="nhiet_pm" type="text" inputmode="decimal" autocomplete="off" oninput="onFill(this)"></div>
                     </div>
                 </div>
             </div>
@@ -352,7 +301,6 @@
             </div>
         </div>
 
-        <!-- Submit -->
         <div class="dk-sub">
             <button class="btn-sub" id="btnSub" onclick="submitForm()"
                     data-zh="⚠ 送出異常回報" data-vi="⚠ GỬI BÁO LỖI">⚠ 送出異常回報</button>
@@ -369,8 +317,8 @@
         <div class="ok-msg" id="okMsg">回報成功</div>
         <div class="ok-tag" id="okTag"></div>
         <div class="ok-det" id="okDet"></div>
-        <button class="btn-next" onclick="resetForm();goScreen('scrList')"
-                data-zh="繼續巡檢 →" data-vi="Tiếp tục →">繼續巡檢 →</button>
+        <button class="btn-next" id="btnNext" onclick="goMachineInput()"
+                data-zh="下一台 →" data-vi="Máy tiếp →">下一台 →</button>
     </div>
 </div>
 
@@ -408,166 +356,154 @@ var K = {name:"cfg_name", lang:"cfg_lang"};
 var QUEUE_KEY = "pending_queue";
 var defects = {t:new Set(), p:new Set()};
 var currentLang = "zh";
-var selectedZone = 0;
 var selectedMachine = null;
 var yesterdayAlerts = {};
 var TYPE_MAP = {"帶寬":"Độ rộng","勾高":"Cao móc","電熱":"Nhiệt","外觀":"Ngoại quan"};
 
-var ZONES = [
-  { zh:"織一①", vi:"Xưởng1-①", m:[1,2,179,4,181,6,183,8,185,10,187,12,189,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,151,152] },
-  { zh:"織一②", vi:"Xưởng1-②", m:[51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,153,154] },
-  { zh:"織一③", vi:"Xưởng1-③", m:[101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,155,156] },
-  { zh:"織一④", vi:"Xưởng1-④", m:[157,158,159,160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,176,177,178,3,180,5,182,7,184,9,186,11,188,13,190,191,192,193,194,195] },
-  { zh:"織二①", vi:"Xưởng2-①", m:[201,202,203,204,205,206,207,208,209,210,211,212,213,214,215,216,217,218,219,220,221,222,223,224,225,226,227,228,229,230,231,232,233,234,235,236,237,238,239,240,241,242,243,244,245,246,247,248,249,250,251,252,253,254,255,256,257,258,259,260,261,262,263,264,265,266,267,268,269,270,271,272,273,274,275,276,277,278,279,280] },
-  { zh:"織二②", vi:"Xưởng2-②", m:[281,282,283,284,285,286,287,288,289,290,291,292,293,294,295,296,297,298,299,300,301,302,303,304,305,306,307,308,309,310,311,312,313,314,315,316,317] }
-];
-
 // ── Offline Queue ──
-function getQueue() { try { return JSON.parse(localStorage.getItem(QUEUE_KEY)||"[]"); } catch(e) { return []; } }
-function saveQueue(q) { localStorage.setItem(QUEUE_KEY, JSON.stringify(q)); }
-function enqueue(p) { var q=getQueue(); q.push(p); saveQueue(q); updateBadge(); }
-function dequeue(id) { saveQueue(getQueue().filter(function(p){return p._id!==id;})); updateBadge(); }
-function updateBadge() {
-    var n=getQueue().length, el=document.getElementById("uploadBadge");
-    if(n>0){el.textContent="⏳ "+n; el.style.display="flex";}
-    else el.style.display="none";
+function getQueue(){try{return JSON.parse(localStorage.getItem(QUEUE_KEY)||"[]");}catch(e){return[];}}
+function saveQueue(q){localStorage.setItem(QUEUE_KEY,JSON.stringify(q));}
+function enqueue(p){var q=getQueue();q.push(p);saveQueue(q);updateBadge();}
+function dequeue(id){saveQueue(getQueue().filter(function(p){return p._id!==id;}));updateBadge();}
+function updateBadge(){
+    var n=getQueue().length,el=document.getElementById("uploadBadge");
+    if(n>0){el.textContent="⏳ "+n;el.style.display="flex";}else el.style.display="none";
 }
-async function uploadOne(p) {
+async function uploadOne(p){
     await fetch(GAS_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"application/json"},body:JSON.stringify(p)});
     dequeue(p._id);
 }
-async function uploadQueue() {
-    var q=getQueue(); if(!q.length) return;
+async function uploadQueue(){
+    var q=getQueue();if(!q.length)return;
     document.getElementById("uploadBadge").textContent=currentLang==="zh"?"上傳中...":"Đang tải...";
     var failed=0;
     for(var i=0;i<q.length;i++){try{await uploadOne(q[i]);}catch(e){failed++;}}
     updateBadge();
-    showToast(failed===0?(currentLang==="zh"?"全部上傳完成 ✓":"Đã tải lên xong ✓"):(currentLang==="zh"?"失敗 ":"Lỗi ")+failed+(currentLang==="zh"?" 筆，稍後再試":" mục"),failed===0);
+    showToast(failed===0?(currentLang==="zh"?"全部上傳完成 ✓":"Đã tải lên xong ✓"):(failed+(currentLang==="zh"?" 筆失敗":" lỗi")),failed===0);
 }
-window.addEventListener("online",function(){if(getQueue().length>0) uploadQueue();});
+window.addEventListener("online",function(){if(getQueue().length>0)uploadQueue();});
 
 // ── Alerts ──
-function fetchAlerts() {
-    return new Promise(function(resolve) {
-        var cb="_cb"+Date.now(), done=false;
-        var finish=function(data){ if(done)return; done=true; yesterdayAlerts=data||{}; delete window[cb]; var s=document.getElementById(cb); if(s)s.parentNode.removeChild(s); resolve(); };
+function fetchAlerts(){
+    return new Promise(function(resolve){
+        var cb="_cb"+Date.now(),done=false;
+        var finish=function(data){if(done)return;done=true;yesterdayAlerts=data||{};delete window[cb];var s=document.getElementById(cb);if(s)s.parentNode.removeChild(s);resolve();};
         window[cb]=finish;
         var script=document.createElement("script");
-        script.id=cb; script.src=GAS_URL+"?callback="+cb;
+        script.id=cb;script.src=GAS_URL+"?callback="+cb;
         script.onerror=function(){finish({});};
         setTimeout(function(){finish({});},8000);
         document.head.appendChild(script);
     });
 }
 
-// ── Zone screen ──
-function buildZoneGrid() {
-    var zh=currentLang==="zh", html="";
-    ZONES.forEach(function(zone,i){
-        var cnt=zone.m.filter(function(m){return yesterdayAlerts[String(m)];}).length;
-        html+='<div class="zone-card'+(cnt>0?" has-alert":"")+'" onclick="goMachines('+i+')">';
-        html+='<div class="zone-name">'+(zh?zone.zh:zone.vi)+'</div>';
-        html+='<div class="zone-count">'+zone.m.length+(zh?" 台":" máy")+'</div>';
-        if(cnt>0) html+='<div class="zone-alert">⚠ '+cnt+(zh?" 台":" máy")+'</div>';
-        html+='</div>';
-    });
-    document.getElementById("zoneGrid").innerHTML=html;
+// ── Machine input screen ──
+function goMachineInput(){
+    goScreen("scrMachine");
+    var inp=document.getElementById("machNoInp");
+    inp.value="";
+    document.getElementById("miYest").style.display="none";
+    setTimeout(function(){inp.focus();},80);
 }
-
-// ── Machine list ──
-function goMachines(zoneIdx) {
-    selectedZone=zoneIdx;
-    var zone=ZONES[zoneIdx], zh=currentLang==="zh";
-    document.getElementById("machZoneName").textContent=zh?zone.zh:zone.vi;
-    var html="";
-    zone.m.forEach(function(m){
-        var a=yesterdayAlerts[String(m)], hasAlert=a&&Object.keys(a).length>0;
-        html+='<div class="m-chip '+(hasAlert?"alr":"ok")+'" onclick="goForm('+m+')">'
-             +m+(hasAlert?'<span class="warn">⚠</span>':'')+'</div>';
+function initMachInput(){
+    var inp=document.getElementById("machNoInp");
+    inp.addEventListener("keydown",function(e){
+        if(e.key==="Enter"){e.preventDefault();goFormByInput();}
     });
-    document.getElementById("machGrid").innerHTML=html;
-    goScreen("scrList");
+    inp.addEventListener("input",function(){
+        var mNo=inp.value.trim();
+        var el=document.getElementById("miYest");
+        if(mNo&&yesterdayAlerts[mNo]&&Object.keys(yesterdayAlerts[mNo]).length>0){
+            var types=Object.keys(yesterdayAlerts[mNo]);
+            var zh=currentLang==="zh";
+            el.textContent="⚠ "+(zh?"昨日有異常：":"Hôm qua có lỗi: ")+types.map(function(t){return zh?t:(TYPE_MAP[t]||t);}).join("、");
+            el.style.display="block";
+        }else{
+            el.style.display="none";
+        }
+    });
+}
+function goFormByInput(){
+    var mNo=document.getElementById("machNoInp").value.trim();
+    if(!mNo){showToast(currentLang==="zh"?"請輸入機台號":"Nhập số máy");return;}
+    selectedMachine=mNo;
+    goForm(mNo);
 }
 
 // ── Form ──
-function goForm(mNo) {
-    selectedMachine=mNo;
+function goForm(mNo){
     resetForm();
     var zh=currentLang==="zh";
     document.getElementById("formMachTag").textContent="#"+mNo;
     var alerts=yesterdayAlerts[String(mNo)];
-    var tag=document.getElementById("formYestTag"), ref=document.getElementById("yesterdayRef");
+    var tag=document.getElementById("formYestTag"),ref=document.getElementById("yesterdayRef");
     if(alerts&&Object.keys(alerts).length>0){
         var types=Object.keys(alerts);
         tag.textContent=(zh?"⚠ 昨日：":"⚠ Hôm qua: ")+types.map(function(t){return zh?t:(TYPE_MAP[t]||t);}).join("、");
         tag.style.display="";
         var html='<div class="yest-ref-ttl">'+(zh?"⚠ 昨日數值":"⚠ Giá trị hôm qua")+'</div>';
         types.forEach(function(type){
-            var vals=alerts[type], lbl=zh?type:(TYPE_MAP[type]||type);
-            var lL=zh?"左":"T", rL=zh?"右":"P";
+            var vals=alerts[type],lbl=zh?type:(TYPE_MAP[type]||type);
+            var lL=zh?"左":"T",rL=zh?"右":"P";
             html+='<div class="yest-row"><span class="yest-type">'+lbl+'</span>'
                  +'<span class="yest-side">'+lL+'</span><span class="yest-val">'+(vals[0]||"-")+'</span>'
                  +'<span class="yest-side">'+rL+'</span><span class="yest-val">'+(vals[1]||"-")+'</span></div>';
         });
-        ref.innerHTML=html; ref.style.display="";
-    } else { tag.style.display="none"; ref.style.display="none"; }
+        ref.innerHTML=html;ref.style.display="";
+    }else{tag.style.display="none";ref.style.display="none";}
     goScreen("scrMain");
-    setTimeout(function(){ document.querySelector(".dk-sec-hd").focus(); }, 80);
+    setTimeout(function(){document.querySelector(".dk-sec-hd").focus();},80);
 }
 
 // ── Section keyboard nav ──
-function initSectionNav() {
-    var secIds = ["rong","cao","nhiet","ngoai"];
-    var headers = secIds.map(function(s){ return document.querySelector('[data-sec="'+s+'"]'); });
-
-    headers.forEach(function(hd, idx) {
-        hd.addEventListener("keydown", function(e) {
-            if (e.key === "Tab" && !e.shiftKey) {
+function initSectionNav(){
+    var secIds=["rong","cao","nhiet","ngoai"];
+    var headers=secIds.map(function(s){return document.querySelector('[data-sec="'+s+'"]');});
+    headers.forEach(function(hd,idx){
+        hd.addEventListener("keydown",function(e){
+            if(e.key==="Tab"&&!e.shiftKey){
                 e.preventDefault();
-                (headers[idx+1] || document.getElementById("btnSub")).focus();
-            } else if (e.key === "Tab" && e.shiftKey) {
+                (headers[idx+1]||document.getElementById("btnSub")).focus();
+            }else if(e.key==="Tab"&&e.shiftKey){
                 e.preventDefault();
-                if (headers[idx-1]) headers[idx-1].focus();
-            } else if (e.key === "Enter" || e.key === " ") {
+                if(headers[idx-1])headers[idx-1].focus();
+            }else if(e.key==="Enter"||e.key===" "){
                 e.preventDefault();
-                var body = document.getElementById("sec_"+hd.getAttribute("data-sec"));
-                var first = body.querySelector("input, .d-chip");
-                if (first) first.focus();
+                var body=document.getElementById("sec_"+hd.getAttribute("data-sec"));
+                var first=body.querySelector("input,.d-chip");
+                if(first)first.focus();
             }
         });
     });
-
-    // Enter in text inputs = move to next focusable element
-    document.getElementById("scrMain").addEventListener("keydown", function(e) {
-        if (e.key !== "Enter") return;
-        var t = e.target;
-        if (t.tagName !== "INPUT" || t.classList.contains("other-inp")) return;
+    // Enter in text inputs → next focusable element
+    document.getElementById("scrMain").addEventListener("keydown",function(e){
+        if(e.key!=="Enter")return;
+        var t=e.target;
+        if(t.tagName!=="INPUT"||t.classList.contains("other-inp"))return;
         e.preventDefault();
-        var all = Array.from(document.querySelectorAll(
-            '#scrMain .dk-sec-hd, #scrMain input.dk-inp, #scrMain .d-chip, #btnSub'
-        ));
-        var idx = all.indexOf(t);
-        if (all[idx+1]) all[idx+1].focus();
+        var all=Array.from(document.querySelectorAll('#scrMain .dk-sec-hd,#scrMain input.dk-inp,#scrMain .d-chip,#btnSub'));
+        var idx=all.indexOf(t);
+        if(all[idx+1])all[idx+1].focus();
     });
 }
 
 // ── onFill ──
-function onFill(el) { el.classList.toggle("filled", !!el.value); }
+function onFill(el){el.classList.toggle("filled",!!el.value);}
 
 // ── Defect grids ──
-function buildGrids() {
+function buildGrids(){
     var idx=currentLang==="zh"?1:2;
     ["t","p"].forEach(function(side){
         var grid=document.getElementById("grid_"+side);
         DEFECTS.forEach(function(d){
             var c=document.createElement("button");
-            c.className="d-chip"; c.dataset.code=d[0];
+            c.className="d-chip";c.dataset.code=d[0];
             c.innerHTML="<strong>"+d[0]+"</strong>"+d[idx];
             (function(s,code,ch){c.onclick=function(){toggleDefect(s,code,ch);};})(side,d[0],c);
             grid.appendChild(c);
         });
         var oc=document.createElement("button");
-        oc.className="d-chip"; oc.dataset.code="OTHER";
+        oc.className="d-chip";oc.dataset.code="OTHER";
         oc.innerHTML="<strong>"+(currentLang==="zh"?"其他":"Khác")+"</strong>";
         (function(s,ch){oc.onclick=function(){toggleOtherChip(s,ch);};})(side,oc);
         grid.appendChild(oc);
@@ -582,16 +518,16 @@ function toggleOtherChip(side,chip){
     var inp=document.getElementById("oi_"+side);
     var show=inp.style.display!=="block";
     inp.style.display=show?"block":"none";
-    if(!show) inp.value="";
+    if(!show)inp.value="";
     chip.classList.toggle("on",show);
-    if(show) inp.focus();
+    if(show)inp.focus();
 }
 
 // ── hasData ──
-function hasData(type) {
+function hasData(type){
     function v(id){return document.getElementById(id).value.trim();}
-    if(type==="rong") return !!(v("rong_t")||v("rong_p"));
-    if(type==="cao")  return ["cao_tk","cao_tg","cao_tm","cao_pk","cao_pg","cao_pm"].some(function(id){return !!v(id);});
+    if(type==="rong")  return !!(v("rong_t")||v("rong_p"));
+    if(type==="cao")   return ["cao_tk","cao_tg","cao_tm","cao_pk","cao_pg","cao_pm"].some(function(id){return !!v(id);});
     if(type==="nhiet") return ["nhiet_tk","nhiet_tg","nhiet_tm","nhiet_pk","nhiet_pg","nhiet_pm"].some(function(id){return !!v(id);});
     if(type==="ngoai") return defects.t.size>0||defects.p.size>0||!!v("oi_t")||!!v("oi_p");
     return false;
@@ -603,14 +539,14 @@ function getTrio(pre){return ["k","g","m"].map(function(s){return getVal(pre+s);
 function getAppearance(side){
     var other=document.getElementById("oi_"+side).value.trim();
     var parts=Array.from(defects[side]);
-    if(other) parts.push((currentLang==="zh"?"其他":"Khác")+": "+other);
+    if(other)parts.push((currentLang==="zh"?"其他":"Khác")+": "+other);
     return parts.join(", ");
 }
 
 // ── Submit ──
-async function submitForm() {
+async function submitForm(){
     if(!["rong","cao","nhiet","ngoai"].some(hasData)){
-        showToast(currentLang==="zh"?"請至少填寫一項異常":"Thêm ít nhất 1 lỗi"); return;
+        showToast(currentLang==="zh"?"請至少填寫一項異常":"Thêm ít nhất 1 lỗi");return;
     }
     var machine=String(selectedMachine);
     var payload={
@@ -629,7 +565,7 @@ async function submitForm() {
     };
     enqueue(payload);
     var btn=document.getElementById("btnSub");
-    btn.disabled=true; btn.textContent=currentLang==="zh"?"送出中...":"Đang gửi...";
+    btn.disabled=true;btn.textContent=currentLang==="zh"?"送出中...":"Đang gửi...";
     var labels={rong:["帶寬","Độ rộng"],cao:["勾高","Cao móc"],nhiet:["電熱","Nhiệt"],ngoai:["外觀","Ngoại quan"]};
     var li=currentLang==="zh"?0:1;
     var types=["rong","cao","nhiet","ngoai"].filter(hasData).map(function(t){return labels[t][li];}).join("、");
@@ -641,29 +577,31 @@ async function submitForm() {
     if(navigator.onLine){
         try{
             await fetch(GAS_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
-            dequeue(payload._id); uploaded=true;
+            dequeue(payload._id);uploaded=true;
         }catch(e){}
     }
     var tag=document.getElementById("okTag"),msg=document.getElementById("okMsg"),icon=document.getElementById("okIcon");
     if(uploaded){
-        icon.textContent="✅"; msg.textContent=currentLang==="zh"?"回報成功":"Đã gửi thành công";
-        tag.className="ok-tag uploaded"; tag.textContent=currentLang==="zh"?"✓ 已上傳":"✓ Đã tải lên";
+        icon.textContent="✅";msg.textContent=currentLang==="zh"?"回報成功":"Đã gửi thành công";
+        tag.className="ok-tag uploaded";tag.textContent=currentLang==="zh"?"✓ 已上傳":"✓ Đã tải lên";
     }else{
-        icon.textContent="📱"; msg.textContent=currentLang==="zh"?"已暫存本機":"Đã lưu tạm";
-        tag.className="ok-tag pending"; tag.textContent=currentLang==="zh"?"⏳ 有網路時自動上傳":"⏳ Sẽ tự động tải khi có mạng";
+        icon.textContent="📱";msg.textContent=currentLang==="zh"?"已暫存本機":"Đã lưu tạm";
+        tag.className="ok-tag pending";tag.textContent=currentLang==="zh"?"⏳ 有網路時自動上傳":"⏳ Sẽ tự động tải khi có mạng";
     }
     goScreen("scrOK");
-    btn.disabled=false; btn.textContent=currentLang==="zh"?"⚠ 送出異常回報":"⚠ GỬI BÁO LỖI";
+    btn.disabled=false;btn.textContent=currentLang==="zh"?"⚠ 送出異常回報":"⚠ GỬI BÁO LỖI";
+    // Auto focus "下一台" so pressing Enter immediately continues
+    setTimeout(function(){document.getElementById("btnNext").focus();},100);
 }
 
 // ── Reset ──
-function resetForm() {
-    document.querySelectorAll("#scrMain .dk-inp, #scrMain .other-inp").forEach(function(el){
-        el.value=""; el.classList.remove("filled");
+function resetForm(){
+    document.querySelectorAll("#scrMain .dk-inp,#scrMain .other-inp").forEach(function(el){
+        el.value="";el.classList.remove("filled");
     });
-    defects.t.clear(); defects.p.clear();
+    defects.t.clear();defects.p.clear();
     document.querySelectorAll(".d-chip").forEach(function(c){c.classList.remove("on");});
-    document.querySelectorAll(".other-inp").forEach(function(el){el.style.display="none"; el.value="";});
+    document.querySelectorAll(".other-inp").forEach(function(el){el.style.display="none";el.value="";});
 }
 
 // ── Screen ──
@@ -677,29 +615,24 @@ function goScreen(id){
 function loadCfg(){document.getElementById("cfgName").value=localStorage.getItem(K.name)||"";}
 function saveSettings(){
     var name=document.getElementById("cfgName").value.trim();
-    if(!name){showToast(currentLang==="zh"?"請輸入名字":"Vui lòng nhập tên"); return;}
+    if(!name){showToast(currentLang==="zh"?"請輸入名字":"Vui lòng nhập tên");return;}
     localStorage.setItem(K.name,name);
-    goScreen("scrZone"); buildZoneGrid();
-    fetchAlerts().then(function(){buildZoneGrid();});
+    goMachineInput();
+    document.getElementById("miWho").textContent=(currentLang==="zh"?"巡檢人員：":"Người kiểm: ")+name;
+    fetchAlerts();
 }
-function goSettings(){loadCfg(); goScreen("scrSettings");}
+function goSettings(){loadCfg();goScreen("scrSettings");}
 
 // ── Toast ──
 function showToast(msg,isOk){
     var t=document.getElementById("toast");
-    t.textContent=msg; t.className="toast show"+(isOk?" ok":"");
+    t.textContent=msg;t.className="toast show"+(isOk?" ok":"");
     setTimeout(function(){t.classList.remove("show");},3000);
 }
 
 // ── Language ──
 function switchLang(lang){
-    currentLang=lang; localStorage.setItem(K.lang,lang); applyLang();
-    var active=document.querySelector(".screen.active");
-    if(active){
-        if(active.id==="scrZone") buildZoneGrid();
-        if(active.id==="scrList") goMachines(selectedZone);
-        if(active.id==="scrMain"&&selectedMachine) goForm(selectedMachine);
-    }
+    currentLang=lang;localStorage.setItem(K.lang,lang);applyLang();
 }
 function applyLang(){
     var zh=currentLang==="zh";
@@ -710,10 +643,12 @@ function applyLang(){
     var idx=zh?1:2;
     document.querySelectorAll(".d-chip").forEach(function(chip){
         var code=chip.dataset.code;
-        if(code==="OTHER"){chip.innerHTML="<strong>"+(zh?"其他":"Khác")+"</strong>"; return;}
+        if(code==="OTHER"){chip.innerHTML="<strong>"+(zh?"其他":"Khác")+"</strong>";return;}
         var d=DEFECTS.find(function(x){return x[0]===code;});
-        if(d) chip.innerHTML="<strong>"+d[0]+"</strong>"+d[idx];
+        if(d)chip.innerHTML="<strong>"+d[0]+"</strong>"+d[idx];
     });
+    var name=localStorage.getItem(K.name)||"";
+    if(name)document.getElementById("miWho").textContent=(zh?"巡檢人員：":"Người kiểm: ")+name;
 }
 
 // ── Init ──
@@ -724,13 +659,12 @@ window.onload=function(){
     loadCfg();
     updateBadge();
     initSectionNav();
-    if(localStorage.getItem(K.name)){
-        goScreen("scrZone"); buildZoneGrid();
-        fetchAlerts().then(function(){
-            buildZoneGrid();
-            var active=document.querySelector(".screen.active");
-            if(active&&active.id==="scrList") goMachines(selectedZone);
-        });
+    initMachInput();
+    var name=localStorage.getItem(K.name)||"";
+    if(name){
+        document.getElementById("miWho").textContent=(currentLang==="zh"?"巡檢人員：":"Người kiểm: ")+name;
+        goMachineInput();
+        fetchAlerts();
     }else{
         goScreen("scrSettings");
     }
