@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>異常回報 / Báo Lỗi</title>
     <style>
-        * { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+        * { box-sizing:border-box; margin:0; padding:0; }
         :root {
             --bg:#f0f4f8; --surf:#fff; --surf2:#f8fafc; --border:#dde3ea;
             --text:#1e293b; --muted:#64748b; --blue:#2563eb; --blue-lt:#eff6ff;
@@ -14,11 +14,11 @@
             --orange:#ea580c; --orange-lt:#fff7ed; --orange-bd:#fed7aa;
             --r:12px;
         }
-        body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; background:var(--bg); color:var(--text); min-height:100vh; padding-bottom:110px; }
+        body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
 
-        /* ── Header ── */
+        /* Header */
         .app-header {
-            background:#fff; padding:12px 16px; position:sticky; top:0; z-index:100;
+            background:#fff; padding:12px 20px; position:sticky; top:0; z-index:100;
             border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;
             box-shadow:0 1px 4px rgba(0,0,0,.07);
         }
@@ -26,21 +26,16 @@
         .hd-sub   { font-size:10px; color:var(--muted); margin-top:2px; }
         .hd-right { display:flex; align-items:center; gap:8px; }
         .lang-toggle { display:flex; border:1.5px solid var(--border); border-radius:20px; overflow:hidden; background:var(--surf2); }
-        .lang-btn { background:none; border:none; color:var(--muted); font-size:11px; font-weight:700; padding:5px 12px; cursor:pointer; transition:all .15s; }
+        .lang-btn { background:none; border:none; color:var(--muted); font-size:11px; font-weight:700; padding:5px 12px; cursor:pointer; }
         .lang-btn.on { background:var(--blue); color:#fff; }
-        .upload-badge {
-            display:none; align-items:center; gap:4px;
-            background:var(--orange); border:none; border-radius:20px;
-            color:#fff; font-size:11px; font-weight:700; padding:5px 10px;
-            cursor:pointer; white-space:nowrap;
-        }
+        .upload-badge { display:none; align-items:center; gap:4px; background:var(--orange); border:none; border-radius:20px; color:#fff; font-size:11px; font-weight:700; padding:5px 10px; cursor:pointer; white-space:nowrap; }
         .gear-btn { background:none; border:none; color:var(--muted); font-size:20px; cursor:pointer; padding:4px; }
 
-        /* ── Screens ── */
+        /* Screens */
         .screen { display:none; } .screen.active { display:block; }
 
-        /* ── Settings ── */
-        .set-body { padding:20px 16px; }
+        /* Settings */
+        .set-body { padding:20px 20px; max-width:480px; margin:0 auto; }
         .set-desc { font-size:13px; color:var(--muted); margin-bottom:22px; line-height:1.7; }
         .set-group { margin-bottom:16px; }
         .set-lbl { font-size:11px; color:var(--muted); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:6px; font-weight:700; }
@@ -48,103 +43,106 @@
         .set-inp:focus { border-color:var(--blue); }
         .btn-save { width:100%; background:var(--blue); border:none; border-radius:var(--r); color:#fff; font-size:16px; padding:16px; cursor:pointer; font-weight:700; margin-top:8px; }
 
-        /* ── Zone selection ── */
-        .zone-page { padding:16px; }
+        /* Zone */
+        .zone-page { padding:20px; max-width:600px; margin:0 auto; }
         .zone-page-ttl { font-size:11px; color:var(--muted); letter-spacing:1.5px; text-transform:uppercase; font-weight:700; margin-bottom:14px; }
         .zone-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-        .zone-card { background:#fff; border:2px solid var(--border); border-radius:var(--r); padding:18px 12px; cursor:pointer; text-align:center; transition:all .15s; box-shadow:0 1px 3px rgba(0,0,0,.05); }
+        .zone-card { background:#fff; border:2px solid var(--border); border-radius:var(--r); padding:18px 12px; cursor:pointer; text-align:center; transition:all .15s; }
         .zone-card.has-alert { border-color:var(--orange); background:var(--orange-lt); }
-        .zone-card:active { transform:scale(.97); }
+        .zone-card:hover { box-shadow:0 2px 8px rgba(0,0,0,.1); }
         .zone-name  { font-size:16px; font-weight:800; color:var(--text); margin-bottom:4px; }
         .zone-count { font-size:11px; color:var(--muted); }
         .zone-alert { font-size:12px; color:var(--orange); font-weight:700; margin-top:8px; }
 
-        /* ── Machine list ── */
-        .mach-hd { background:#fff; position:sticky; top:52px; z-index:80; border-bottom:1px solid var(--border); padding:10px 16px; display:flex; align-items:center; gap:10px; box-shadow:0 1px 4px rgba(0,0,0,.05); }
-        .mach-back-btn  { background:none; border:none; color:var(--blue); font-size:14px; font-weight:700; cursor:pointer; flex-shrink:0; }
-        .mach-zone-lbl  { font-size:15px; font-weight:800; color:var(--text); }
-        .mach-body { padding:12px 14px 100px; }
+        /* Machine list */
+        .mach-hd { background:#fff; position:sticky; top:52px; z-index:80; border-bottom:1px solid var(--border); padding:10px 20px; display:flex; align-items:center; gap:10px; }
+        .mach-back-btn { background:none; border:none; color:var(--blue); font-size:14px; font-weight:700; cursor:pointer; }
+        .mach-zone-lbl { font-size:15px; font-weight:800; }
+        .mach-body { padding:14px 20px 60px; max-width:900px; }
         .chip-grid { display:flex; flex-wrap:wrap; gap:6px; }
         .m-chip { display:flex; flex-direction:column; align-items:center; justify-content:center; width:52px; min-height:42px; border-radius:9px; font-size:13px; font-weight:800; line-height:1.3; cursor:pointer; transition:transform .1s; }
-        .m-chip:active { transform:scale(.92); }
+        .m-chip:hover { transform:scale(1.05); }
         .m-chip.ok  { background:#f1f5f9; color:#94a3b8; border:1px solid #e2e8f0; }
-        .m-chip.alr { background:var(--orange); color:#fff; border:none; box-shadow:0 2px 8px rgba(234,88,12,.4); }
+        .m-chip.alr { background:var(--orange); color:#fff; border:none; }
         .m-chip .warn { font-size:9px; opacity:.85; }
 
-        /* ── Form sticky bar ── */
-        .sticky-add {
-            position:sticky; top:52px; z-index:50;
-            background:var(--bg); padding:8px 14px 10px;
-            border-bottom:1px solid var(--border);
-            box-shadow:0 2px 6px rgba(0,0,0,.05);
+        /* Form top bar */
+        .form-top {
+            background:#fff; position:sticky; top:52px; z-index:90;
+            border-bottom:1px solid var(--border); padding:10px 20px;
+            display:flex; align-items:center; gap:14px;
+            box-shadow:0 1px 4px rgba(0,0,0,.05);
         }
-        .form-nav-row { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
-        .form-back-btn { background:none; border:none; color:var(--blue); font-size:13px; font-weight:700; cursor:pointer; padding:0; flex-shrink:0; }
-        .form-mach-tag { font-size:18px; font-weight:800; color:var(--text); }
-        .form-yest-tag { font-size:11px; color:var(--orange); font-weight:700; background:var(--orange-lt); border:1px solid var(--orange-bd); border-radius:6px; padding:3px 8px; margin-left:auto; white-space:nowrap; }
-        .add-bar-lbl { font-size:10px; color:var(--muted); letter-spacing:1.5px; text-transform:uppercase; font-weight:700; margin-bottom:8px; }
-        .add-row { display:flex; flex-wrap:wrap; gap:7px; }
-        .add-btn {
-            display:flex; align-items:center; gap:5px;
-            padding:8px 13px; border-radius:9px;
-            border:2px dashed var(--border); background:var(--surf);
-            color:var(--muted); font-size:12px; font-weight:700;
-            cursor:pointer; transition:all .2s; white-space:nowrap;
+        .form-back-btn { background:none; border:none; color:var(--blue); font-size:14px; font-weight:700; cursor:pointer; flex-shrink:0; }
+        .form-mach-tag { font-size:22px; font-weight:800; color:var(--text); }
+        .form-yest-tag { font-size:11px; color:var(--orange); font-weight:700; background:var(--orange-lt); border:1px solid var(--orange-bd); border-radius:6px; padding:3px 8px; white-space:nowrap; }
+        .form-kbd-hint { margin-left:auto; font-size:11px; color:var(--muted); }
+
+        /* Desktop form */
+        .dk-wrap { max-width:760px; margin:0 auto; padding:16px 20px 100px; }
+
+        .dk-section { margin-bottom:8px; border:1.5px solid var(--border); border-radius:var(--r); background:var(--surf); overflow:hidden; }
+
+        .dk-sec-hd {
+            padding:13px 18px; font-size:12px; font-weight:800; color:var(--muted);
+            letter-spacing:2px; text-transform:uppercase; cursor:pointer;
+            display:flex; align-items:center; gap:10px; outline:none;
+            user-select:none; transition:background .1s;
         }
-        .add-btn .ic { font-size:15px; transition:transform .2s; }
-        .add-btn.active { border-style:solid; border-color:var(--orange); background:var(--orange-lt); color:var(--orange); }
-        .add-btn.active .ic { transform:rotate(45deg); }
+        .dk-sec-hd:hover  { background:var(--surf2); }
+        .dk-sec-hd:focus  { background:var(--blue-lt); color:var(--blue); outline:2px solid var(--blue); outline-offset:-2px; }
+        .dk-hint { margin-left:auto; font-size:10px; font-weight:400; color:var(--blue); letter-spacing:0; text-transform:none; opacity:0; transition:opacity .15s; white-space:nowrap; }
+        .dk-sec-hd:focus .dk-hint { opacity:1; }
 
-        /* ── Form body ── */
-        .form-body { padding:14px; }
+        .dk-sec-body { padding:16px 18px 18px; border-top:1.5px solid var(--border); }
 
-        /* Empty hint */
-        .empty-hint { text-align:center; padding:30px 0 10px; color:#94a3b8; font-size:13px; line-height:1.8; }
+        /* Shared input */
+        .dk-inp {
+            width:100%; height:52px; background:var(--surf2); border:2px solid var(--border);
+            border-radius:10px; color:var(--text); font-size:22px; font-weight:600;
+            padding:0 10px; text-align:center; outline:none; transition:border-color .15s, background .15s;
+        }
+        .dk-inp:focus { border-color:var(--orange); box-shadow:0 0 0 3px rgba(234,88,12,.1); background:#fff; }
+        .dk-inp.filled { background:var(--orange-lt); border-color:var(--orange); color:var(--orange); }
 
-        /* Problem card */
-        .prob-card { background:var(--surf); border:2px solid var(--orange); border-radius:var(--r); margin-bottom:12px; overflow:hidden; box-shadow:0 2px 8px rgba(234,88,12,.1); display:none; }
-        .prob-card.show { display:block; }
-        .prob-head { background:var(--orange-lt); padding:11px 15px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--orange-bd); }
-        .prob-title { font-size:12px; color:var(--orange); letter-spacing:1.5px; text-transform:uppercase; font-weight:700; }
-        .remove-btn { background:none; border:none; color:var(--orange); font-size:22px; cursor:pointer; line-height:1; }
-        .prob-body { padding:14px 15px; }
+        /* 帶寬 */
+        .rong-grid { display:grid; grid-template-columns:28px 1fr 28px 1fr; align-items:center; gap:10px 14px; }
+        .rong-grid label { font-size:13px; font-weight:700; color:var(--muted); text-align:center; }
 
-        /* Inputs */
-        .side-lbl { font-size:11px; font-weight:700; color:var(--text); letter-spacing:.5px; margin-bottom:8px; }
-        .val-row { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
-        .val-row:last-child { margin-bottom:0; }
-        .val-side { font-size:12px; color:var(--muted); flex:0 0 50px; font-weight:600; }
-        .val-inp { flex:1; height:46px; background:var(--surf2); border:2px solid var(--border); border-radius:10px; color:var(--text); font-size:16px; padding:0 12px; outline:none; text-align:center; transition:all .15s; }
-        .val-inp:focus { border-color:var(--orange); box-shadow:0 0 0 3px rgba(234,88,12,.1); }
-        .val-inp.filled { background:var(--orange-lt); border-color:var(--orange); color:var(--orange); font-weight:600; }
-
-        /* Triple */
+        /* Trio (勾高 / 電熱) */
         .trio-block { margin-bottom:14px; }
         .trio-block:last-child { margin-bottom:0; }
-        .trio-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
-        .trio-cell { display:flex; flex-direction:column; align-items:center; gap:5px; }
-        .trio-sublbl { font-size:10px; color:var(--muted); text-align:center; line-height:1.4; }
-        .trio-inp { width:100%; height:50px; background:var(--surf2); border:2px solid var(--border); border-radius:10px; color:var(--text); font-size:16px; text-align:center; outline:none; transition:all .15s; }
-        .trio-inp:focus  { border-color:var(--orange); box-shadow:0 0 0 3px rgba(234,88,12,.1); }
-        .trio-inp.filled { background:var(--orange-lt); border-color:var(--orange); color:var(--orange); font-weight:600; }
-
-        /* Divider */
+        .side-lbl { font-size:11px; font-weight:700; color:var(--text); letter-spacing:.5px; margin-bottom:8px; }
+        .trio-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; }
+        .trio-cell { display:flex; flex-direction:column; gap:5px; }
+        .trio-lbl { font-size:10px; color:var(--muted); text-align:center; }
         .divider { border:none; border-top:1px solid var(--border); margin:14px 0; }
 
-        /* Defect chips */
-        .ap-side { margin-bottom:16px; }
+        /* 外觀 chips */
+        .ap-side { margin-bottom:14px; }
         .ap-side:last-child { margin-bottom:0; }
-        .defect-grid { display:flex; flex-wrap:wrap; gap:7px; margin-top:8px; }
-        .d-chip { background:var(--surf2); border:1.5px solid var(--border); border-radius:8px; color:var(--muted); font-size:11px; padding:7px 10px; cursor:pointer; line-height:1.35; transition:all .15s; }
+        .defect-grid { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+        .d-chip { background:var(--surf2); border:1.5px solid var(--border); border-radius:8px; color:var(--muted); font-size:11px; padding:6px 10px; cursor:pointer; line-height:1.35; transition:all .1s; }
         .d-chip strong { display:block; font-size:12px; color:#475569; }
+        .d-chip:focus { outline:2px solid var(--blue); outline-offset:1px; }
         .d-chip.on { background:var(--red-lt); border-color:var(--red); color:#b91c1c; }
         .d-chip.on strong { color:var(--red); }
-        .other-inp { width:100%; background:var(--surf2); border:2px solid var(--border); border-radius:10px; color:var(--text); font-size:14px; padding:10px 14px; outline:none; margin-top:9px; display:none; }
+        .other-inp { width:100%; background:var(--surf2); border:2px solid var(--border); border-radius:10px; color:var(--text); font-size:14px; padding:10px 14px; outline:none; margin-top:8px; display:none; }
         .other-inp:focus { border-color:var(--orange); }
 
+        /* Yesterday ref */
+        .yest-ref { background:var(--orange-lt); border:1.5px solid var(--orange-bd); border-radius:10px; padding:10px 14px; margin:12px 20px 0; max-width:760px; margin-left:auto; margin-right:auto; }
+        .yest-ref-ttl { font-size:10px; color:var(--orange); font-weight:700; letter-spacing:1px; text-transform:uppercase; margin-bottom:6px; }
+        .yest-row { display:flex; align-items:baseline; gap:6px; font-size:12px; margin-bottom:4px; flex-wrap:wrap; }
+        .yest-row:last-child { margin-bottom:0; }
+        .yest-type { font-weight:800; color:var(--orange); min-width:34px; }
+        .yest-side { color:var(--muted); font-size:11px; }
+        .yest-val  { color:var(--text); font-weight:600; margin-right:8px; }
+
         /* Submit */
-        .sub-area { padding:12px 14px 20px; position:sticky; bottom:0; background:linear-gradient(to top,var(--bg) 70%,transparent); }
+        .dk-sub { margin-top:12px; }
         .btn-sub { width:100%; background:var(--red); border:none; border-radius:var(--r); color:#fff; font-size:17px; font-weight:800; padding:17px; cursor:pointer; letter-spacing:1px; box-shadow:0 3px 10px rgba(220,38,38,.35); }
+        .btn-sub:focus { outline:3px solid var(--red); outline-offset:2px; }
         .btn-sub:disabled { opacity:.5; box-shadow:none; }
         .btn-rst { width:100%; background:#fff; border:1.5px solid var(--border); border-radius:var(--r); color:var(--muted); font-size:14px; padding:12px; cursor:pointer; margin-top:8px; }
 
@@ -158,32 +156,10 @@
         .ok-det  { font-size:13px; color:var(--muted); line-height:1.8; }
         .btn-next { background:var(--blue); border:none; border-radius:var(--r); color:#fff; font-size:16px; padding:15px 32px; cursor:pointer; font-weight:700; }
 
-        /* Yesterday reference card */
-        .yest-ref { background:var(--orange-lt); border:1.5px solid var(--orange-bd); border-radius:10px; padding:10px 14px; margin-bottom:12px; }
-        .yest-ref-ttl { font-size:10px; color:var(--orange); font-weight:700; letter-spacing:1px; text-transform:uppercase; margin-bottom:8px; }
-        .yest-row { display:flex; align-items:baseline; gap:6px; font-size:12px; margin-bottom:5px; flex-wrap:wrap; }
-        .yest-row:last-child { margin-bottom:0; }
-        .yest-type { font-weight:800; color:var(--orange); min-width:34px; }
-        .yest-side { color:var(--muted); font-size:11px; }
-        .yest-val  { color:var(--text); font-weight:600; margin-right:8px; }
-
         /* Toast */
         .toast { position:fixed; top:16px; left:50%; transform:translateX(-50%) translateY(-100px); background:var(--red); color:#fff; padding:10px 22px; border-radius:30px; font-size:13px; transition:transform .3s; z-index:999; pointer-events:none; white-space:nowrap; }
         .toast.show { transform:translateX(-50%) translateY(0); }
         .toast.ok { background:var(--green-dk); }
-
-        /* Stepper — 帶寬 */
-        .step-wrap { display:flex; align-items:center; gap:6px; flex:1; }
-        .step-btn { flex:1; height:46px; border:none; border-radius:9px; font-size:15px; font-weight:800; cursor:pointer; background:#e2e8f0; color:#475569; transition:transform .1s; }
-        .step-btn:active { transform:scale(.93); background:#cbd5e1; }
-        .step-val-disp { flex:0 0 62px; height:46px; background:var(--orange-lt); border:2px solid var(--orange); border-radius:10px; color:var(--orange); font-size:20px; font-weight:800; display:flex; align-items:center; justify-content:center; }
-
-        /* Stepper — 勾高 */
-        .trio-step { display:flex; flex-direction:column; align-items:center; gap:3px; width:100%; }
-        .trio-step-val { width:100%; height:36px; background:var(--orange-lt); border:2px solid var(--orange); border-radius:8px; color:var(--orange); font-size:15px; font-weight:800; display:flex; align-items:center; justify-content:center; }
-        .trio-step-btns { display:grid; grid-template-columns:1fr 1fr; gap:3px; width:100%; }
-        .trio-step-btn { height:27px; border:none; border-radius:6px; font-size:11px; font-weight:800; cursor:pointer; background:#e2e8f0; color:#475569; transition:transform .1s; }
-        .trio-step-btn:active { transform:scale(.9); background:#cbd5e1; }
     </style>
 </head>
 <body>
@@ -199,7 +175,7 @@
         <button class="upload-badge" id="uploadBadge" onclick="uploadQueue()"></button>
         <div class="lang-toggle">
             <button class="lang-btn on" id="lbtn_zh" onclick="switchLang('zh')">中</button>
-            <button class="lang-btn" id="lbtn_vi" onclick="switchLang('vi')">VI</button>
+            <button class="lang-btn"    id="lbtn_vi" onclick="switchLang('vi')">VI</button>
         </div>
         <button class="gear-btn" onclick="goSettings()">⚙️</button>
     </div>
@@ -238,113 +214,54 @@
 
 <!-- FORM -->
 <div class="screen" id="scrMain">
-    <div class="sticky-add">
-        <div class="form-nav-row">
-            <button class="form-back-btn" onclick="goScreen('scrList')">←</button>
-            <span class="form-mach-tag" id="formMachTag"></span>
-            <span class="form-yest-tag" id="formYestTag" style="display:none"></span>
-        </div>
-        <div class="add-bar-lbl" data-zh="點選新增異常項目" data-vi="Thêm lỗi">點選新增異常項目</div>
-        <div class="add-row">
-            <button class="add-btn" id="addbtn_rong" onclick="toggleProblem('rong')">
-                <span class="ic">＋</span><span data-zh="帶寬" data-vi="Độ rộng">帶寬</span>
-            </button>
-            <button class="add-btn" id="addbtn_cao" onclick="toggleProblem('cao')">
-                <span class="ic">＋</span><span data-zh="勾高" data-vi="Cao móc">勾高</span>
-            </button>
-            <button class="add-btn" id="addbtn_nhiet" onclick="toggleProblem('nhiet')">
-                <span class="ic">＋</span><span data-zh="電熱" data-vi="Nhiệt">電熱</span>
-            </button>
-            <button class="add-btn" id="addbtn_ngoai" onclick="toggleProblem('ngoai')">
-                <span class="ic">＋</span><span data-zh="外觀" data-vi="Ngoại quan">外觀</span>
-            </button>
-        </div>
+    <div class="form-top">
+        <button class="form-back-btn" onclick="goScreen('scrList')">←</button>
+        <span class="form-mach-tag" id="formMachTag"></span>
+        <span class="form-yest-tag" id="formYestTag" style="display:none"></span>
+        <span class="form-kbd-hint" data-zh="Tab 略過類別　Enter 填入 / 跳欄" data-vi="Tab bỏ qua　Enter điền">Tab 略過類別　Enter 填入 / 跳欄</span>
     </div>
 
-    <div class="form-body">
-        <div class="yest-ref" id="yesterdayRef" style="display:none"></div>
+    <div class="yest-ref" id="yesterdayRef" style="display:none"></div>
 
-        <p class="empty-hint" id="emptyHint"
-           data-zh="↑ 點選上方項目新增異常" data-vi="↑ Nhấn phía trên để thêm lỗi">
-            ↑ 點選上方項目新增異常
-        </p>
+    <div class="dk-wrap">
 
         <!-- 帶寬 -->
-        <div class="prob-card" id="card_rong">
-            <div class="prob-head">
-                <span class="prob-title" data-zh="⚠ 帶寬異常" data-vi="⚠ Lỗi Độ rộng">⚠ 帶寬異常</span>
-                <button class="remove-btn" onclick="toggleProblem('rong')">×</button>
+        <div class="dk-section">
+            <div class="dk-sec-hd" tabindex="0" data-sec="rong">
+                <span data-zh="帶寬" data-vi="Độ rộng">帶寬</span>
+                <span class="dk-hint" data-zh="Enter 填入　Tab 略過" data-vi="Enter điền　Tab bỏ qua">Enter 填入　Tab 略過</span>
             </div>
-            <div class="prob-body">
-                <div class="val-row">
-                    <span class="val-side" data-zh="左" data-vi="Trái">左</span>
-                    <div class="step-wrap">
-                        <button class="step-btn" onclick="adjustStep('rong_t',-1,0)">−1</button>
-                        <div class="step-val-disp" id="rong_t_disp">0</div>
-                        <button class="step-btn" onclick="adjustStep('rong_t',1,0)">+1</button>
-                        <input type="hidden" id="rong_t" value="0">
-                    </div>
-                </div>
-                <div class="val-row">
-                    <span class="val-side" data-zh="右" data-vi="Phải">右</span>
-                    <div class="step-wrap">
-                        <button class="step-btn" onclick="adjustStep('rong_p',-1,0)">−1</button>
-                        <div class="step-val-disp" id="rong_p_disp">0</div>
-                        <button class="step-btn" onclick="adjustStep('rong_p',1,0)">+1</button>
-                        <input type="hidden" id="rong_p" value="0">
-                    </div>
+            <div class="dk-sec-body" id="sec_rong">
+                <div class="rong-grid">
+                    <label data-zh="左" data-vi="Trái">左</label>
+                    <input class="dk-inp" id="rong_t" type="text" inputmode="decimal" autocomplete="off" oninput="onFill(this)">
+                    <label data-zh="右" data-vi="Phải">右</label>
+                    <input class="dk-inp" id="rong_p" type="text" inputmode="decimal" autocomplete="off" oninput="onFill(this)">
                 </div>
             </div>
         </div>
 
         <!-- 勾高 -->
-        <div class="prob-card" id="card_cao">
-            <div class="prob-head">
-                <span class="prob-title" data-zh="⚠ 勾高異常" data-vi="⚠ Lỗi Cao móc">⚠ 勾高異常</span>
-                <button class="remove-btn" onclick="toggleProblem('cao')">×</button>
+        <div class="dk-section">
+            <div class="dk-sec-hd" tabindex="0" data-sec="cao">
+                <span data-zh="勾高" data-vi="Cao móc">勾高</span>
+                <span class="dk-hint" data-zh="Enter 填入　Tab 略過" data-vi="Enter điền　Tab bỏ qua">Enter 填入　Tab 略過</span>
             </div>
-            <div class="prob-body">
+            <div class="dk-sec-body" id="sec_cao">
                 <div class="trio-block">
                     <div class="side-lbl" data-zh="左側" data-vi="Bên trái">左側</div>
                     <div class="trio-grid">
                         <div class="trio-cell">
-                            <span class="trio-sublbl" data-zh="邊界側" data-vi="Bên kiếm">邊界側</span>
-                            <div class="trio-step">
-                                <div class="trio-step-val" id="cao_tk_disp">2.00</div>
-                                <div class="trio-step-btns">
-                                    <button class="trio-step-btn" onclick="adjustStep('cao_tk',-0.1,2)">−.1</button>
-                                    <button class="trio-step-btn" onclick="adjustStep('cao_tk',0.1,2)">+.1</button>
-                                    <button class="trio-step-btn" onclick="adjustStep('cao_tk',-0.01,2)">−.01</button>
-                                    <button class="trio-step-btn" onclick="adjustStep('cao_tk',0.01,2)">+.01</button>
-                                </div>
-                                <input type="hidden" id="cao_tk" value="2.00">
-                            </div>
+                            <span class="trio-lbl" data-zh="邊界側" data-vi="Bên kiếm">邊界側</span>
+                            <input class="dk-inp" id="cao_tk" type="text" inputmode="decimal" autocomplete="off" oninput="onFill(this)">
                         </div>
                         <div class="trio-cell">
-                            <span class="trio-sublbl" data-zh="中間" data-vi="Giữa">中間</span>
-                            <div class="trio-step">
-                                <div class="trio-step-val" id="cao_tg_disp">2.00</div>
-                                <div class="trio-step-btns">
-                                    <button class="trio-step-btn" onclick="adjustStep('cao_tg',-0.1,2)">−.1</button>
-                                    <button class="trio-step-btn" onclick="adjustStep('cao_tg',0.1,2)">+.1</button>
-                                    <button class="trio-step-btn" onclick="adjustStep('cao_tg',-0.01,2)">−.01</button>
-                                    <button class="trio-step-btn" onclick="adjustStep('cao_tg',0.01,2)">+.01</button>
-                                </div>
-                                <input type="hidden" id="cao_tg" value="2.00">
-                            </div>
+                            <span class="trio-lbl" data-zh="中間" data-vi="Giữa">中間</span>
+                            <input class="dk-inp" id="cao_tg" type="text" inputmode="decimal" autocomplete="off" oninput="onFill(this)">
                         </div>
                         <div class="trio-cell">
-                            <span class="trio-sublbl" data-zh="針側" data-vi="Bên kim">針側</span>
-                            <div class="trio-step">
-                                <div class="trio-step-val" id="cao_tm_disp">2.00</div>
-                                <div class="trio-step-btns">
-                                    <button class="trio-step-btn" onclick="adjustStep('cao_tm',-0.1,2)">−.1</button>
-                                    <button class="trio-step-btn" onclick="adjustStep('cao_tm',0.1,2)">+.1</button>
-                                    <button class="trio-step-btn" onclick="adjustStep('cao_tm',-0.01,2)">−.01</button>
-                                    <button class="trio-step-btn" onclick="adjustStep('cao_tm',0.01,2)">+.01</button>
-                                </div>
-                                <input type="hidden" id="cao_tm" value="2.00">
-                            </div>
+                            <span class="trio-lbl" data-zh="針側" data-vi="Bên kim">針側</span>
+                            <input class="dk-inp" id="cao_tm" type="text" inputmode="decimal" autocomplete="off" oninput="onFill(this)">
                         </div>
                     </div>
                 </div>
@@ -353,43 +270,16 @@
                     <div class="side-lbl" data-zh="右側" data-vi="Bên phải">右側</div>
                     <div class="trio-grid">
                         <div class="trio-cell">
-                            <span class="trio-sublbl" data-zh="邊界側" data-vi="Bên kiếm">邊界側</span>
-                            <div class="trio-step">
-                                <div class="trio-step-val" id="cao_pk_disp">2.00</div>
-                                <div class="trio-step-btns">
-                                    <button class="trio-step-btn" onclick="adjustStep('cao_pk',-0.1,2)">−.1</button>
-                                    <button class="trio-step-btn" onclick="adjustStep('cao_pk',0.1,2)">+.1</button>
-                                    <button class="trio-step-btn" onclick="adjustStep('cao_pk',-0.01,2)">−.01</button>
-                                    <button class="trio-step-btn" onclick="adjustStep('cao_pk',0.01,2)">+.01</button>
-                                </div>
-                                <input type="hidden" id="cao_pk" value="2.00">
-                            </div>
+                            <span class="trio-lbl" data-zh="邊界側" data-vi="Bên kiếm">邊界側</span>
+                            <input class="dk-inp" id="cao_pk" type="text" inputmode="decimal" autocomplete="off" oninput="onFill(this)">
                         </div>
                         <div class="trio-cell">
-                            <span class="trio-sublbl" data-zh="中間" data-vi="Giữa">中間</span>
-                            <div class="trio-step">
-                                <div class="trio-step-val" id="cao_pg_disp">2.00</div>
-                                <div class="trio-step-btns">
-                                    <button class="trio-step-btn" onclick="adjustStep('cao_pg',-0.1,2)">−.1</button>
-                                    <button class="trio-step-btn" onclick="adjustStep('cao_pg',0.1,2)">+.1</button>
-                                    <button class="trio-step-btn" onclick="adjustStep('cao_pg',-0.01,2)">−.01</button>
-                                    <button class="trio-step-btn" onclick="adjustStep('cao_pg',0.01,2)">+.01</button>
-                                </div>
-                                <input type="hidden" id="cao_pg" value="2.00">
-                            </div>
+                            <span class="trio-lbl" data-zh="中間" data-vi="Giữa">中間</span>
+                            <input class="dk-inp" id="cao_pg" type="text" inputmode="decimal" autocomplete="off" oninput="onFill(this)">
                         </div>
                         <div class="trio-cell">
-                            <span class="trio-sublbl" data-zh="針側" data-vi="Bên kim">針側</span>
-                            <div class="trio-step">
-                                <div class="trio-step-val" id="cao_pm_disp">2.00</div>
-                                <div class="trio-step-btns">
-                                    <button class="trio-step-btn" onclick="adjustStep('cao_pm',-0.1,2)">−.1</button>
-                                    <button class="trio-step-btn" onclick="adjustStep('cao_pm',0.1,2)">+.1</button>
-                                    <button class="trio-step-btn" onclick="adjustStep('cao_pm',-0.01,2)">−.01</button>
-                                    <button class="trio-step-btn" onclick="adjustStep('cao_pm',0.01,2)">+.01</button>
-                                </div>
-                                <input type="hidden" id="cao_pm" value="2.00">
-                            </div>
+                            <span class="trio-lbl" data-zh="針側" data-vi="Bên kim">針側</span>
+                            <input class="dk-inp" id="cao_pm" type="text" inputmode="decimal" autocomplete="off" oninput="onFill(this)">
                         </div>
                     </div>
                 </div>
@@ -397,53 +287,26 @@
         </div>
 
         <!-- 電熱 -->
-        <div class="prob-card" id="card_nhiet">
-            <div class="prob-head">
-                <span class="prob-title" data-zh="⚠ 電熱異常" data-vi="⚠ Lỗi Nhiệt">⚠ 電熱異常</span>
-                <button class="remove-btn" onclick="toggleProblem('nhiet')">×</button>
+        <div class="dk-section">
+            <div class="dk-sec-hd" tabindex="0" data-sec="nhiet">
+                <span data-zh="電熱" data-vi="Nhiệt">電熱</span>
+                <span class="dk-hint" data-zh="Enter 填入　Tab 略過" data-vi="Enter điền　Tab bỏ qua">Enter 填入　Tab 略過</span>
             </div>
-            <div class="prob-body">
+            <div class="dk-sec-body" id="sec_nhiet">
                 <div class="trio-block">
                     <div class="side-lbl" data-zh="左側" data-vi="Bên trái">左側</div>
                     <div class="trio-grid">
                         <div class="trio-cell">
-                            <span class="trio-sublbl" data-zh="邊界側" data-vi="Bên kiếm">邊界側</span>
-                            <div class="trio-step">
-                                <div class="trio-step-val" id="nhiet_tk_disp">90</div>
-                                <div class="trio-step-btns">
-                                    <button class="trio-step-btn" onclick="adjustStep('nhiet_tk',-1,0)">−1</button>
-                                    <button class="trio-step-btn" onclick="adjustStep('nhiet_tk',1,0)">+1</button>
-                                    <button class="trio-step-btn" onclick="adjustStep('nhiet_tk',-10,0)">−10</button>
-                                    <button class="trio-step-btn" onclick="adjustStep('nhiet_tk',10,0)">+10</button>
-                                </div>
-                                <input type="hidden" id="nhiet_tk" value="90">
-                            </div>
+                            <span class="trio-lbl" data-zh="邊界側" data-vi="Bên kiếm">邊界側</span>
+                            <input class="dk-inp" id="nhiet_tk" type="text" inputmode="decimal" autocomplete="off" oninput="onFill(this)">
                         </div>
                         <div class="trio-cell">
-                            <span class="trio-sublbl" data-zh="中間" data-vi="Giữa">中間</span>
-                            <div class="trio-step">
-                                <div class="trio-step-val" id="nhiet_tg_disp">90</div>
-                                <div class="trio-step-btns">
-                                    <button class="trio-step-btn" onclick="adjustStep('nhiet_tg',-1,0)">−1</button>
-                                    <button class="trio-step-btn" onclick="adjustStep('nhiet_tg',1,0)">+1</button>
-                                    <button class="trio-step-btn" onclick="adjustStep('nhiet_tg',-10,0)">−10</button>
-                                    <button class="trio-step-btn" onclick="adjustStep('nhiet_tg',10,0)">+10</button>
-                                </div>
-                                <input type="hidden" id="nhiet_tg" value="90">
-                            </div>
+                            <span class="trio-lbl" data-zh="中間" data-vi="Giữa">中間</span>
+                            <input class="dk-inp" id="nhiet_tg" type="text" inputmode="decimal" autocomplete="off" oninput="onFill(this)">
                         </div>
                         <div class="trio-cell">
-                            <span class="trio-sublbl" data-zh="針側" data-vi="Bên kim">針側</span>
-                            <div class="trio-step">
-                                <div class="trio-step-val" id="nhiet_tm_disp">90</div>
-                                <div class="trio-step-btns">
-                                    <button class="trio-step-btn" onclick="adjustStep('nhiet_tm',-1,0)">−1</button>
-                                    <button class="trio-step-btn" onclick="adjustStep('nhiet_tm',1,0)">+1</button>
-                                    <button class="trio-step-btn" onclick="adjustStep('nhiet_tm',-10,0)">−10</button>
-                                    <button class="trio-step-btn" onclick="adjustStep('nhiet_tm',10,0)">+10</button>
-                                </div>
-                                <input type="hidden" id="nhiet_tm" value="90">
-                            </div>
+                            <span class="trio-lbl" data-zh="針側" data-vi="Bên kim">針側</span>
+                            <input class="dk-inp" id="nhiet_tm" type="text" inputmode="decimal" autocomplete="off" oninput="onFill(this)">
                         </div>
                     </div>
                 </div>
@@ -452,43 +315,16 @@
                     <div class="side-lbl" data-zh="右側" data-vi="Bên phải">右側</div>
                     <div class="trio-grid">
                         <div class="trio-cell">
-                            <span class="trio-sublbl" data-zh="邊界側" data-vi="Bên kiếm">邊界側</span>
-                            <div class="trio-step">
-                                <div class="trio-step-val" id="nhiet_pk_disp">90</div>
-                                <div class="trio-step-btns">
-                                    <button class="trio-step-btn" onclick="adjustStep('nhiet_pk',-1,0)">−1</button>
-                                    <button class="trio-step-btn" onclick="adjustStep('nhiet_pk',1,0)">+1</button>
-                                    <button class="trio-step-btn" onclick="adjustStep('nhiet_pk',-10,0)">−10</button>
-                                    <button class="trio-step-btn" onclick="adjustStep('nhiet_pk',10,0)">+10</button>
-                                </div>
-                                <input type="hidden" id="nhiet_pk" value="90">
-                            </div>
+                            <span class="trio-lbl" data-zh="邊界側" data-vi="Bên kiếm">邊界側</span>
+                            <input class="dk-inp" id="nhiet_pk" type="text" inputmode="decimal" autocomplete="off" oninput="onFill(this)">
                         </div>
                         <div class="trio-cell">
-                            <span class="trio-sublbl" data-zh="中間" data-vi="Giữa">中間</span>
-                            <div class="trio-step">
-                                <div class="trio-step-val" id="nhiet_pg_disp">90</div>
-                                <div class="trio-step-btns">
-                                    <button class="trio-step-btn" onclick="adjustStep('nhiet_pg',-1,0)">−1</button>
-                                    <button class="trio-step-btn" onclick="adjustStep('nhiet_pg',1,0)">+1</button>
-                                    <button class="trio-step-btn" onclick="adjustStep('nhiet_pg',-10,0)">−10</button>
-                                    <button class="trio-step-btn" onclick="adjustStep('nhiet_pg',10,0)">+10</button>
-                                </div>
-                                <input type="hidden" id="nhiet_pg" value="90">
-                            </div>
+                            <span class="trio-lbl" data-zh="中間" data-vi="Giữa">中間</span>
+                            <input class="dk-inp" id="nhiet_pg" type="text" inputmode="decimal" autocomplete="off" oninput="onFill(this)">
                         </div>
                         <div class="trio-cell">
-                            <span class="trio-sublbl" data-zh="針側" data-vi="Bên kim">針側</span>
-                            <div class="trio-step">
-                                <div class="trio-step-val" id="nhiet_pm_disp">90</div>
-                                <div class="trio-step-btns">
-                                    <button class="trio-step-btn" onclick="adjustStep('nhiet_pm',-1,0)">−1</button>
-                                    <button class="trio-step-btn" onclick="adjustStep('nhiet_pm',1,0)">+1</button>
-                                    <button class="trio-step-btn" onclick="adjustStep('nhiet_pm',-10,0)">−10</button>
-                                    <button class="trio-step-btn" onclick="adjustStep('nhiet_pm',10,0)">+10</button>
-                                </div>
-                                <input type="hidden" id="nhiet_pm" value="90">
-                            </div>
+                            <span class="trio-lbl" data-zh="針側" data-vi="Bên kim">針側</span>
+                            <input class="dk-inp" id="nhiet_pm" type="text" inputmode="decimal" autocomplete="off" oninput="onFill(this)">
                         </div>
                     </div>
                 </div>
@@ -496,34 +332,33 @@
         </div>
 
         <!-- 外觀 -->
-        <div class="prob-card" id="card_ngoai">
-            <div class="prob-head">
-                <span class="prob-title" data-zh="⚠ 外觀異常" data-vi="⚠ Lỗi Ngoại quan">⚠ 外觀異常</span>
-                <button class="remove-btn" onclick="toggleProblem('ngoai')">×</button>
+        <div class="dk-section">
+            <div class="dk-sec-hd" tabindex="0" data-sec="ngoai">
+                <span data-zh="外觀" data-vi="Ngoại quan">外觀</span>
+                <span class="dk-hint" data-zh="Enter 填入　Tab 略過" data-vi="Enter điền　Tab bỏ qua">Enter 填入　Tab 略過</span>
             </div>
-            <div class="prob-body">
+            <div class="dk-sec-body" id="sec_ngoai">
                 <div class="ap-side">
                     <div class="side-lbl" data-zh="左側" data-vi="Bên trái">左側</div>
                     <div class="defect-grid" id="grid_t"></div>
-                    <input class="other-inp" id="oi_t"
-                           data-ph-zh="其他說明..." data-ph-vi="Khác..." placeholder="其他說明...">
+                    <input class="other-inp" id="oi_t" data-ph-zh="其他說明..." data-ph-vi="Khác..." placeholder="其他說明...">
                 </div>
                 <hr class="divider">
                 <div class="ap-side">
                     <div class="side-lbl" data-zh="右側" data-vi="Bên phải">右側</div>
                     <div class="defect-grid" id="grid_p"></div>
-                    <input class="other-inp" id="oi_p"
-                           data-ph-zh="其他說明..." data-ph-vi="Khác..." placeholder="其他說明...">
+                    <input class="other-inp" id="oi_p" data-ph-zh="其他說明..." data-ph-vi="Khác..." placeholder="其他說明...">
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="sub-area">
-        <button class="btn-sub" id="btnSub" onclick="submitForm()"
-                data-zh="⚠ 送出異常回報" data-vi="⚠ GỬI BÁO LỖI">⚠ 送出異常回報</button>
-        <button class="btn-rst" onclick="resetForm()"
-                data-zh="↺ 清除重填" data-vi="↺ Làm mới">↺ 清除重填</button>
+        <!-- Submit -->
+        <div class="dk-sub">
+            <button class="btn-sub" id="btnSub" onclick="submitForm()"
+                    data-zh="⚠ 送出異常回報" data-vi="⚠ GỬI BÁO LỖI">⚠ 送出異常回報</button>
+            <button class="btn-rst" onclick="resetForm()"
+                    data-zh="↺ 清除重填" data-vi="↺ Làm mới">↺ 清除重填</button>
+        </div>
     </div>
 </div>
 
@@ -571,7 +406,6 @@ var DEFECTS = [
 var GAS_URL = "https://script.google.com/macros/s/AKfycbzbFxPaHZJI-ehCHXC__gFLDUzkI15GJUORRPbuOyTy4LslzTQc_C58jDKB-5hQy2ss/exec";
 var K = {name:"cfg_name", lang:"cfg_lang"};
 var QUEUE_KEY = "pending_queue";
-var activeProblems = new Set();
 var defects = {t:new Set(), p:new Set()};
 var currentLang = "zh";
 var selectedZone = 0;
@@ -589,349 +423,315 @@ var ZONES = [
 ];
 
 // ── Offline Queue ──
-function getQueue() {
-    try { return JSON.parse(localStorage.getItem(QUEUE_KEY) || "[]"); } catch(e) { return []; }
-}
+function getQueue() { try { return JSON.parse(localStorage.getItem(QUEUE_KEY)||"[]"); } catch(e) { return []; } }
 function saveQueue(q) { localStorage.setItem(QUEUE_KEY, JSON.stringify(q)); }
-function enqueue(payload) { var q = getQueue(); q.push(payload); saveQueue(q); updateBadge(); }
-function dequeue(id) { saveQueue(getQueue().filter(function(p) { return p._id !== id; })); updateBadge(); }
+function enqueue(p) { var q=getQueue(); q.push(p); saveQueue(q); updateBadge(); }
+function dequeue(id) { saveQueue(getQueue().filter(function(p){return p._id!==id;})); updateBadge(); }
 function updateBadge() {
-    var n = getQueue().length;
-    var el = document.getElementById("uploadBadge");
-    if (n > 0) { el.textContent = "⏳ " + n; el.style.display = "flex"; }
-    else { el.style.display = "none"; }
+    var n=getQueue().length, el=document.getElementById("uploadBadge");
+    if(n>0){el.textContent="⏳ "+n; el.style.display="flex";}
+    else el.style.display="none";
 }
-
-async function uploadOne(payload) {
-    await fetch(GAS_URL, { method:"POST", mode:"no-cors", headers:{"Content-Type":"application/json"}, body:JSON.stringify(payload) });
-    dequeue(payload._id);
+async function uploadOne(p) {
+    await fetch(GAS_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"application/json"},body:JSON.stringify(p)});
+    dequeue(p._id);
 }
 async function uploadQueue() {
-    var q = getQueue();
-    if (q.length === 0) return;
-    document.getElementById("uploadBadge").textContent = currentLang==="zh" ? "上傳中..." : "Đang tải...";
-    var failed = 0;
-    for (var i = 0; i < q.length; i++) { try { await uploadOne(q[i]); } catch(e) { failed++; } }
+    var q=getQueue(); if(!q.length) return;
+    document.getElementById("uploadBadge").textContent=currentLang==="zh"?"上傳中...":"Đang tải...";
+    var failed=0;
+    for(var i=0;i<q.length;i++){try{await uploadOne(q[i]);}catch(e){failed++;}}
     updateBadge();
-    showToast(failed === 0 ? (currentLang==="zh" ? "全部上傳完成 ✓" : "Đã tải lên xong ✓") :
-        (currentLang==="zh" ? "失敗 " : "Lỗi ") + failed + (currentLang==="zh" ? " 筆，稍後再試" : " mục"), failed === 0);
+    showToast(failed===0?(currentLang==="zh"?"全部上傳完成 ✓":"Đã tải lên xong ✓"):(currentLang==="zh"?"失敗 ":"Lỗi ")+failed+(currentLang==="zh"?" 筆，稍後再試":" mục"),failed===0);
 }
-window.addEventListener("online", function() { if (getQueue().length > 0) uploadQueue(); });
+window.addEventListener("online",function(){if(getQueue().length>0) uploadQueue();});
 
 // ── Alerts ──
 function fetchAlerts() {
     return new Promise(function(resolve) {
-        var cb = '_cb' + Date.now();
-        var done = false;
-        var finish = function(data) {
-            if (done) return;
-            done = true;
-            yesterdayAlerts = data || {};
-            delete window[cb];
-            var s = document.getElementById(cb);
-            if (s) s.parentNode.removeChild(s);
-            resolve();
-        };
-        window[cb] = finish;
-        var script = document.createElement('script');
-        script.id = cb;
-        script.src = GAS_URL + '?callback=' + cb;
-        script.onerror = function() { finish({}); };
-        setTimeout(function() { finish({}); }, 8000);
+        var cb="_cb"+Date.now(), done=false;
+        var finish=function(data){ if(done)return; done=true; yesterdayAlerts=data||{}; delete window[cb]; var s=document.getElementById(cb); if(s)s.parentNode.removeChild(s); resolve(); };
+        window[cb]=finish;
+        var script=document.createElement("script");
+        script.id=cb; script.src=GAS_URL+"?callback="+cb;
+        script.onerror=function(){finish({});};
+        setTimeout(function(){finish({});},8000);
         document.head.appendChild(script);
     });
 }
 
 // ── Zone screen ──
 function buildZoneGrid() {
-    var zh = currentLang === "zh";
-    var html = "";
-    ZONES.forEach(function(zone, i) {
-        var cnt = zone.m.filter(function(m) { return yesterdayAlerts[String(m)]; }).length;
-        html += '<div class="zone-card' + (cnt > 0 ? " has-alert" : "") + '" onclick="goMachines(' + i + ')">';
-        html += '<div class="zone-name">' + (zh ? zone.zh : zone.vi) + '</div>';
-        html += '<div class="zone-count">' + zone.m.length + (zh ? " 台" : " máy") + '</div>';
-        if (cnt > 0) html += '<div class="zone-alert">⚠ ' + cnt + (zh ? " 台" : " máy") + '</div>';
-        html += '</div>';
+    var zh=currentLang==="zh", html="";
+    ZONES.forEach(function(zone,i){
+        var cnt=zone.m.filter(function(m){return yesterdayAlerts[String(m)];}).length;
+        html+='<div class="zone-card'+(cnt>0?" has-alert":"")+'" onclick="goMachines('+i+')">';
+        html+='<div class="zone-name">'+(zh?zone.zh:zone.vi)+'</div>';
+        html+='<div class="zone-count">'+zone.m.length+(zh?" 台":" máy")+'</div>';
+        if(cnt>0) html+='<div class="zone-alert">⚠ '+cnt+(zh?" 台":" máy")+'</div>';
+        html+='</div>';
     });
-    document.getElementById("zoneGrid").innerHTML = html;
+    document.getElementById("zoneGrid").innerHTML=html;
 }
 
-// ── Machine list screen ──
+// ── Machine list ──
 function goMachines(zoneIdx) {
-    selectedZone = zoneIdx;
-    var zone = ZONES[zoneIdx];
-    var zh = currentLang === "zh";
-    document.getElementById("machZoneName").textContent = zh ? zone.zh : zone.vi;
-    var html = "";
-    zone.m.forEach(function(m) {
-        var a = yesterdayAlerts[String(m)];
-        var hasAlert = a && Object.keys(a).length > 0;
-        var cls = hasAlert ? "alr" : "ok";
-        html += '<div class="m-chip ' + cls + '" onclick="goForm(' + m + ')">' + m + (hasAlert ? '<span class="warn">⚠</span>' : '') + '</div>';
+    selectedZone=zoneIdx;
+    var zone=ZONES[zoneIdx], zh=currentLang==="zh";
+    document.getElementById("machZoneName").textContent=zh?zone.zh:zone.vi;
+    var html="";
+    zone.m.forEach(function(m){
+        var a=yesterdayAlerts[String(m)], hasAlert=a&&Object.keys(a).length>0;
+        html+='<div class="m-chip '+(hasAlert?"alr":"ok")+'" onclick="goForm('+m+')">'
+             +m+(hasAlert?'<span class="warn">⚠</span>':'')+'</div>';
     });
-    document.getElementById("machGrid").innerHTML = html;
+    document.getElementById("machGrid").innerHTML=html;
     goScreen("scrList");
 }
 
-// ── Form screen ──
+// ── Form ──
 function goForm(mNo) {
-    selectedMachine = mNo;
+    selectedMachine=mNo;
     resetForm();
-    var zh = currentLang === "zh";
-    document.getElementById("formMachTag").textContent = "#" + mNo;
-    var alerts = yesterdayAlerts[String(mNo)];
-    var tag = document.getElementById("formYestTag");
-    var ref = document.getElementById("yesterdayRef");
-    if (alerts && Object.keys(alerts).length > 0) {
-        var types = Object.keys(alerts);
-        var typeLabels = zh ? types : types.map(function(t) { return TYPE_MAP[t] || t; });
-        tag.textContent = (zh ? "⚠ 昨日：" : "⚠ Hôm qua: ") + typeLabels.join("、");
-        tag.style.display = "";
-        var html = '<div class="yest-ref-ttl">' + (zh ? "⚠ 昨日數值" : "⚠ Giá trị hôm qua") + '</div>';
-        types.forEach(function(type) {
-            var vals = alerts[type];
-            var lbl = zh ? type : (TYPE_MAP[type] || type);
-            var lL = zh ? "左" : "T"; var rL = zh ? "右" : "P";
-            html += '<div class="yest-row">';
-            html += '<span class="yest-type">' + lbl + '</span>';
-            html += '<span class="yest-side">' + lL + '</span><span class="yest-val">' + (vals[0] || "-") + '</span>';
-            html += '<span class="yest-side">' + rL + '</span><span class="yest-val">' + (vals[1] || "-") + '</span>';
-            html += '</div>';
+    var zh=currentLang==="zh";
+    document.getElementById("formMachTag").textContent="#"+mNo;
+    var alerts=yesterdayAlerts[String(mNo)];
+    var tag=document.getElementById("formYestTag"), ref=document.getElementById("yesterdayRef");
+    if(alerts&&Object.keys(alerts).length>0){
+        var types=Object.keys(alerts);
+        tag.textContent=(zh?"⚠ 昨日：":"⚠ Hôm qua: ")+types.map(function(t){return zh?t:(TYPE_MAP[t]||t);}).join("、");
+        tag.style.display="";
+        var html='<div class="yest-ref-ttl">'+(zh?"⚠ 昨日數值":"⚠ Giá trị hôm qua")+'</div>';
+        types.forEach(function(type){
+            var vals=alerts[type], lbl=zh?type:(TYPE_MAP[type]||type);
+            var lL=zh?"左":"T", rL=zh?"右":"P";
+            html+='<div class="yest-row"><span class="yest-type">'+lbl+'</span>'
+                 +'<span class="yest-side">'+lL+'</span><span class="yest-val">'+(vals[0]||"-")+'</span>'
+                 +'<span class="yest-side">'+rL+'</span><span class="yest-val">'+(vals[1]||"-")+'</span></div>';
         });
-        ref.innerHTML = html;
-        ref.style.display = "";
-    } else {
-        tag.style.display = "none";
-        ref.style.display = "none";
-    }
+        ref.innerHTML=html; ref.style.display="";
+    } else { tag.style.display="none"; ref.style.display="none"; }
     goScreen("scrMain");
+    setTimeout(function(){ document.querySelector(".dk-sec-hd").focus(); }, 80);
 }
 
-// ── Screen ──
-function goScreen(id) {
-    document.querySelectorAll(".screen").forEach(function(s) { s.classList.remove("active"); });
-    document.getElementById(id).classList.add("active");
-    window.scrollTo(0, 0);
-}
+// ── Section keyboard nav ──
+function initSectionNav() {
+    var secIds = ["rong","cao","nhiet","ngoai"];
+    var headers = secIds.map(function(s){ return document.querySelector('[data-sec="'+s+'"]'); });
 
-// ── Settings ──
-function loadCfg() { document.getElementById("cfgName").value = localStorage.getItem(K.name) || ""; }
-function saveSettings() {
-    var name = document.getElementById("cfgName").value.trim();
-    if (!name) { showToast(currentLang === "zh" ? "請輸入名字" : "Vui lòng nhập tên"); return; }
-    localStorage.setItem(K.name, name);
-    goScreen("scrZone");
-    buildZoneGrid();
-    fetchAlerts().then(function() { buildZoneGrid(); });
-}
-function goSettings() { loadCfg(); goScreen("scrSettings"); }
-
-// ── Toast ──
-function showToast(msg, isOk) {
-    var t = document.getElementById("toast");
-    t.textContent = msg;
-    t.className = "toast show" + (isOk ? " ok" : "");
-    setTimeout(function() { t.classList.remove("show"); }, 3000);
-}
-
-// ── Language ──
-function switchLang(lang) {
-    currentLang = lang;
-    localStorage.setItem(K.lang, lang);
-    applyLang();
-    var active = document.querySelector(".screen.active");
-    if (active) {
-        if (active.id === "scrZone") buildZoneGrid();
-        if (active.id === "scrList") goMachines(selectedZone);
-        if (active.id === "scrMain" && selectedMachine) goForm(selectedMachine);
-    }
-}
-function applyLang() {
-    var zh = currentLang === "zh";
-    document.getElementById("lbtn_zh").classList.toggle("on", zh);
-    document.getElementById("lbtn_vi").classList.toggle("on", !zh);
-    document.querySelectorAll("[data-zh]").forEach(function(el) {
-        el.textContent = zh ? el.dataset.zh : el.dataset.vi;
+    headers.forEach(function(hd, idx) {
+        hd.addEventListener("keydown", function(e) {
+            if (e.key === "Tab" && !e.shiftKey) {
+                e.preventDefault();
+                (headers[idx+1] || document.getElementById("btnSub")).focus();
+            } else if (e.key === "Tab" && e.shiftKey) {
+                e.preventDefault();
+                if (headers[idx-1]) headers[idx-1].focus();
+            } else if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                var body = document.getElementById("sec_"+hd.getAttribute("data-sec"));
+                var first = body.querySelector("input, .d-chip");
+                if (first) first.focus();
+            }
+        });
     });
-    document.querySelectorAll("[data-ph-zh]").forEach(function(el) {
-        el.placeholder = zh ? el.dataset.phZh : el.dataset.phVi;
-    });
-    var idx = zh ? 1 : 2;
-    document.querySelectorAll(".d-chip").forEach(function(chip) {
-        var code = chip.dataset.code;
-        if (code === "OTHER") { chip.innerHTML = "<strong>" + (zh ? "其他" : "Khác") + "</strong>"; return; }
-        var d = DEFECTS.find(function(x) { return x[0] === code; });
-        if (d) chip.innerHTML = "<strong>" + d[0] + "</strong>" + d[idx];
+
+    // Enter in text inputs = move to next focusable element
+    document.getElementById("scrMain").addEventListener("keydown", function(e) {
+        if (e.key !== "Enter") return;
+        var t = e.target;
+        if (t.tagName !== "INPUT" || t.classList.contains("other-inp")) return;
+        e.preventDefault();
+        var all = Array.from(document.querySelectorAll(
+            '#scrMain .dk-sec-hd, #scrMain input.dk-inp, #scrMain .d-chip, #btnSub'
+        ));
+        var idx = all.indexOf(t);
+        if (all[idx+1]) all[idx+1].focus();
     });
 }
+
+// ── onFill ──
+function onFill(el) { el.classList.toggle("filled", !!el.value); }
 
 // ── Defect grids ──
 function buildGrids() {
-    var idx = currentLang === "zh" ? 1 : 2;
-    ["t","p"].forEach(function(side) {
-        var grid = document.getElementById("grid_" + side);
-        DEFECTS.forEach(function(d) {
-            var c = document.createElement("button");
-            c.className = "d-chip"; c.dataset.code = d[0];
-            c.innerHTML = "<strong>" + d[0] + "</strong>" + d[idx];
-            (function(s, code, ch) { c.onclick = function() { toggleDefect(s, code, ch); }; })(side, d[0], c);
+    var idx=currentLang==="zh"?1:2;
+    ["t","p"].forEach(function(side){
+        var grid=document.getElementById("grid_"+side);
+        DEFECTS.forEach(function(d){
+            var c=document.createElement("button");
+            c.className="d-chip"; c.dataset.code=d[0];
+            c.innerHTML="<strong>"+d[0]+"</strong>"+d[idx];
+            (function(s,code,ch){c.onclick=function(){toggleDefect(s,code,ch);};})(side,d[0],c);
             grid.appendChild(c);
         });
-        var oc = document.createElement("button");
-        oc.className = "d-chip"; oc.dataset.code = "OTHER";
-        oc.innerHTML = "<strong>" + (currentLang === "zh" ? "其他" : "Khác") + "</strong>";
-        (function(s, ch) { oc.onclick = function() { toggleOtherChip(s, ch); }; })(side, oc);
+        var oc=document.createElement("button");
+        oc.className="d-chip"; oc.dataset.code="OTHER";
+        oc.innerHTML="<strong>"+(currentLang==="zh"?"其他":"Khác")+"</strong>";
+        (function(s,ch){oc.onclick=function(){toggleOtherChip(s,ch);};})(side,oc);
         grid.appendChild(oc);
     });
 }
+function toggleDefect(side,code,chip){
+    var s=defects[side];
+    if(s.has(code)){s.delete(code);chip.classList.remove("on");}
+    else{s.add(code);chip.classList.add("on");}
+}
+function toggleOtherChip(side,chip){
+    var inp=document.getElementById("oi_"+side);
+    var show=inp.style.display!=="block";
+    inp.style.display=show?"block":"none";
+    if(!show) inp.value="";
+    chip.classList.toggle("on",show);
+    if(show) inp.focus();
+}
 
-// ── Problem toggle ──
-function toggleProblem(type) {
-    var card = document.getElementById("card_" + type);
-    var btn  = document.getElementById("addbtn_" + type);
-    if (activeProblems.has(type)) {
-        activeProblems.delete(type); card.classList.remove("show"); btn.classList.remove("active"); clearProblem(type);
-    } else {
-        activeProblems.add(type); card.classList.add("show"); btn.classList.add("active");
-        initSteppers(type);
-        setTimeout(function() { card.scrollIntoView({behavior:"smooth", block:"nearest"}); }, 60);
-    }
-    document.getElementById("emptyHint").style.display = activeProblems.size === 0 ? "" : "none";
-}
-function clearProblem(type) {
-    var card = document.getElementById("card_" + type);
-    card.querySelectorAll("input").forEach(function(el) { el.value = ""; el.classList.remove("filled"); });
-    if (type === "ngoai") {
-        defects.t.clear(); defects.p.clear();
-        document.querySelectorAll(".d-chip").forEach(function(c) { c.classList.remove("on"); });
-        ["t","p"].forEach(function(s) { var oi = document.getElementById("oi_"+s); oi.style.display="none"; oi.value=""; });
-    }
-}
-function onFill(el) { el.classList.toggle("filled", !!el.value); }
-function adjustStep(id, delta, decimals) {
-    var inp = document.getElementById(id);
-    var cur = parseFloat(inp.value) || 0;
-    var factor = Math.pow(10, decimals);
-    var next = Math.round((cur + delta) * factor) / factor;
-    var disp = decimals > 0 ? next.toFixed(decimals) : String(next);
-    inp.value = disp;
-    document.getElementById(id + '_disp').textContent = disp;
-}
-function initSteppers(type) {
-    if (type === "rong") {
-        ["rong_t","rong_p"].forEach(function(id) {
-            document.getElementById(id).value = "0";
-            document.getElementById(id + "_disp").textContent = "0";
-        });
-    } else if (type === "cao") {
-        ["cao_tk","cao_tg","cao_tm","cao_pk","cao_pg","cao_pm"].forEach(function(id) {
-            document.getElementById(id).value = "2.00";
-            document.getElementById(id + "_disp").textContent = "2.00";
-        });
-    } else if (type === "nhiet") {
-        ["nhiet_tk","nhiet_tg","nhiet_tm","nhiet_pk","nhiet_pg","nhiet_pm"].forEach(function(id) {
-            document.getElementById(id).value = "90";
-            document.getElementById(id + "_disp").textContent = "90";
-        });
-    }
-}
-function toggleDefect(side, code, chip) {
-    var s = defects[side];
-    if (s.has(code)) { s.delete(code); chip.classList.remove("on"); }
-    else             { s.add(code);    chip.classList.add("on"); }
-}
-function toggleOtherChip(side, chip) {
-    var inp = document.getElementById("oi_" + side);
-    var show = inp.style.display !== "block";
-    inp.style.display = show ? "block" : "none";
-    if (!show) inp.value = "";
-    chip.classList.toggle("on", show);
-    if (show) inp.focus();
+// ── hasData ──
+function hasData(type) {
+    function v(id){return document.getElementById(id).value.trim();}
+    if(type==="rong") return !!(v("rong_t")||v("rong_p"));
+    if(type==="cao")  return ["cao_tk","cao_tg","cao_tm","cao_pk","cao_pg","cao_pm"].some(function(id){return !!v(id);});
+    if(type==="nhiet") return ["nhiet_tk","nhiet_tg","nhiet_tm","nhiet_pk","nhiet_pg","nhiet_pm"].some(function(id){return !!v(id);});
+    if(type==="ngoai") return defects.t.size>0||defects.p.size>0||!!v("oi_t")||!!v("oi_p");
+    return false;
 }
 
 // ── Collect ──
-function getVal(id) { return document.getElementById(id).value.trim() || "-"; }
-function getTrio(pre) { return ["k","g","m"].map(function(s){return getVal(pre+s);}).join(" / "); }
-function getAppearance(side) {
-    var other = document.getElementById("oi_"+side).value.trim();
-    var parts = Array.from(defects[side]);
-    if (other) parts.push((currentLang==="zh"?"其他":"Khác")+": "+other);
+function getVal(id){return document.getElementById(id).value.trim()||"-";}
+function getTrio(pre){return ["k","g","m"].map(function(s){return getVal(pre+s);}).join(" / ");}
+function getAppearance(side){
+    var other=document.getElementById("oi_"+side).value.trim();
+    var parts=Array.from(defects[side]);
+    if(other) parts.push((currentLang==="zh"?"其他":"Khác")+": "+other);
     return parts.join(", ");
 }
 
 // ── Submit ──
 async function submitForm() {
-    if (activeProblems.size === 0) { showToast(currentLang==="zh" ? "請至少新增一項異常" : "Thêm ít nhất 1 lỗi"); return; }
-    var machine = String(selectedMachine);
-    var has = function(t) { return activeProblems.has(t); };
-    var payload = {
+    if(!["rong","cao","nhiet","ngoai"].some(hasData)){
+        showToast(currentLang==="zh"?"請至少填寫一項異常":"Thêm ít nhất 1 lỗi"); return;
+    }
+    var machine=String(selectedMachine);
+    var payload={
         _id:             Date.now(),
         timestamp:       new Date().toLocaleString("zh-TW"),
-        inspector:       localStorage.getItem(K.name) || "",
+        inspector:       localStorage.getItem(K.name)||"",
         so_may:          machine,
-        do_rong_trai:    has("rong")  ? getVal("rong_t")   : "",
-        do_rong_phai:    has("rong")  ? getVal("rong_p")   : "",
-        cao_trai:        has("cao")   ? getTrio("cao_t")   : "",
-        cao_phai:        has("cao")   ? getTrio("cao_p")   : "",
-        nhiet_trai:      has("nhiet") ? getTrio("nhiet_t") : "",
-        nhiet_phai:      has("nhiet") ? getTrio("nhiet_p") : "",
-        ngoai_quan_trai: has("ngoai") ? getAppearance("t") : "",
-        ngoai_quan_phai: has("ngoai") ? getAppearance("p") : ""
+        do_rong_trai:    hasData("rong") ?getVal("rong_t")  :"",
+        do_rong_phai:    hasData("rong") ?getVal("rong_p")  :"",
+        cao_trai:        hasData("cao")  ?getTrio("cao_t")  :"",
+        cao_phai:        hasData("cao")  ?getTrio("cao_p")  :"",
+        nhiet_trai:      hasData("nhiet")?getTrio("nhiet_t"):"",
+        nhiet_phai:      hasData("nhiet")?getTrio("nhiet_p"):"",
+        ngoai_quan_trai: hasData("ngoai")?getAppearance("t"):"",
+        ngoai_quan_phai: hasData("ngoai")?getAppearance("p"):""
     };
     enqueue(payload);
-    var btn = document.getElementById("btnSub");
-    btn.disabled = true;
-    btn.textContent = currentLang==="zh" ? "送出中..." : "Đang gửi...";
-    var labels = {rong:["帶寬","Độ rộng"], cao:["勾高","Cao móc"], nhiet:["電熱","Nhiệt"], ngoai:["外觀","Ngoại quan"]};
-    var li = currentLang==="zh" ? 0 : 1;
-    var types = Array.from(activeProblems).map(function(t){return labels[t][li];}).join("、");
-    document.getElementById("okDet").innerHTML =
+    var btn=document.getElementById("btnSub");
+    btn.disabled=true; btn.textContent=currentLang==="zh"?"送出中...":"Đang gửi...";
+    var labels={rong:["帶寬","Độ rộng"],cao:["勾高","Cao móc"],nhiet:["電熱","Nhiệt"],ngoai:["外觀","Ngoại quan"]};
+    var li=currentLang==="zh"?0:1;
+    var types=["rong","cao","nhiet","ngoai"].filter(hasData).map(function(t){return labels[t][li];}).join("、");
+    document.getElementById("okDet").innerHTML=
         (currentLang==="zh"?"機台":"Máy")+" #"+machine+"　"+payload.timestamp+
         "<br>"+(currentLang==="zh"?"巡檢：":"Người kiểm: ")+payload.inspector+
         "<br>"+(currentLang==="zh"?"異常：":"Lỗi: ")+types;
-    var uploaded = false;
-    if (navigator.onLine) {
-        try {
-            await fetch(GAS_URL, { method:"POST", mode:"no-cors", headers:{"Content-Type":"application/json"}, body:JSON.stringify(payload) });
-            dequeue(payload._id);
-            uploaded = true;
-        } catch(e) {}
+    var uploaded=false;
+    if(navigator.onLine){
+        try{
+            await fetch(GAS_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
+            dequeue(payload._id); uploaded=true;
+        }catch(e){}
     }
-    var tag = document.getElementById("okTag"), msg = document.getElementById("okMsg"), icon = document.getElementById("okIcon");
-    if (uploaded) {
-        icon.textContent = "✅"; msg.textContent = currentLang==="zh" ? "回報成功" : "Đã gửi thành công";
-        tag.className = "ok-tag uploaded"; tag.textContent = currentLang==="zh" ? "✓ 已上傳" : "✓ Đã tải lên";
-    } else {
-        icon.textContent = "📱"; msg.textContent = currentLang==="zh" ? "已暫存本機" : "Đã lưu tạm";
-        tag.className = "ok-tag pending"; tag.textContent = currentLang==="zh" ? "⏳ 有網路時自動上傳" : "⏳ Sẽ tự động tải khi có mạng";
+    var tag=document.getElementById("okTag"),msg=document.getElementById("okMsg"),icon=document.getElementById("okIcon");
+    if(uploaded){
+        icon.textContent="✅"; msg.textContent=currentLang==="zh"?"回報成功":"Đã gửi thành công";
+        tag.className="ok-tag uploaded"; tag.textContent=currentLang==="zh"?"✓ 已上傳":"✓ Đã tải lên";
+    }else{
+        icon.textContent="📱"; msg.textContent=currentLang==="zh"?"已暫存本機":"Đã lưu tạm";
+        tag.className="ok-tag pending"; tag.textContent=currentLang==="zh"?"⏳ 有網路時自動上傳":"⏳ Sẽ tự động tải khi có mạng";
     }
     goScreen("scrOK");
-    btn.disabled = false;
-    btn.textContent = currentLang==="zh" ? "⚠ 送出異常回報" : "⚠ GỬI BÁO LỖI";
+    btn.disabled=false; btn.textContent=currentLang==="zh"?"⚠ 送出異常回報":"⚠ GỬI BÁO LỖI";
 }
 
 // ── Reset ──
 function resetForm() {
-    Array.from(activeProblems).slice().forEach(function(t) { toggleProblem(t); });
+    document.querySelectorAll("#scrMain .dk-inp, #scrMain .other-inp").forEach(function(el){
+        el.value=""; el.classList.remove("filled");
+    });
+    defects.t.clear(); defects.p.clear();
+    document.querySelectorAll(".d-chip").forEach(function(c){c.classList.remove("on");});
+    document.querySelectorAll(".other-inp").forEach(function(el){el.style.display="none"; el.value="";});
+}
+
+// ── Screen ──
+function goScreen(id){
+    document.querySelectorAll(".screen").forEach(function(s){s.classList.remove("active");});
+    document.getElementById(id).classList.add("active");
+    window.scrollTo(0,0);
+}
+
+// ── Settings ──
+function loadCfg(){document.getElementById("cfgName").value=localStorage.getItem(K.name)||"";}
+function saveSettings(){
+    var name=document.getElementById("cfgName").value.trim();
+    if(!name){showToast(currentLang==="zh"?"請輸入名字":"Vui lòng nhập tên"); return;}
+    localStorage.setItem(K.name,name);
+    goScreen("scrZone"); buildZoneGrid();
+    fetchAlerts().then(function(){buildZoneGrid();});
+}
+function goSettings(){loadCfg(); goScreen("scrSettings");}
+
+// ── Toast ──
+function showToast(msg,isOk){
+    var t=document.getElementById("toast");
+    t.textContent=msg; t.className="toast show"+(isOk?" ok":"");
+    setTimeout(function(){t.classList.remove("show");},3000);
+}
+
+// ── Language ──
+function switchLang(lang){
+    currentLang=lang; localStorage.setItem(K.lang,lang); applyLang();
+    var active=document.querySelector(".screen.active");
+    if(active){
+        if(active.id==="scrZone") buildZoneGrid();
+        if(active.id==="scrList") goMachines(selectedZone);
+        if(active.id==="scrMain"&&selectedMachine) goForm(selectedMachine);
+    }
+}
+function applyLang(){
+    var zh=currentLang==="zh";
+    document.getElementById("lbtn_zh").classList.toggle("on",zh);
+    document.getElementById("lbtn_vi").classList.toggle("on",!zh);
+    document.querySelectorAll("[data-zh]").forEach(function(el){el.textContent=zh?el.dataset.zh:el.dataset.vi;});
+    document.querySelectorAll("[data-ph-zh]").forEach(function(el){el.placeholder=zh?el.dataset.phZh:el.dataset.phVi;});
+    var idx=zh?1:2;
+    document.querySelectorAll(".d-chip").forEach(function(chip){
+        var code=chip.dataset.code;
+        if(code==="OTHER"){chip.innerHTML="<strong>"+(zh?"其他":"Khác")+"</strong>"; return;}
+        var d=DEFECTS.find(function(x){return x[0]===code;});
+        if(d) chip.innerHTML="<strong>"+d[0]+"</strong>"+d[idx];
+    });
 }
 
 // ── Init ──
-window.onload = function() {
-    currentLang = localStorage.getItem(K.lang) || "zh";
+window.onload=function(){
+    currentLang=localStorage.getItem(K.lang)||"zh";
     buildGrids();
     applyLang();
     loadCfg();
     updateBadge();
-    if (localStorage.getItem(K.name)) {
-        goScreen("scrZone");
-        buildZoneGrid();
-        fetchAlerts().then(function() {
+    initSectionNav();
+    if(localStorage.getItem(K.name)){
+        goScreen("scrZone"); buildZoneGrid();
+        fetchAlerts().then(function(){
             buildZoneGrid();
-            var active = document.querySelector(".screen.active");
-            if (active && active.id === "scrList") goMachines(selectedZone);
+            var active=document.querySelector(".screen.active");
+            if(active&&active.id==="scrList") goMachines(selectedZone);
         });
-    } else {
+    }else{
         goScreen("scrSettings");
     }
 };
